@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include "SDL/SDL.h"
-#include "SDL/SDL_image.h"
+#include "SDL2/SDL.h"
+#include "SDL2/SDL_image.h"
 
-#define MAX_MAP_X 20
-#define MAX_MAP_Y 15
+#define ROOM_X 25
+#define ROOM_Y 24
 
 #define TILE_SIZE 32

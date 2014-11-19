@@ -1,6 +1,6 @@
 #include "defs.h"
 
-typedef struct Map
+typedef struct Room
 {
-	int tile[MAX_MAP_Y][MAX_MAP_X];
-} Map;
+	int tile[ROOM_Y][ROOM_X];
+} Room;

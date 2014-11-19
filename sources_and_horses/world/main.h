@@ -1,4 +1,4 @@
 #include "structs.h"
 
-SDL_Surface *screen, *brickImage, *backgroundImage;
-Map map;
+SDL_Surface *window, *solidsImage, *backgroundImage;
+Room room;

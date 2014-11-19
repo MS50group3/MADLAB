@@ -1,19 +1,13 @@
 #include "draw.h"
 
-extern void drawMap(void);
+extern void drawRoom(void);
 
 void draw()
-{
-	/* Draw the map */
-	
-	drawMap();
+{	
+	drawRoom();
 
-	/* Swap the buffers */
-
-	SDL_Flip(screen);
-	
-	/* Sleep briefly */
-	
+	SDL_RenderPresent(screen);
+		
 	SDL_Delay(1);
 }
 
