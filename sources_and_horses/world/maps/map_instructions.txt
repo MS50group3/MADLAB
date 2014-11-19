@@ -1,0 +1,21 @@
+
+At some point instructions on how to make maps will be here. 
+
+For now, it's just some text telling you what will happen in the future. 
+
+...not unlike a crystal ball in many ways. 
+
+But the maps will be used for blocking (in the stage/theatre/film sense)
+the rooms. 
+
+0000000
+0000110
+0000000
+0010000
+0010000
+
+So basically the 1s would represent a place the sprite could not go. 
+
+Issues:
+
+- work out map sizes and screen size
