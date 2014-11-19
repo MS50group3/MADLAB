@@ -20,7 +20,7 @@ Display newDisplay(){
     // Create window and get a the associated surface
     d->window = SDL_CreateWindow("Puzzle",100,100,640,480,0);
     d->surface = SDL_GetWindowSurface(d->window);
-    d->image = IMG_Load("computer.png");
+    d->image = IMG_Load("../../gfx/computer.png");
 
     // Let the room be white. Fill it.
     d->white = SDL_MapRGB(d->surface->format,136,170,194);
