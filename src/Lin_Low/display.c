@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include "display.h"
 
+
 struct display
 {
     SDL_Window *window;
@@ -10,14 +11,18 @@ struct display
     SDL_Surface *image;
     Uint32 white, black;
     SDL_Rect *box;
+    SDL_Event *event;
 }; 
 
+// Create all the relevant stuff for a display
 Display newDisplay(){
+
     SDL_Init(SDL_INIT_EVERYTHING);
 
     Display d = malloc(sizeof(struct display));
+    d->event = malloc(sizeof(SDL_Event));
 
-    // Create window and get a the associated surface
+    // Create window and get the associated surface
     d->window = SDL_CreateWindow("Puzzle",100,100,640,480,0);
     d->surface = SDL_GetWindowSurface(d->window);
     d->image = IMG_Load("../../gfx/computer.png");
@@ -51,8 +56,17 @@ void endFrame(Display d){
 }
 
 void quit(Display d){
-    SDL_Delay(3000);
+    SDL_Delay(20);
     SDL_Quit();
+}
+
+bool getEvent(Display d){
+
+    bool arrived = SDL_PollEvent(d->event);
+    if (! arrived) return false; // No event polled at all
+
+    if (d->event->type != SDL_QUIT) return false; // Filter all events other than quit
+    return true;
 }
 
 

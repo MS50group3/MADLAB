@@ -7,10 +7,11 @@ void run(){
 
     Display d = newDisplay();
 
-    startFrame(d);
-    drawBall(d,0.5,0.5);
-    endFrame(d);
-    
+    while(getEvent(d) == false){
+	    startFrame(d);
+	    drawBall(d,0.5,0.5);
+    	endFrame(d);
+	}
     quit(d);
 }
 
