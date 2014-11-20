@@ -1,13 +1,16 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include "display.h"
 
+#define WWIDTH 800
+#define WHEIGHT 600
 
 struct display
 {
     SDL_Window *window;
-    SDL_Surface *surface;
+    SDL_Surface *background;
     SDL_Surface *image;
     Uint32 white, black;
     SDL_Rect *box;
@@ -23,13 +26,14 @@ Display newDisplay(){
     d->event = malloc(sizeof(SDL_Event));
 
     // Create window and get the associated surface
-    d->window = SDL_CreateWindow("Puzzle",100,100,640,480,0);
-    d->surface = SDL_GetWindowSurface(d->window);
+    d->window = SDL_CreateWindow("Puzzle",SDL_WINDOWPOS_UNDEFINED,SDL_WINDOWPOS_UNDEFINED,WWIDTH,WHEIGHT,0);
+    d->background = SDL_GetWindowSurface(d->window);
     d->image = IMG_Load("../../gfx/computer.png");
+    //d->sprite = SDL_LoadBMP("../../gfx/prof2.bmp");
 
     // Let the room be white. Fill it.
-    d->white = SDL_MapRGB(d->surface->format,136,170,194);
-    d->black = SDL_MapRGB(d->surface->format,0,0,0);
+    d->white = SDL_MapRGB(d->background->format,136,170,194);
+    d->black = SDL_MapRGB(d->background->format,0,0,0);
     
     // Box
     d->box = malloc(sizeof(SDL_Rect));
@@ -39,15 +43,15 @@ Display newDisplay(){
 
 // Clear the display and draw backgroud
 void startFrame(Display d){
-    SDL_FillRect(d->surface,NULL,d->white); 
+    SDL_FillRect(d->background,NULL,d->white); 
 }
 
 void drawBall(Display d, float x, float y){
-    int xp = (int) ((640-32) * x);
-    int yp = (int) ((480-32) * y);
+    int xp = (int) ((WWIDTH-32) * x);
+    int yp = (int) ((WHEIGHT-32) * y);
     d->box->x = xp;
     d->box->y = yp;
-    SDL_BlitSurface(d->image, NULL, d->surface, d->box);
+    SDL_BlitSurface(d->image, NULL, d->background, d->box);
 }
 
 void endFrame(Display d){

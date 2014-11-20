@@ -2,6 +2,7 @@
 
 #include <stdlib.h>
 #include "display.h"
+#include "crac.h"
 
 void run(){
 
