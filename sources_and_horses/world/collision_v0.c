@@ -21,7 +21,7 @@ int main (void)
     rc_sprite.y = 0;                              //the sprite's x-axis remains at zero
   }
   if (rc_sprite.y >= SCREEN_HEIGHT - BLOCK_SIZE){ //if the sprite's movements go all the way down
-	rc_sprite.y = SCREEN_HEIGHT - BLOCK_SIZE;     //subtract block size so you can still draw the sprite
+    rc_sprite.y = SCREEN_HEIGHT - BLOCK_SIZE;     //subtract block size so you can still draw the sprite
   }
   else if(room[y][x] != 0){                       //rule to take care of map blocking - spaces sprite can move in the room
 	
@@ -34,7 +34,7 @@ void movement (int room[][MAX], int x, int y)
   
   /*north*/
   if ((possible_move(room, x, (y+1), row_size, column_size) == 1) && (room[x][(y+1)]) ==  OPEN){
-	rc_sprite.y = room[y+1];
+    rc_sprite.y = room[y+1];
     rc_sprite.x = room[x];
   }else{
     rc_sprite.y = room[y];
@@ -42,15 +42,15 @@ void movement (int room[][MAX], int x, int y)
   }
   /*south*/
   if ((possible_move(room, x, (y-1), row_size, column_size) == 1) && (room[x][(y-1)]) ==  OPEN){
-	rc_sprite.y = room[y-1];
+    rc_sprite.y = room[y-1];
     rc_sprite.x = room[x];
   }else{
     rc_sprite.y = room[y];
     rc_sprite.x = room[x];
   }
   /*east*/
-    if ((possible_move(room, (x+1), y, row_size, column_size) == 1) && (room[x+1][y)]) ==  OPEN){
-	rc_sprite.y = room[y];
+  if ((possible_move(room, (x+1), y, row_size, column_size) == 1) && (room[x+1][y)]) ==  OPEN){
+    rc_sprite.y = room[y];
     rc_sprite.x = room[x+1];
   }else{
     rc_sprite.y = room[y];
@@ -58,7 +58,7 @@ void movement (int room[][MAX], int x, int y)
   }
   /*west*/
   if ((possible_move(room, (x-1), y, row_size, column_size) == 1) && (room[x-1][y)]) ==  OPEN){
-	rc_sprite.y = room[y];
+    rc_sprite.y = room[y];
     rc_sprite.x = room[x-1];
   }else{
     rc_sprite.y = room[y];
