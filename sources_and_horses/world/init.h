@@ -1,3 +1,3 @@
 #include "defs.h"
 
-SDL_Surface *window, *solidsImage, *backgroundImage;
+extern SDL_Surface *screen, *brickImage, *backgroundImage;

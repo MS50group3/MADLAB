@@ -1,53 +1,44 @@
+/*
+init_SDL.c
+This handles the opening and closing of SDL
+* Still needs to be tested for error cases*
+ */
+
 #include "init.h"
 
-void init(char *title)
+void init()
 {
-	/* Initialise SDL Video and Audio */
-	
-	if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_AUDIO) < 0)
-	{
-		printf("Could not initialize SDL: %s\n", SDL_GetError());
-		
-		exit(1);
-	}
-	
-	/* Open a 640 x 480 screen */
-	
-	screen = SDL_SetVideoMode(640, 480, 0, SDL_HWPALETTE|SDL_DOUBLEBUF);
-	
-	if (screen == NULL)
-	{
-		printf("Couldn't set screen mode to 640 x 480: %s\n", SDL_GetError());
+	SDL_Window *window         = NULL;
+	SDL_Surface* screenSurface = NULL;
 
+	if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
+	{
+		fprintf(stderr, "\nUnable to initialise SDL:  %s\n",
+						SDL_GetError());
 		exit(1);
+	}else{
+		window = SDL_CreateWindow ("MADLAB",                      //window name
+								                SDL_WINDOWPOS_UNDEFINED,      //x-axis on the screen coordinate
+								                SDL_WINDOWPOS_UNDEFINED,      //y-axis screen coordinate
+								                SCREEN_WIDTH, SCREEN_HEIGHT,  //size of the window
+								                SDL_WINDOW_RESIZABLE);        //make the window resizeable       
+
+		if (window == NULL){
+			printf("Error creating window: %s\n", SDL_GetError());
+			exit(1);
+		}
 	}
-	
-	/* Set the screen title */
-	
-	SDL_WM_SetCaption(title, NULL);
-	
-	/* Hide the mouse cursor */
-	
-	SDL_ShowCursor(SDL_DISABLE);
 }
 
-void cleanup()
+void shut_down()
 {
-	/* Free the brick image */
+  /*itextures must be destroyed before closing*/
+  SDL_DestroyTexture(background_tex); //renames needed!
+	SDL_DestroyTexture(sprite_tex);
+	SDL_DestroyRenderer(renderer);
+	SDL_DestroyWindow(window);
 	
-	if (brickImage != NULL)
-	{
-		SDL_FreeSurface(brickImage);
-	}
-	
-	/* Free the brick image */
-	
-	if (backgroundImage != NULL)
-	{
-		SDL_FreeSurface(backgroundImage);
-	}
-	
-	/* Shut down SDL */
-	
+	/*aaaaand...quit*/
 	SDL_Quit();
 }
+
