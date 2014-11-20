@@ -2,7 +2,7 @@
 #include <stdio.h>
 #define OPEN 0
 
-enum orientation {north, south, west, east};
+//enum orientation {north, south, west, east};
 
 /*collision for the edge of the screen*/
 
@@ -13,15 +13,15 @@ int main (void)
   if(rc_sprite.x <= 0){                           //if the sprite movements left bring it to zero x axis
     rc_sprite.x = 0;                              //the sprite's x-axis remains at zero
   }
-  if(rc_sprite.x >= SCREEN_WIDTH - BLOCK_SIZE){   //if the sprite's movements go all the way right
-    rc_sprite.x = SCREEN_WIDTH - BLOCK_SIZE;      //subtract block size so you can still draw the sprite
+  if(rc_sprite.x >= SCREEN_WIDTH - TILE_SIZE){   //if the sprite's movements go all the way right
+    rc_sprite.x = SCREEN_WIDTH - TILE_SIZE;      //subtract block size so you can still draw the sprite
   }                                           
 /*rules for movement up - down*/
   if(rc_sprite.y <= 0){                           //if the sprite movements up bring it to zero y axis
     rc_sprite.y = 0;                              //the sprite's x-axis remains at zero
   }
-  if (rc_sprite.y >= SCREEN_HEIGHT - BLOCK_SIZE){ //if the sprite's movements go all the way down
-    rc_sprite.y = SCREEN_HEIGHT - BLOCK_SIZE;     //subtract block size so you can still draw the sprite
+  if (rc_sprite.y >= SCREEN_HEIGHT - TILE_SIZE){ //if the sprite's movements go all the way down
+    rc_sprite.y = SCREEN_HEIGHT - TILE_SIZE;     //subtract block size so you can still draw the sprite
   }
   else if(room[y][x] != 0){                       //rule to take care of map blocking - spaces sprite can move in the room
 	
