@@ -1,3 +1,3 @@
 #include "structs.h"
 
-extern SDL_Surface *screen;
+SDL_Surface *screen;

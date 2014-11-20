@@ -1,6 +1,6 @@
 #include "map.h"
 
-extern void drawImage(SDL_Surface *, int, int);
+void drawImage(SDL_Surface *, int, int);
 
 void loadMap(char *name)
 {
@@ -20,9 +20,9 @@ void loadMap(char *name)
 
 	/* Read the data from the file into the map */
 
-	for (y=0;y<MAX_MAP_Y;y++)
+	for (y=0;y<ROOM_Y;y++)
 	{
-		for (x=0;x<MAX_MAP_X;x++)
+		for (x=0;x<ROOM_X;x++)
 		{
 			fscanf(fp, "%d", &map.tile[y][x]);
 		}
@@ -43,9 +43,9 @@ void drawMap()
 
 	/* Draw the map */
 
-	for (y=0;y<MAX_MAP_Y;y++)
+	for (y=0;y<ROOM_Y;y++)
 	{
-		for (x=0;x<MAX_MAP_X;x++)
+		for (x=0;x<ROOM_X;x++)
 		{
 			if (map.tile[y][x] != 0)
 			{
