@@ -20,11 +20,11 @@ void loadMap(char *name)
 
 	/* Read the data from the file into the map */
 
-	for (y=0;y<ROOM_Y;y++)
+	for (int y = 0; y < ROOM_Y; y++)
 	{
-		for (x=0;x<ROOM_X;x++)
+		for (int x = 0; x < ROOM_X; x++)
 		{
-			fscanf(fp, "%d", &map.tile[y][x]);
+			fscanf(fp, "%d", &room.tile[y][x]);
 		}
 	}
 
@@ -47,7 +47,7 @@ void drawMap()
 	{
 		for (x=0;x<ROOM_X;x++)
 		{
-			if (map.tile[y][x] != 0)
+			if (room.tile[y][x] != 0)
 			{
 				drawImage(brickImage, x * TILE_SIZE, y * TILE_SIZE);
 			}

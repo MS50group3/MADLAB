@@ -1,17 +1,29 @@
+/*headers*/
 #include <stdio.h>
 #include <stdlib.h>
+#include <SDL2/SDL.h>
+#include <stdbool.h>
+#include <SDL2/SDL_image.h>
 
+/* definitions */
+#define SCREEN_WIDTH  800
+#define SCREEN_HEIGHT 600
+#define TILE_SIZE    32
 #define ROOM_X 25
 #define ROOM_Y 24
-#define RESET -1
 
 typedef struct roomGrid
 {
-	int **roomArray;
+	char **roomArray;
 }roomGrid;
 
+
+//void HandleEvent(SDL_Event event, SDL_Rect rcSprite, SDL_Rect rcSrc);
 void makeRoom(roomGrid *rg, FILE *fp);
 void printArray(roomGrid *rg);
+//void draw(SDL_Renderer *renderer, SDL_Rect rcSprite, SDL_Rect rcSrc, SDL_Window *window, SDL_Rect rcBrick, roomGrid *rg);
+//void run();
+
 
 
 int main(int argc, char *argv[])
@@ -31,20 +43,21 @@ int main(int argc, char *argv[])
 
 	makeRoom(rg, fp);
 	fclose(fp);
-	printArray(rg);
 
+	//run(rg);
+	printArray(rg);
 
 	return 0;
 }
 
 
-// (rg -> roomArray)[ROOM_X] = calloc(ROOM_Y +1, sizeof(*int));
+// (rg -> roomArray)[ROOM_X] = calloc(ROOM_Y +1, sizeof(char*));
 
 void makeRoom(roomGrid *rg, FILE *fp)
 {
 	rg -> roomArray = 0;
 
-	rg -> roomArray = (int **)calloc((ROOM_Y) + 1, sizeof(int *));
+	rg -> roomArray = (char **)calloc((ROOM_Y) + 1, sizeof(char *));
 	if (rg -> roomArray == NULL)
 	{
 		fprintf(stderr, "No memory available.\n");
@@ -53,7 +66,7 @@ void makeRoom(roomGrid *rg, FILE *fp)
 
 	for(int i = 0; i <= ROOM_Y; i++)
 	{
-		rg -> roomArray[i] = (int *)calloc((ROOM_X)+1, sizeof(int));
+		rg -> roomArray[i] = (char *)calloc((ROOM_X)+1, sizeof(char));
 		if (rg -> roomArray[i] ==  NULL)
 		{
 			fprintf(stderr, "No memory available.\n");
@@ -61,64 +74,37 @@ void makeRoom(roomGrid *rg, FILE *fp)
 		}
 	}
 
-	for (int i = 0; i < ROOM_Y; i++)
-	{
-		for (int j = 0; j < ROOM_X; j++)
-		{
-			printf("%2d", rg -> roomArray[i][j]);
-		}
-		printf("\n");
-	}
-		printf("\n");
+	//rg -> roomArray[ROOM_X] = calloc(ROOM_Y +1, sizeof(char*));
 
 
-
-// for (int i = 0, j = 0, c = 0; j <= ROOM_X && i <= ROOM_Y; j++)
-// 	{
-// 		c = fgets(*rg -> roomArray, 1, fp);
-
-// 		(c == '\n') ? (j = RESET, i++): (rg -> roomArray[i][j] = c);
-// 	}
 
 	for (int i = 0; i < ROOM_Y; i++)
 	{
 		for (int j = 0; j < ROOM_X; j++)
 		{
-			fscanf(fp, "%1d", &rg -> roomArray[i][j]);
+			fscanf(fp, "%c", &rg -> roomArray[i][0]);
 		}
-		
 	}
+	
 
-
-	// for (int i = 0; i < ROOM_Y; i++)
-	// {
-	// 	for (int j = 0; j < ROOM_X; j++)
-	// 	{
-	// 		&rg -> roomArray[i][j] = fgets(rg -> roomArray, ROOM_X,fp);
-	// 	}
-	// }
+	for (int i = 0; i < ROOM_Y; i++)
+	{
+		for (int j = 0; j < ROOM_X; j++)
+		{
+			printf("%2c", rg -> roomArray[i][j]);
+		}
+		printf("\n");
+	}
 }
-
 
 void printArray(roomGrid *rg)
 {
-	for (int i = 0; i < ROOM_Y; i++)
+	for (int i = 0; i <= ROOM_Y; i++)
 	{
-		for (int j = 0; j < ROOM_X; j++)
+		for (int j = 0; j <= ROOM_X; j++)
 		{
-			printf("%2d", rg -> roomArray[i][j]);
+			printf("%2c", rg -> roomArray[i][j]);
 		}
 		printf("\n");
 	}
 }
-
-
-
-// for (int i = 0; i < rg -> ROOM_Y; i++)
-// {
-// 	for (int j = 0; j < rg -> ROOM_X; j++)
-// 	{
-// 		fscanf(fp, "%s", ROOM_X);
-// 	}
-// }
-
