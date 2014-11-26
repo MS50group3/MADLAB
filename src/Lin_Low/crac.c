@@ -17,12 +17,14 @@ int main(int argc, char **argv)
 {
 	run();
 }
+
 void run()
 {
 	SDL_Window *window = NULL;
 	SDL_Rect rcSprite, rcSrc;
 	//SDL_Surface* screenSurface = NULL;
 
+	//JUST CREATE A WINDOW
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
 	{
 		fprintf(stderr, "\nUnable to initialise SDL:  %s\n",
@@ -44,14 +46,16 @@ void run()
 		}
 	}
 
-	atexit(SDL_Quit);
-
+	// Create a renderer
 	SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 	
+	// DRAW SOMETHING
 	draw(renderer, rcSprite, rcSrc, window);
 	
+	//atexit(SDL_Quit);
 	SDL_Quit();
 }
+
 
 void draw(SDL_Renderer *renderer, SDL_Rect rcSprite, SDL_Rect rcSrc, SDL_Window *window)
 {
@@ -61,11 +65,12 @@ void draw(SDL_Renderer *renderer, SDL_Rect rcSprite, SDL_Rect rcSrc, SDL_Window 
 	// int colorkey;
 
 	/* making dat dere background */
-	background = SDL_LoadBMP("pokemonlab.bmp");
+	background = SDL_LoadBMP("../../gfx/pokemonlab.bmp");
 	backtex   = SDL_CreateTextureFromSurface(renderer, background);
 	SDL_FreeSurface (background);
+
 	/* I have created life itself yo */                                                        
-	sprite     = SDL_LoadBMP("prof2.bmp");
+	sprite     = SDL_LoadBMP("../../gfx/prof2.bmp");
 	spritetex   = SDL_CreateTextureFromSurface(renderer, sprite);
 	SDL_FreeSurface (sprite);
 
@@ -87,9 +92,11 @@ void draw(SDL_Renderer *renderer, SDL_Rect rcSprite, SDL_Rect rcSrc, SDL_Window 
 
 		if (SDL_PollEvent(&event))  //If there is an event
 		{
-			// HandleEvent(event, rcSrc, rcSprite); //Run the HandleEvent function
+			//HandleEvent(event, rcSrc, rcSprite); //Run the HandleEvent function
 			switch (event.type) 
-				{
+				{	case SDL_QUIT:
+						SDL_Quit();
+
 					case SDL_KEYDOWN:
 					switch (event.key.keysym.sym)     
 					{
@@ -130,10 +137,13 @@ void draw(SDL_Renderer *renderer, SDL_Rect rcSprite, SDL_Rect rcSrc, SDL_Window 
 	SDL_RenderPresent(renderer);
 	}
 
-
-	// SDL_Delay(5000);
+	//SDL_Delay(5000);
 	SDL_DestroyTexture(backtex);
 	SDL_DestroyTexture(spritetex);
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
+
+	//atexit(SDL_Quit);
 }
+
+
