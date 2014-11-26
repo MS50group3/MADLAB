@@ -108,7 +108,7 @@ void makeRoom(roomGrid *rg, FILE *fp)
 	{
 		for (int j = 0; j < ROOM_X; j++)
 		{
-			if(fscanf(fp, "%1d", &rg -> arr[i][j]));
+			fscanf(fp, "%1d", &rg -> arr[i][j]);
 			/*else
 			{
 				fprintf(stderr, "Invalid array size.\n");
