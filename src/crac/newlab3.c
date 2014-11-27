@@ -51,7 +51,7 @@ void freeArray(roomGrid *rg);
 void possible(roomGrid *rg, progress *pz);
 int action(roomGrid *rg, progress *pz);
 void interactProbe(roomGrid *rg, progress *pz);
-
+void move(roomGrid *rg, progress *pz);
 
 int main(int argc, char *argv[])
 {
@@ -184,6 +184,11 @@ void draw(SDL_Renderer *renderer, SDL_Window *window, roomGrid *rg, progress *pz
 	rg -> rcSprite.w = TILE_SIZE;
 	rg -> rcSprite.h = TILE_SIZE; 
 
+	rg -> rcObj.x = 32;  
+	rg -> rcObj.y = 0;
+	rg -> rcObj.w = TILE_SIZE;
+	rg -> rcObj.h = TILE_SIZE;
+
 	/* set sprite "destination" position - as called by RenderCopy, choose which to be */
 	// rg -> rcSrc1.x = 0;
 	// rg -> rcSrc1.y = 0;
@@ -220,47 +225,19 @@ void draw(SDL_Renderer *renderer, SDL_Window *window, roomGrid *rg, progress *pz
 						break;
 					case SDLK_LEFT:
 						rg -> direction = left;
-						if (!((rg -> rcSprite.x) % TILE_SIZE))
-						{
-							possible(rg, pz);
-						}
-						 else
-						{
-						 	rg -> rcSprite.x -= 8;
-						}
+						(!((rg -> rcSprite.x) % TILE_SIZE)) ? possible(rg, pz): move(rg, pz);
 						break;
 					case SDLK_RIGHT:
 						rg -> direction = right;
-						if (!((rg -> rcSprite.x) % TILE_SIZE))
-						{
-							possible(rg, pz);
-						}
-						else
-						{
-							rg -> rcSprite.x += 8;
-						}
+						(!((rg -> rcSprite.x) % TILE_SIZE)) ? possible(rg, pz): move(rg, pz);
 						break;
 					case SDLK_UP:
 						rg -> direction = up;
-						if (!((rg -> rcSprite.y) % TILE_SIZE))
-						{
-							possible(rg, pz);
-						}
-						else
-						{
-							rg -> rcSprite.y -= 8;
-						}
+						(!((rg -> rcSprite.x) % TILE_SIZE)) ? possible(rg, pz): move(rg, pz);
 						break;
 					case SDLK_DOWN:
 						rg -> direction = down;
-						if (!((rg -> rcSprite.y) % TILE_SIZE))
-						{
-							possible(rg, pz);
-						}
-						else
-						{
-							rg -> rcSprite.y += 8;
-						}
+						(!((rg -> rcSprite.x) % TILE_SIZE)) ? possible(rg, pz): move(rg, pz);
 						break;
 					case SDLK_SPACE:
 						interactProbe(rg, pz);
@@ -375,14 +352,11 @@ void draw(SDL_Renderer *renderer, SDL_Window *window, roomGrid *rg, progress *pz
 
 	    /*draw objects */
 
-  rg -> rcObj.x = 32;  
-  rg -> rcObj.y = 0;
-  rg -> rcObj.w = 150;
-  rg -> rcObj.h = 150;
-  SDL_RenderCopy(renderer, backtex, &rg -> rcSrc1, &rg -> rc_Block);
-
-
-
+		// rg -> rcObj.x = 32;  
+		// rg -> rcObj.y = 0;
+		// rg -> rcObj.w = TILE_SIZE;
+		// rg -> rcObj.h = TILE_SIZE;
+		// SDL_RenderCopy(renderer, backtex, &rg -> rcSrc1, &rg -> rc_Block);
 
 		/*SDL_RenderClear(renderer);
 
@@ -409,6 +383,7 @@ void draw(SDL_Renderer *renderer, SDL_Window *window, roomGrid *rg, progress *pz
 				}
 			}
 		}*/
+	//SDL_RenderCopy(renderer, backtex, &rg -> rcSrc1, &rg -> rc_Block);
 
 		/* RenderClear to wipe framebuffer, RenderCopy to compose final framebuffer, RenderPresent puts on screen*/
 	SDL_RenderCopy(renderer, spritetex, &rg -> rcObj, &rg -> rcSprite);		
@@ -423,6 +398,34 @@ void draw(SDL_Renderer *renderer, SDL_Window *window, roomGrid *rg, progress *pz
 	SDL_DestroyWindow(window);
 }
 
+
+void move(roomGrid *rg, progress *pz)
+{
+	switch(rg -> direction)
+	{		
+		case(left):		(rg -> rcObj.x == 0) ? (rg -> rcObj.x = 32): (rg -> rcObj.x = 0);
+						rg -> rcSprite.x -= 8;
+						break;
+
+		case(right):	(rg -> rcObj.x == 0) ? (rg -> rcObj.x = 32): (rg -> rcObj.x = 0);
+						rg -> rcSprite.x += 8;
+						break;
+
+		case(up):		(rg -> rcObj.x == 0) ? (rg -> rcObj.x = 32): (rg -> rcObj.x = 0);
+						rg -> rcSprite.y -= 8;
+						break;
+
+		case(down):		(rg -> rcObj.x == 0) ? (rg -> rcObj.x = 32): (rg -> rcObj.x = 0);
+						rg -> rcSprite.y += 8;					
+						break;
+
+		default:		fprintf(stderr, "Problem probing!\n");
+						exit(6);
+						break;
+	}
+}
+
+
 void possible(roomGrid *rg, progress *pz)
 {
 	rg -> xa = (rg -> rcSprite.x) / TILE_SIZE;
@@ -436,7 +439,7 @@ void possible(roomGrid *rg, progress *pz)
 						{
 							if(rg -> arr[rg -> yb][rg -> xa - 1] == 0)
 							{
-								rg -> rcSprite.x -= 8;
+								move(rg, pz);
 							}
 						};
 						break;
@@ -445,7 +448,7 @@ void possible(roomGrid *rg, progress *pz)
 						{
 							if(rg -> arr[rg -> yb + 1][rg -> xa] == 0)
 							{
-								rg -> rcSprite.y += 8;
+								move(rg, pz);
 							}
 						};
 						break;
@@ -454,7 +457,7 @@ void possible(roomGrid *rg, progress *pz)
 						{
 							if(rg -> arr[rg -> ya][rg -> xb + 1] == 0)
 							{
-								rg -> rcSprite.x += 8;
+								move(rg, pz);
 							}
 						};
 						break;
@@ -463,7 +466,7 @@ void possible(roomGrid *rg, progress *pz)
 						{
 							if(rg -> arr[rg -> ya - 1][rg -> xa] == 0)
 							{
-								rg -> rcSprite.y -= 8;
+								move(rg, pz);
 							}
 						};
 						break;
