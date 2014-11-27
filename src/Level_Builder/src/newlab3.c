@@ -31,10 +31,11 @@ int main(int argc, char *argv[])
 
 void makeRoom(roomGrid *rg, FILE *fp)
 {	
-	// rg = roomgrid
+	
 	rg -> arr = 0;
 
 	rg -> arr = (int **)calloc((ROOM_Y) + 1, sizeof(int *));
+	
 	if (rg -> arr == NULL)
 	{
 		fprintf(stderr, "No memory available.\n");
@@ -164,7 +165,7 @@ void draw(SDL_Renderer *renderer, SDL_Window *window, roomGrid *rg, progress *pz
 
 				case SDL_QUIT:
 					exit(0);
-					
+
 				case SDL_KEYDOWN:
 				switch (event.key.keysym.sym)     
 				{

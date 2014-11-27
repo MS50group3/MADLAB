@@ -7,10 +7,10 @@
 
 /* definitions */
 #define SCREEN_WIDTH  800
-#define SCREEN_HEIGHT 640
+#define SCREEN_HEIGHT 660
 #define TILE_SIZE    32
 #define ROOM_X 25
-#define ROOM_Y 20
+#define ROOM_Y 25
 #define SPRITE_VEL 5
 
 typedef enum compass{up = 0, right = 1, down = 2, left = 3/*, space = 4*/}compass;
@@ -23,9 +23,9 @@ typedef struct roomGrid
 	compass direction;
 	SDL_Rect rcSprite, rcSrc1, rcSrc2, rcSrc3, rc_Block;
 	int xa;
+	int ya;
 	int xb;
 	int yb;
-	int ya;
 	int xc;
 	int yc;
 	int vertd;
