@@ -30,7 +30,8 @@ int main(int argc, char *argv[])
 
 
 void makeRoom(roomGrid *rg, FILE *fp)
-{
+{	
+	// rg = roomgrid
 	rg -> arr = 0;
 
 	rg -> arr = (int **)calloc((ROOM_Y) + 1, sizeof(int *));
@@ -63,7 +64,6 @@ void makeRoom(roomGrid *rg, FILE *fp)
 		}
 	}
 }
-
 
 void run(roomGrid *rg, progress *pz)
 {
@@ -155,13 +155,16 @@ void draw(SDL_Renderer *renderer, SDL_Window *window, roomGrid *rg, progress *pz
 
 	while (gameRunning)
 	{
-    	SDL_Event event; //call SDL_Event
+    	SDL_Event event; 
 
-		if (SDL_PollEvent(&event))  //If there is an event
+		if (SDL_PollEvent(&event))  
 		{
-			// HandleEvent(event, rcSrc, rcSprite); //Run the HandleEvent function
 			switch (event.type) 
-			{
+			{	
+
+				case SDL_QUIT:
+					exit(0);
+					
 				case SDL_KEYDOWN:
 				switch (event.key.keysym.sym)     
 				{
@@ -233,7 +236,6 @@ void draw(SDL_Renderer *renderer, SDL_Window *window, roomGrid *rg, progress *pz
 
 
 		SDL_RenderClear(renderer);
-
 
 
 		for (int i = 0; i <= ROOM_Y; i++)
@@ -321,7 +323,6 @@ void possible(roomGrid *rg, progress *pz)
 						break;
 	 }
 }
-
 
 void interactProbe(roomGrid *rg, progress *pz)
 {
