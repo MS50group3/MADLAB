@@ -22,7 +22,7 @@ typedef struct roomGrid
 {
 	int **arr;
 	compass direction;
-	SDL_Rect rcSprite, rcSrc1, rcObj, rcSrc3, rc_Block;
+	SDL_Rect rcSprite, rcSrc1, rcSrc2, rcSrc3, rc_Block;
 	int xa;
 	int xb;
 	int yb;
@@ -107,12 +107,12 @@ void makeRoom(roomGrid *rg, FILE *fp)
 	{
 		for (int j = 0; j < ROOM_X; j++)
 		{
-			if(fscanf(fp, "%1d", &rg -> arr[i][j]) == 1);
-			else
+			fscanf(fp, "%1d", &rg -> arr[i][j]);
+			/*else
 			{
 				fprintf(stderr, "Invalid array size.\n");
 				exit(5);
-			}
+			}*/
 		}
 	}
 }
@@ -131,11 +131,11 @@ void run(roomGrid *rg, progress *pz)
 	}
 	else
 	{
-		window = SDL_CreateWindow ("MADLAB!",         //window name
+		window = SDL_CreateWindow ("MADLAB Fuck Yeah!",         //window name
 								 SDL_WINDOWPOS_UNDEFINED,       //x-axis on the screen coordinate
 								 SDL_WINDOWPOS_UNDEFINED,       //y-axis screen coordinate
 								 SCREEN_WIDTH, SCREEN_HEIGHT,   //size of the window
-								 SDL_WINDOW_SHOWN);         //make the window resizeable       
+								 SDL_WINDOW_RESIZABLE);         //make the window resizeable       
 
 		if (window == NULL) 
 		{
@@ -169,7 +169,7 @@ void draw(SDL_Renderer *renderer, SDL_Window *window, roomGrid *rg, progress *pz
 	pz -> puzzle_1 = false;
 
 	/* making dat dere background */
-	background = IMG_Load("lab1sheet.png");
+	background = IMG_Load("test_array.png");
 	backtex = SDL_CreateTextureFromSurface(renderer, background);
 	SDL_FreeSurface (background);
 
@@ -185,18 +185,20 @@ void draw(SDL_Renderer *renderer, SDL_Window *window, roomGrid *rg, progress *pz
 	rg -> rcSprite.h = TILE_SIZE; 
 
 	/* set sprite "destination" position - as called by RenderCopy, choose which to be */
-	// rg -> rcSrc1.x = 0;
-	// rg -> rcSrc1.y = 0;
-	// rg -> rcSrc1.w = TILE_SIZE;
-	// rg -> rcSrc1.h = TILE_SIZE;
-	// rg -> rcSrc2.x = 32;
-	// rg -> rcSrc2.y = 0;
-	// rg -> rcSrc2.w = TILE_SIZE;
-	// rg -> rcSrc2.h = TILE_SIZE;
-	// rg -> rcSrc3.x = 64;
-	// rg -> rcSrc3.y = 0;
-	// rg -> rcSrc3.w = TILE_SIZE;
-	// rg -> rcSrc3.h = TILE_SIZE;
+	rg -> rcSrc1.x = 0;
+	rg -> rcSrc1.y = 0;
+	rg -> rcSrc1.w = TILE_SIZE;
+	rg -> rcSrc1.h = TILE_SIZE;
+
+	rg -> rcSrc2.x = 32;
+	rg -> rcSrc2.y = 0;
+	rg -> rcSrc2.w = TILE_SIZE;
+	rg -> rcSrc2.h = TILE_SIZE;
+
+	rg -> rcSrc3.x = 64;
+	rg -> rcSrc3.y = 0;
+	rg -> rcSrc3.w = TILE_SIZE;
+	rg -> rcSrc3.h = TILE_SIZE;
 
 
 	rg -> rc_Block.w = TILE_SIZE;
@@ -220,47 +222,19 @@ void draw(SDL_Renderer *renderer, SDL_Window *window, roomGrid *rg, progress *pz
 						break;
 					case SDLK_LEFT:
 						rg -> direction = left;
-						if (!((rg -> rcSprite.x) % TILE_SIZE))
-						{
-							possible(rg, pz);
-						}
-						 else
-						{
-						 	rg -> rcSprite.x -= 8;
-						}
+						(!((rg -> rcSprite.x) % TILE_SIZE)) ? possible(rg, pz) : rg -> rcSprite.x -= 8;
 						break;
 					case SDLK_RIGHT:
 						rg -> direction = right;
-						if (!((rg -> rcSprite.x) % TILE_SIZE))
-						{
-							possible(rg, pz);
-						}
-						else
-						{
-							rg -> rcSprite.x += 8;
-						}
+						(!((rg -> rcSprite.x) % TILE_SIZE)) ? possible(rg, pz) : rg -> rcSprite.x += 8;
 						break;
 					case SDLK_UP:
 						rg -> direction = up;
-						if (!((rg -> rcSprite.y) % TILE_SIZE))
-						{
-							possible(rg, pz);
-						}
-						else
-						{
-							rg -> rcSprite.y -= 8;
-						}
+						(!((rg -> rcSprite.x) % TILE_SIZE)) ? possible(rg, pz) : rg -> rcSprite.y -= 8;
 						break;
 					case SDLK_DOWN:
 						rg -> direction = down;
-						if (!((rg -> rcSprite.y) % TILE_SIZE))
-						{
-							possible(rg, pz);
-						}
-						else
-						{
-							rg -> rcSprite.y += 8;
-						}
+						(!((rg -> rcSprite.x) % TILE_SIZE)) ? possible(rg, pz) : rg -> rcSprite.y += 8;
 						break;
 					case SDLK_SPACE:
 						interactProbe(rg, pz);
@@ -272,129 +246,25 @@ void draw(SDL_Renderer *renderer, SDL_Window *window, roomGrid *rg, progress *pz
 
 		/* collide with edges of screen */
 		if (rg -> rcSprite.x <= 0)
-		{
 			rg -> rcSprite.x = 0;
-		}
 		if (rg -> rcSprite.x >= SCREEN_WIDTH - TILE_SIZE) 
-		{
 			rg -> rcSprite.x = SCREEN_WIDTH - TILE_SIZE;
-		}
 
 		if (rg -> rcSprite.y <= 0)
-		{
-			rg -> rcSprite.y = 1;
-		}
-		if (rg -> rcSprite.y >= SCREEN_HEIGHT - TILE_SIZE)
-		{ 
+			rg -> rcSprite.y = 0;
+		if (rg -> rcSprite.y >= SCREEN_HEIGHT - TILE_SIZE) 
 			rg -> rcSprite.y = SCREEN_HEIGHT - TILE_SIZE;
-		}
-
 
 		SDL_RenderClear(renderer);
 
-	    for (int i = 0; i <= ROOM_Y; i++)
-	    {
-			for (int j = 0; j < ROOM_X; j++)
-			{
-				rg -> rc_Block.x = (j * TILE_SIZE); //set the array location to the tile size and Block size
-				rg -> rc_Block.y = (i * TILE_SIZE);
-
-				//first ground tile does not go in a loop. It populates everything so just draw it. You also free up 0!
-				rg -> rcSrc1.x = 41;
-				rg -> rcSrc1.y =  0;
-				rg -> rcSrc1.w = 32;
-				rg -> rcSrc1.h = 29;
-				SDL_RenderCopy(renderer, backtex, &rg -> rcSrc1, &rg -> rc_Block);
-				/*if (rg -> arr[i][j] == 0)
-				{
-				  rg -> rcSrc1.x = 11;
-				  rg -> rcSrc1.y = 0;
-				  rg -> rcSrc1.w = 30;
-				  rg -> rcSrc1.h = 28;
-				  SDL_RenderCopy(renderer, backtex, &rg -> rcSrc1, &rg -> rc_Block);
-				}*/
-				if (rg -> arr[i][j] == 1)
-				{
-					rg -> rcSrc1.x = 71;
-					rg -> rcSrc1.y = 81;
-					rg -> rcSrc1.w = 45;
-					rg -> rcSrc1.h = 34;
-					SDL_RenderCopy(renderer, backtex, &rg -> rcSrc1, &rg -> rc_Block);
-				}
-				if (rg -> arr[i][j] == 2)
-				{
-					rg -> rcSrc1.x = 73;
-					rg -> rcSrc1.y =  0;
-					rg -> rcSrc1.w = TILE_SIZE;
-					rg -> rcSrc1.h = 29;
-					SDL_RenderCopy(renderer, backtex, &rg -> rcSrc1, &rg -> rc_Block);
-				}
-				if (rg -> arr[i][j] == 3)
-				{
-					rg -> rcSrc1.x = 121;
-					rg -> rcSrc1.y =  56;
-					rg -> rcSrc1.w =  76;
-					rg -> rcSrc1.h =  59;
-					SDL_RenderCopy(renderer, backtex, &rg -> rcSrc1, &rg -> rc_Block);
-				}
-				if (rg -> arr[i][j] == 4)
-				{
-					rg -> rcSrc1.x = 207;
-					rg -> rcSrc1.y =  70;
-					rg -> rcSrc1.w =  61;
-					rg -> rcSrc1.h =  41;
-					SDL_RenderCopy(renderer, backtex, &rg -> rcSrc1, &rg -> rc_Block);
-				}
-				if (rg -> arr[i][j] == 5)
-				{
-					rg -> rcSrc1.x = 279;
-					rg -> rcSrc1.y =   8;
-					rg -> rcSrc1.w =  55;
-					rg -> rcSrc1.h = 127;
-					SDL_RenderCopy(renderer, backtex, &rg -> rcSrc1, &rg -> rc_Block);
-				}
-				     if (rg -> arr[i][j] == 6)
-				{
-					rg -> rcSrc1.x = 141;
-					rg -> rcSrc1.y =   0;
-					rg -> rcSrc1.w = TILE_SIZE;
-					rg -> rcSrc1.h = TILE_SIZE;
-					SDL_RenderCopy(renderer, backtex, &rg -> rcSrc1, &rg -> rc_Block);
-				}
-				     if (rg -> arr[i][j] == 7)
-				{
-					rg -> rcSrc1.x = 279;
-					rg -> rcSrc1.y =   8;
-					rg -> rcSrc1.w =  55;
-					rg -> rcSrc1.h = 127;
-					SDL_RenderCopy(renderer, backtex, &rg -> rcSrc1, &rg -> rc_Block);
-				}
-	    	}
-	    } //end of for loop
-
-
-	    /*draw objects */
-
-  rg -> rcObj.x = 32;  
-  rg -> rcObj.y = 0;
-  rg -> rcObj.w = 150;
-  rg -> rcObj.h = 150;
-  SDL_RenderCopy(renderer, backtex, &rg -> rcSrc1, &rg -> rc_Block);
-
-
-
-
-		/*SDL_RenderClear(renderer);
-
-
-
-		for (int i = 0; i < ROOM_Y; i++)
+		for (int i = 0; i <= ROOM_Y; i++)
 		{
 			for (int j = 0; j < ROOM_X; j++)
 			{
 				
 				rg -> rc_Block.x = (j * TILE_SIZE); //set the array location to the tile size and Block size
 				rg -> rc_Block.y = (i * TILE_SIZE);
+
 				if (rg -> arr[i][j] == 0)
 				{
 					SDL_RenderCopy(renderer, backtex, &rg -> rcSrc2, &rg -> rc_Block);
@@ -408,13 +278,12 @@ void draw(SDL_Renderer *renderer, SDL_Window *window, roomGrid *rg, progress *pz
 					SDL_RenderCopy(renderer, backtex, &rg -> rcSrc3, &rg -> rc_Block);
 				}
 			}
-		}*/
+		}
 
 		/* RenderClear to wipe framebuffer, RenderCopy to compose final framebuffer, RenderPresent puts on screen*/
-	SDL_RenderCopy(renderer, spritetex, &rg -> rcObj, &rg -> rcSprite);		
-	SDL_RenderPresent(renderer);
+		SDL_RenderCopy(renderer, spritetex, &rg -> rcSrc2, &rg -> rcSprite);
+		SDL_RenderPresent(renderer);
 	}
-
 
 	// SDL_Delay(5000);
 	SDL_DestroyTexture(backtex);
@@ -422,6 +291,7 @@ void draw(SDL_Renderer *renderer, SDL_Window *window, roomGrid *rg, progress *pz
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
 }
+
 
 void possible(roomGrid *rg, progress *pz)
 {
@@ -459,7 +329,7 @@ void possible(roomGrid *rg, progress *pz)
 						};
 						break;
 
-		case(up):		if((rg -> arr[rg -> ya-1][rg -> xa]) == (rg -> arr[rg -> ya-1][rg -> xb]))
+		case(up):		if((rg -> arr[rg -> ya - 1][rg -> xa]) == (rg -> arr[rg -> ya - 1][rg -> xb]))
 						{
 							if(rg -> arr[rg -> ya - 1][rg -> xa] == 0)
 							{
