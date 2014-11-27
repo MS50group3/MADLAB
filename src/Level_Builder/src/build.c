@@ -22,6 +22,26 @@ typedef struct map
 	int width, height;
 } Map;
 
+void save(int array[ROOM_Y][ROOM_X]){
+
+	FILE *of;
+    of = fopen("../src/Your_level.txt","w");
+    if(of == NULL) {
+        printf("ERROR opening file...exiting\n");
+	}
+
+    for (int i = 0; i < ROOM_Y; ++i)
+    {
+    	for (int j = 0; j < ROOM_X; ++j)
+    	{
+    		fprintf(of, "%d ", array[i][j]);
+    	} 
+
+    	fprintf(of,"\n");
+    }
+
+    fclose(of);
+}
 
 
 
@@ -116,6 +136,10 @@ int main(void){
 					{
 						case SDLK_q:
 							running = false;
+						break;
+
+						case SDLK_s:
+							save(array);
 						break;
 
 						default:
@@ -246,6 +270,7 @@ int main(void){
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
     SDL_Quit();
+
 
 }
 
