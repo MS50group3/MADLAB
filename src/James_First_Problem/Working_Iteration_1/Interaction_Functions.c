@@ -92,10 +92,10 @@ void James_SDL_Events(SDL_Simplewin *sw, int *skip_checker)
    {
        switch (event.type){
           case SDL_QUIT:
-          sw->finished = finished;
+          sw->finished = 1;
           case SDL_MOUSEBUTTONDOWN:
           case SDL_KEYDOWN:
-            *skip_checker = on;
+            *skip_checker = 1;
        }
     }
 }
@@ -105,7 +105,7 @@ void print_text(SDL_Simplewin *sw, char *instruction)
 {
   int refresh_counter = 0, skip_checker = 0;
 	SDL_Surface* text_one = NULL;
-  	SDL_Texture* image;
+  SDL_Texture* image;
 
 	//The following few lines are used to create a filename to get the .bmp to print to screen.
 	char prefix[LENGTH_PREFIX] = "Instructions/";
@@ -118,7 +118,7 @@ void print_text(SDL_Simplewin *sw, char *instruction)
 
 	//Loads image in and checks it.
 	text_one = SDL_LoadBMP( filename );
-  	image = SDL_CreateTextureFromSurface(sw->renderer,text_one);
+  image = SDL_CreateTextureFromSurface(sw->renderer,text_one);
 
 	if( text_one == NULL )
 	{
@@ -127,16 +127,16 @@ void print_text(SDL_Simplewin *sw, char *instruction)
 
 	//Update the surface and apply the image.
 	SDL_RenderCopy(sw->renderer, image, NULL, NULL);
-  	SDL_RenderPresent(sw->renderer);
+  SDL_RenderPresent(sw->renderer);
 
 	//Wait the sleep time and free the malloc for the filename.
-  	look_for_action(&refresh_counter, sw, &skip_checker);
+  look_for_action(&refresh_counter, sw, &skip_checker);
 
 	free(filename);
 }
 
 //Just a list of instructions to be printed.
-void get_instructions(char *instructions_list[NUM_INSTRUCTIONS_ONE + NUM_INSTRUCTIONS_TWO])
+void get_instructions(char *instructions_list[NUM_INSTRUCTIONS])
 {
   //First block of instructions
   instructions_list[0] = "fan_on_wall";
@@ -157,7 +157,7 @@ void input_screen(SDL_Simplewin *sw, wrong_right *correct_indicator)
     SDL_Surface *text, *text_one;
     SDL_Rect drcrect;
     char input_string[MAX_INPUT_CHARS], possible_answer[MAX_INPUT_CHARS];
-    int input_index = 0, finish_checker = unfinished;
+    int input_index = 0, finish_checker = 0;
 
     //clear_screen(sw);
     initialise_input_string(input_string);
@@ -170,8 +170,8 @@ void input_screen(SDL_Simplewin *sw, wrong_right *correct_indicator)
     }
 
     image_one = SDL_CreateTextureFromSurface(sw->renderer, text_one);
-    TTF_Font *font = TTF_OpenFont("opendisplay.ttf", 200);
-    SDL_Color fg = { 0, 0, 0, 0};
+    TTF_Font *font = TTF_OpenFont("basictitlefont.ttf", 200);
+    SDL_Color fg = { 255, 255, 255, 255 };
 
     do{
 
@@ -184,10 +184,6 @@ void input_screen(SDL_Simplewin *sw, wrong_right *correct_indicator)
         SDL_RenderCopy(sw->renderer, image_one, NULL, NULL);
         SDL_RenderCopy(sw->renderer, image, NULL, &drcrect);
         SDL_RenderPresent(sw->renderer);
-
-        if(input_index == CHARS_IN_ANS + 1){
-          finish_checker = finished;
-        }
 
     }while(input_index < MAX_INPUT_CHARS && !finish_checker);
 
@@ -202,11 +198,11 @@ void create_answer_for_checking(char possible_answer[MAX_INPUT_CHARS], char inpu
 {
   int i;
 
-  for(i = 0; i < CHARS_IN_ANS; ++i){
+  for(i = 0; i < 13; ++i){
         possible_answer[i] = input_string[i];
     }
 
-  possible_answer[CHARS_IN_ANS] = '\0';
+  possible_answer[13] = '\0';
 }
 
 void initialise_input_string(char input_string[MAX_INPUT_CHARS])
@@ -220,10 +216,10 @@ void initialise_input_string(char input_string[MAX_INPUT_CHARS])
 
 void initialise_drcrect(SDL_Rect *drcrect, int input_index)
 {
-  drcrect->x = RECT_X;
-  drcrect->y = RECT_Y;
-  drcrect->w = RECT_W * (input_index + 1);
-  drcrect->h = RECT_H;
+  drcrect->x = 200;
+  drcrect->y = 100;
+  drcrect->w = 400 * (input_index + 1);
+  drcrect->h = 70;
 }
 
 void check_user_variable_input(SDL_Simplewin *sw, char *input_string, int *input_index, int *finish_checker)
@@ -236,7 +232,7 @@ void check_user_variable_input(SDL_Simplewin *sw, char *input_string, int *input
   while (gameover != INPUT_FINISHED){                                                                 //to make screen stay on.
     while( SDL_PollEvent( &event ) ){                                                                 //checks for events.
       if(event.type == SDL_KEYDOWN){                                                                  //checks for key being pressed
-        char c = event.key.keysym.sym;                                                                //if the key is pressed assigns character
+        char c = event.key.keysym.sym;                                                              //if the key is pressed assigns character
         if( (c >= 'a' && c <= 'z') || (c == ' ' || c == '=' || c == ',' || c == '.' ) ){
               if(c == ','){
                 input_string[*input_index] = '<';
@@ -255,7 +251,7 @@ void check_user_variable_input(SDL_Simplewin *sw, char *input_string, int *input
           gameover = INPUT_FINISHED; 
         }
         else if(c == '\r'){
-          *finish_checker = finished;
+          *finish_checker = 1;
           gameover = INPUT_FINISHED; 
         }
       }
