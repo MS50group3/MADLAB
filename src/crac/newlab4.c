@@ -1,20 +1,11 @@
 /*headers*/
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <SDL2/SDL.h>
 #include <stdbool.h>
-#include <string.h>
 #include <SDL2/SDL_image.h>
-#include <SDL2/SDL_mixer.h>
 
-
-/* definitions */
-// #define SCREEN_WIDTH  800
-// #define SCREEN_HEIGHT 640
-// #define TILE_SIZE    32
-// #define ROOM_X 25
-// #define ROOM_Y 20
-// #define SPRITE_VEL 5
 
 /* definitions */
 #define SCREEN_WIDTH     800
@@ -31,21 +22,33 @@
 #define NUM_REFRESHES     50
 
 
+// /* definitions */
+// #define SCREEN_WIDTH  800
+// #define SCREEN_HEIGHT 640
+// #define TILE_SIZE    32
+// #define ROOM_X 25
+// #define ROOM_Y 20
+// #define SPRITE_VEL 5
+
+
 typedef enum compass{up = 0, right = 1, down = 2, left = 3}compass;
 
 typedef enum tileType{path = 0, obstacle = 1, puz_1 = 2, puz_2 = 3, puz_3 = 4, puz_4 = 5, puz_5 = 6}tileType;
+
+// All info required for windows / renderer & event loop
+struct SDL_Simplewin {
+   SDL_bool finished;
+   SDL_Window *win;
+   SDL_Renderer *renderer;
+   SDL_Surface *surface;
+};
+typedef struct SDL_Simplewin SDL_Simplewin;
 
 typedef struct roomGrid
 {
 	int **arr;
 	compass direction;
 	SDL_Rect rcSprite, rcSrc1, rcObj, rcSrc3, rc_Block;
-	SDL_Window *window;
-	SDL_Renderer *renderer;
-   	SDL_Surface *surface;
-   	SDL_Texture *texture;
-	SDL_bool finished;
-	bool gamerunning;
 	int xa;
 	int xb;
 	int yb;
@@ -53,7 +56,6 @@ typedef struct roomGrid
 	int xc;
 	int yc;
 	int probe;
-	int skip_checker;
 }roomGrid;
 
 typedef struct progress
@@ -66,27 +68,26 @@ typedef struct progress
 }progress;
 
 
-/* prototypes */
-void James_SDL_Init(roomGrid *rg);
-void James_Shit(roomGrid *rg);
-void James_SDL_Events(roomGrid *rg);
-//void James_SDL_SetDrawColour(roomGrid *rg, Uint8 r, Uint8 g, Uint8 b);
-void print_some_text(roomGrid *rg, char *instruction);
-void get_instructions(char *instructions_list[NUM_INSTRUCTIONS]);
-void look_for_action(int *refresh_counter, roomGrid *rg);
-void SDL_QuitChecker(roomGrid *rg);
-
-
 //void HandleEvent(SDL_Event event, SDL_Rect rcSprite, SDL_Rect rcSrc);
 void makeRoom(roomGrid *rg, FILE *fp);
 void printArray(roomGrid *rg, progress *pz);
-void draw(/*SDL_Renderer *renderer,*/ /*SDL_Window *window,*/ roomGrid *rg, progress *pz);
+void draw(SDL_Renderer *renderer, SDL_Window *window, roomGrid *rg, progress *pz);
 void run(roomGrid *rg, progress *pz);
 void freeArray(roomGrid *rg);
 void possible(roomGrid *rg, progress *pz);
 int action(roomGrid *rg, progress *pz);
 void interactProbe(roomGrid *rg, progress *pz);
 void move(roomGrid *rg, progress *pz);
+void James_SDL_Init(SDL_Simplewin *sw);
+void James_Shit(SDL_Simplewin *sw);
+
+
+void James_SDL_Events(SDL_Simplewin *sw, int *skip_checker);
+void James_SDL_SetDrawColour(SDL_Simplewin *sw, Uint8 r, Uint8 g, Uint8 b);
+void print_some_text(SDL_Simplewin *sw, char *instruction);
+void get_instructions(char *instructions_list[NUM_INSTRUCTIONS]);
+void look_for_action(int *refresh_counter, SDL_Simplewin *sw, int *skip_checker);
+void SDL_QuitChecker(SDL_Simplewin *sw, int *skip_checker);
 
 
 int main(int argc, char *argv[])
@@ -115,6 +116,49 @@ int main(int argc, char *argv[])
 	freeArray(rg);
 
 	return 0;
+}
+
+void James_SDL_Init(SDL_Simplewin *sw)
+{
+
+  //Sets up windows and checks to make sure it's set up.
+   if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
+      fprintf(stderr, "\nUnable to initialize SDL:  %s\n", SDL_GetError());
+      SDL_Quit();
+      exit(1);
+   }
+
+   //Puts the finished part of the structure to zero.
+   sw->finished = 0;
+
+   //Makes the window and checks it using the #defined width and height.
+   sw->win= SDL_CreateWindow("Interaction Demo",
+                          SDL_WINDOWPOS_UNDEFINED,
+                          SDL_WINDOWPOS_UNDEFINED,
+                         SCREEN_WIDTH, SCREEN_HEIGHT,
+                          SDL_WINDOW_SHOWN);
+   if(sw->win == NULL){
+      fprintf(stderr, "\nUnable to initialize SDL Window:  %s\n", SDL_GetError());
+      SDL_Quit();
+      exit(1);
+   }
+
+   //This is added in to create a surface to push .bmp files onto.
+   sw->surface = SDL_GetWindowSurface(sw->win);
+
+   //Creates a renderable surface for any pixel drawing/ screen filling.
+   sw->renderer = SDL_GetRenderer(sw->win);
+   if(sw->renderer == NULL){
+      fprintf(stderr, "\nUnable to initialize SDL Renderer:  %s\n", SDL_GetError());
+      SDL_Quit();
+      exit(1);
+   }
+
+   //Set screen to black
+   James_SDL_SetDrawColour(sw, 0, 0, 0);    //Sets colour to black.
+   SDL_RenderClear(sw->renderer);           //Clears the screen of all rendered objects.
+   SDL_RenderPresent(sw->renderer);         //Updates the screen with the objects.
+
 }
 
 
@@ -156,71 +200,52 @@ void makeRoom(roomGrid *rg, FILE *fp)
 
 void run(roomGrid *rg, progress *pz)
 {
-	SDL_Window *window = NULL;
+	//SDL_Window *window = NULL;
 	bool success = true;
-	//rg -> finshed = false;
 
-	if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
-	{
-		fprintf(stderr, "\nUnable to initialise SDL:  %s\n",
-						SDL_GetError());
-		exit(1);
-	}
-	else
-	{
-		window = SDL_CreateWindow ("MADLAB!",         			//window name
-								 SDL_WINDOWPOS_UNDEFINED,       //x-axis on the screen coordinate
-								 SDL_WINDOWPOS_UNDEFINED,       //y-axis screen coordinate
-								 SCREEN_WIDTH, SCREEN_HEIGHT,   //size of the window
-								 SDL_WINDOW_SHOWN);         	//make the window resizeable       
+	// if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
+	// {
+	// 	fprintf(stderr, "\nUnable to initialise SDL:  %s\n",
+	// 					SDL_GetError());
+	// 	exit(1);
+	// }
+	// else
+	// {
+	// 	window = SDL_CreateWindow ("MADLAB!",         			//window name
+	// 							 SDL_WINDOWPOS_UNDEFINED,       //x-axis on the screen coordinate
+	// 							 SDL_WINDOWPOS_UNDEFINED,       //y-axis screen coordinate
+	// 							 SCREEN_WIDTH, SCREEN_HEIGHT,   //size of the window
+	// 							 SDL_WINDOW_SHOWN);         	//make the window resizeable       
 
-		if (window == NULL) 
-		{
-			printf("Could not create window: %s\n", SDL_GetError());
-			exit(1);
+	// 	if (window == NULL) 
+	// 	{
+	// 		printf("Could not create window: %s\n", SDL_GetError());
+	// 		exit(1);
+	// 	}
+	// }
+
+	SDL_Simplewin sw; 
+	James_SDL_Init(&sw);
+
+	if( !(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG)) //Initialize PNG loading ; 
+		{ 
+			printf( "SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError()); success = false; 
+			printf("%d", success);
 		}
-	}
 
-	if(!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG)) //Initialize PNG loading ; 
-	{ 
-		printf( "SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError());
-		success = false; 
-		printf("%d", success);
-	}
+	if( !(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG)) //Initialize PNG loading ; 
+		{ 
+			printf( "SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError()); success = false; 
+			printf("%d", success);
+		}
 
-	if((rg -> renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED)) == NULL)
-	{
-		fprintf(stderr, "\nUnable to initialize SDL Renderer:  %s\n", SDL_GetError());
-		SDL_Quit();
-		exit(1);
-	}
-
-	James_SDL_Init(rg);
-	James_Shit(rg);
-
-	draw(rg, pz);
+	//SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+	James_Shit(&sw);
+	draw(sw.renderer, sw.win, rg, pz);
+	//draw(renderer, window, rg, pz);
 	atexit(SDL_Quit);
 	IMG_Quit();
 	SDL_Quit();
-}
-
-
-void James_SDL_Init(roomGrid *rg)
-{
-/*	//This is added in to create a surface to push .bmp files onto.
-	rg -> surface = SDL_GetWindowSurface(sw -> win);
-
-	//Creates a renderable surface for any pixel drawing/ screen filling.
-	rg -> renderer = SDL_GetRenderer(sw -> win);*/
-
-	
-
-	
-
-	//Set screen to black
-	//James_SDL_SetDrawColour(rg -> window, 0, 0, 0);    //Sets colour to black.
-	//SDL_RenderClear(rg -> renderer);           //Clears the screen of all rendered objects.
-	//SDL_RenderPresent(rg -> renderer);         //Updates the screen with the objects.
 }
 
 
@@ -228,139 +253,53 @@ void James_Shit(roomGrid *rg)
 {
 	//List of instructions to be used for printing.
 	char *instructions_list[NUM_INSTRUCTIONS];
+
+	//Used for looping through the instructions.
 	int i;
-	rg -> finished = 0;
 
 	get_instructions(instructions_list);
 
-	for(i = 0; i < NUM_INSTRUCTIONS; ++i)
-	{
-		print_some_text(rg, instructions_list[i]);
+	for(i = 0; i < NUM_INSTRUCTIONS; ++i){
+		print_some_text(sw, instructions_list[i]);
 	}
 }
 
 
-//Just a list of instructions to be printed.
-void get_instructions(char *instructions_list[NUM_INSTRUCTIONS])
-{
-	instructions_list[0] = "MadLab";
-	instructions_list[1] = "Where_am_I";
-	instructions_list[2] = "looks_like";
-	instructions_list[3] = "door_locked";
-	instructions_list[4] = "shenanigans";
-	instructions_list[5] = "neill_shenanigans";
-	instructions_list[6] = "maybe_if_I";
-	instructions_list[7] = "press_spacebar";
-	instructions_list[8] = "find_neill";
-	instructions_list[9] = "lets_go";
-}
-
-
-//Used to print sets of instructions to the screen.
-void print_some_text(roomGrid *rg, char *instruction)
-{
-	int refresh_counter = 0; 
-	rg -> skip_checker = 0;
-	SDL_Surface* text_one = NULL;
-	SDL_Texture* image;
-
-	//The following few lines are used to create a filename to get the .bmp to print to screen.
-	char prefix[LENGTH_PREFIX] = "Instructions/";
-	char extension[LENGTH_EXTENSION] = ".bmp";
-	char *filename = malloc(strlen(prefix) + strlen(instruction) + strlen(extension));
-
-	strcpy(filename, prefix);
-	strcat(filename, instruction);
-	strcat(filename, extension);
-
-	//Loads image in and checks it.
-	text_one = SDL_LoadBMP(filename);
-	image = SDL_CreateTextureFromSurface(rg -> renderer, text_one);
-
-	if(text_one == NULL)
-	{
-		printf("Unable to load image %s! SDL Error: %s\n", filename, SDL_GetError());
-	}
-
-	//Update the surface and apply the image.
-	SDL_RenderCopy(rg -> renderer, image, NULL, NULL);
-	SDL_RenderPresent(rg -> renderer);
-
-	//Wait the sleep time and free the malloc for the filename.
-	look_for_action(&refresh_counter, rg);
-
-	free(filename);
-}
-
-
-void James_SDL_Events(roomGrid *rg)
+void James_SDL_Events(SDL_Simplewin *sw, int *skip_checker)
 {
    SDL_Event event;
    while(SDL_PollEvent(&event))
-   	{
-       switch (event.type)
-       	{
-         	case SDL_QUIT:
-         		rg -> finished = 1;
-         		break;
-         	case SDL_MOUSEBUTTONDOWN:
-         		break;
-         	case SDL_KEYDOWN:
-         		rg -> skip_checker = 1;
-         		break;
-       	}
+   {
+       switch (event.type){
+          case SDL_QUIT:
+          sw->finished = 1;
+          case SDL_MOUSEBUTTONDOWN:
+          case SDL_KEYDOWN:
+            *skip_checker = 1;
+       }
     }
 }
 
 
-// Trivial wrapper to avoid complexities of renderer & alpha channels
-// void James_SDL_SetDrawColour(SDL_Simplewin *sw, Uint8 r, Uint8 g, Uint8 b)
-// {
-//    SDL_SetRenderDrawColor(sw->renderer, r, g, b, SDL_ALPHA_OPAQUE);
-// }
-
-
-void look_for_action(int *refresh_counter, roomGrid *rg)
-{
-	do
-	{
-		++(*refresh_counter);
-		SDL_Delay(SLEEP_TIME);
-		SDL_QuitChecker(rg);
-	}
-  	while(*refresh_counter < NUM_REFRESHES && !rg -> skip_checker);
-}
-
-void SDL_QuitChecker(roomGrid *rg)
-{
-	James_SDL_Events(rg);
-	if(rg -> finished)
-	{
-		exit(1);
-	}
-}
-
-
-void draw(roomGrid *rg, progress *pz)
+void draw(SDL_Renderer *renderer, SDL_Window *window, roomGrid *rg, progress *pz)
 {
 	SDL_Surface *background, *sprite;
 	SDL_Texture *backtex, *spritetex;
-	rg -> gamerunning = true;
-	pz -> puzzle_1 = false;
-	//rg -> quitchecker = false;
+	bool gameRunning = true;
 	rg -> xa = 0;
 	rg -> yb = 0;
 	rg -> ya = 0;
 	rg -> direction = 0;
+	pz -> puzzle_1 = false;
 
 	/* making dat dere background */
 	background = IMG_Load("lab1sheet.png");
-	backtex = SDL_CreateTextureFromSurface(rg -> renderer, background);
+	backtex = SDL_CreateTextureFromSurface(renderer, background);
 	SDL_FreeSurface (background);
 
 	/* I have created life itself yo */                                                        
 	sprite = SDL_LoadBMP("prof2.bmp");
-	spritetex = SDL_CreateTextureFromSurface(rg -> renderer, sprite);
+	spritetex = SDL_CreateTextureFromSurface(renderer, sprite);
 	SDL_FreeSurface (sprite);
 
 	/* set sprite "source" position - as called by RenderCopy, choose which to be */
@@ -378,7 +317,7 @@ void draw(roomGrid *rg, progress *pz)
 	rg -> rc_Block.h = TILE_SIZE;
 
 
-	while (rg -> gamerunning)
+	while (gameRunning)
 	{
     	SDL_Event event; //call SDL_Event
 
@@ -387,14 +326,11 @@ void draw(roomGrid *rg, progress *pz)
 			// HandleEvent(event, rcSrc, rcSprite); //Run the HandleEvent function
 			switch (event.type) 
 			{
-				case SDL_QUIT:
-     				rg -> gamerunning = false;
-     				break;
 				case SDL_KEYDOWN:
 				switch (event.key.keysym.sym)     
 				{
 					case SDLK_q:
-						rg -> gamerunning = false;
+						gameRunning = false;
 						break;
 					case SDLK_LEFT:
 						rg -> direction = left;
@@ -406,11 +342,11 @@ void draw(roomGrid *rg, progress *pz)
 						break;
 					case SDLK_UP:
 						rg -> direction = up;
-						(!((rg -> rcSprite.y) % TILE_SIZE)) ? possible(rg, pz): move(rg, pz);
+						(!((rg -> rcSprite.x) % TILE_SIZE)) ? possible(rg, pz): move(rg, pz);
 						break;
 					case SDLK_DOWN:
 						rg -> direction = down;
-						(!((rg -> rcSprite.y) % TILE_SIZE)) ? possible(rg, pz): move(rg, pz);
+						(!((rg -> rcSprite.x) % TILE_SIZE)) ? possible(rg, pz): move(rg, pz);
 						break;
 					case SDLK_SPACE:
 						interactProbe(rg, pz);
@@ -439,7 +375,8 @@ void draw(roomGrid *rg, progress *pz)
 			rg -> rcSprite.y = SCREEN_HEIGHT - TILE_SIZE;
 		}
 
-		SDL_RenderClear(rg -> renderer);
+
+		SDL_RenderClear(renderer);
 
 	    for (int i = 0; i <= ROOM_Y; i++)
 	    {
@@ -453,7 +390,7 @@ void draw(roomGrid *rg, progress *pz)
 				rg -> rcSrc1.y =  0;
 				rg -> rcSrc1.w = 32;
 				rg -> rcSrc1.h = 29;
-				SDL_RenderCopy(rg -> renderer, backtex, &rg -> rcSrc1, &rg -> rc_Block);
+				SDL_RenderCopy(renderer, backtex, &rg -> rcSrc1, &rg -> rc_Block);
 				
 				if (rg -> arr[i][j] == 1)
 				{
@@ -461,7 +398,7 @@ void draw(roomGrid *rg, progress *pz)
 					rg -> rcSrc1.y = 81;
 					rg -> rcSrc1.w = 45;
 					rg -> rcSrc1.h = 34;
-					SDL_RenderCopy(rg -> renderer, backtex, &rg -> rcSrc1, &rg -> rc_Block);
+					SDL_RenderCopy(renderer, backtex, &rg -> rcSrc1, &rg -> rc_Block);
 				}
 				if (rg -> arr[i][j] == 2)
 				{
@@ -469,7 +406,7 @@ void draw(roomGrid *rg, progress *pz)
 					rg -> rcSrc1.y =  0;
 					rg -> rcSrc1.w = TILE_SIZE;
 					rg -> rcSrc1.h = 29;
-					SDL_RenderCopy(rg -> renderer, backtex, &rg -> rcSrc1, &rg -> rc_Block);
+					SDL_RenderCopy(renderer, backtex, &rg -> rcSrc1, &rg -> rc_Block);
 				}
 				if (rg -> arr[i][j] == 3)
 				{
@@ -477,7 +414,7 @@ void draw(roomGrid *rg, progress *pz)
 					rg -> rcSrc1.y =  56;
 					rg -> rcSrc1.w =  76;
 					rg -> rcSrc1.h =  59;
-					SDL_RenderCopy(rg -> renderer, backtex, &rg -> rcSrc1, &rg -> rc_Block);
+					SDL_RenderCopy(renderer, backtex, &rg -> rcSrc1, &rg -> rc_Block);
 				}
 				if (rg -> arr[i][j] == 4)
 				{
@@ -485,7 +422,7 @@ void draw(roomGrid *rg, progress *pz)
 					rg -> rcSrc1.y =  70;
 					rg -> rcSrc1.w =  61;
 					rg -> rcSrc1.h =  41;
-					SDL_RenderCopy(rg -> renderer, backtex, &rg -> rcSrc1, &rg -> rc_Block);
+					SDL_RenderCopy(renderer, backtex, &rg -> rcSrc1, &rg -> rc_Block);
 				}
 				if (rg -> arr[i][j] == 5)
 				{
@@ -493,7 +430,7 @@ void draw(roomGrid *rg, progress *pz)
 					rg -> rcSrc1.y =   8;
 					rg -> rcSrc1.w =  55;
 					rg -> rcSrc1.h = 127;
-					SDL_RenderCopy(rg -> renderer, backtex, &rg -> rcSrc1, &rg -> rc_Block);
+					SDL_RenderCopy(renderer, backtex, &rg -> rcSrc1, &rg -> rc_Block);
 				}
 				if (rg -> arr[i][j] == 6)
 				{
@@ -501,7 +438,7 @@ void draw(roomGrid *rg, progress *pz)
 					rg -> rcSrc1.y =   0;
 					rg -> rcSrc1.w = TILE_SIZE;
 					rg -> rcSrc1.h = TILE_SIZE;
-					SDL_RenderCopy(rg -> renderer, backtex, &rg -> rcSrc1, &rg -> rc_Block);
+					SDL_RenderCopy(renderer, backtex, &rg -> rcSrc1, &rg -> rc_Block);
 				}
 				if (rg -> arr[i][j] == 7)
 				{
@@ -509,22 +446,22 @@ void draw(roomGrid *rg, progress *pz)
 					rg -> rcSrc1.y =   8;
 					rg -> rcSrc1.w =  55;
 					rg -> rcSrc1.h = 127;
-					SDL_RenderCopy(rg -> renderer, backtex, &rg -> rcSrc1, &rg -> rc_Block);
+					SDL_RenderCopy(renderer, backtex, &rg -> rcSrc1, &rg -> rc_Block);
 				}
 	    	}
 	    } //end of for loop
 
 	/* RenderClear to wipe framebuffer, RenderCopy to compose final framebuffer, RenderPresent puts on screen*/
-	SDL_RenderCopy(rg -> renderer, spritetex, &rg -> rcObj, &rg -> rcSprite);		
-	SDL_RenderPresent(rg -> renderer);
+	SDL_RenderCopy(renderer, spritetex, &rg -> rcObj, &rg -> rcSprite);		
+	SDL_RenderPresent(renderer);
 	}
 
 
 	// SDL_Delay(5000);
-	SDL_DestroyTexture(backtex);
-	SDL_DestroyTexture(spritetex);
-	SDL_DestroyRenderer(rg -> renderer);
-	SDL_DestroyWindow(rg -> window);
+	// SDL_DestroyTexture(backtex);
+	// SDL_DestroyTexture(spritetex);
+	// SDL_DestroyRenderer(renderer);
+	// SDL_DestroyWindow(window);
 }
 
 
@@ -577,6 +514,99 @@ void possible(roomGrid *rg, progress *pz)
 						exit(6);
 						break;
 	 }
+}
+
+
+// Gobble all events & ignore most
+void James_SDL_Events(SDL_Simplewin *sw, int *skip_checker)
+{
+   SDL_Event event;
+   while(SDL_PollEvent(&event))
+   {
+       switch (event.type){
+          case SDL_QUIT:
+          sw->finished = 1;
+          case SDL_MOUSEBUTTONDOWN:
+          case SDL_KEYDOWN:
+            *skip_checker = 1;
+       }
+    }
+}
+
+
+// Trivial wrapper to avoid complexities of renderer & alpha channels
+void James_SDL_SetDrawColour(SDL_Simplewin *sw, Uint8 r, Uint8 g, Uint8 b)
+{
+
+   SDL_SetRenderDrawColor(sw->renderer, r, g, b, SDL_ALPHA_OPAQUE);
+
+}
+
+//Used to print sets of instructions to the screen.
+void print_some_text(SDL_Simplewin *sw, char *instruction)
+{
+  int refresh_counter = 0, skip_checker = 0;
+	SDL_Surface* text_one = NULL;
+  SDL_Texture* image;
+
+	//The following few lines are used to create a filename to get the .bmp to print to screen.
+	char prefix[LENGTH_PREFIX] = "Instructions/";
+	char extension[LENGTH_EXTENSION] = ".bmp";
+	char *filename = malloc(strlen(prefix) + strlen(instruction) + strlen(extension));
+
+	strcpy(filename, prefix);
+	strcat(filename, instruction);
+	strcat(filename, extension);
+
+	//Loads image in and checks it.
+	text_one = SDL_LoadBMP( filename );
+  image = SDL_CreateTextureFromSurface(sw->renderer,text_one);
+
+	if( text_one == NULL )
+	{
+		printf( "Unable to load image %s! SDL Error: %s\n", filename, SDL_GetError() );
+	}
+
+	//Update the surface and apply the image.
+	SDL_RenderCopy(sw->renderer, image, NULL, NULL);
+  SDL_RenderPresent(sw->renderer);
+
+	//Wait the sleep time and free the malloc for the filename.
+  look_for_action(&refresh_counter, sw, &skip_checker);
+
+	//free(filename);
+}
+
+void look_for_action(int *refresh_counter, SDL_Simplewin *sw, int *skip_checker)
+{
+  do{
+    ++(*refresh_counter);
+    SDL_Delay(SLEEP_TIME);
+    SDL_QuitChecker(sw, skip_checker);
+  }while( *refresh_counter < NUM_REFRESHES && !*skip_checker);
+}
+
+void SDL_QuitChecker(SDL_Simplewin *sw, int *skip_checker)
+{
+  James_SDL_Events(sw, skip_checker);
+  if(sw->finished){
+    exit(1);
+  }
+}
+
+//Just a list of instructions to be printed.
+void get_instructions(char *instructions_list[NUM_INSTRUCTIONS])
+{
+	instructions_list[0] = "MadLab";
+	instructions_list[1] = "Where_am_I";
+	instructions_list[2] = "looks_like";
+	instructions_list[3] = "door_locked";
+	instructions_list[4] = "shenanigans";
+	instructions_list[5] = "neill_shenanigans";
+	instructions_list[6] = "maybe_if_I";
+	instructions_list[7] = "press_spacebar";
+	instructions_list[8] = "find_neill";
+	instructions_list[9] = "lets_go";
 }
 
 

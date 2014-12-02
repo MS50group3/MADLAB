@@ -7,15 +7,6 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_mixer.h>
 
-
-/* definitions */
-// #define SCREEN_WIDTH  800
-// #define SCREEN_HEIGHT 640
-// #define TILE_SIZE    32
-// #define ROOM_X 25
-// #define ROOM_Y 20
-// #define SPRITE_VEL 5
-
 /* definitions */
 #define SCREEN_WIDTH     800
 #define SCREEN_HEIGHT    640
@@ -54,6 +45,7 @@ typedef struct roomGrid
 	int yc;
 	int probe;
 	int skip_checker;
+	int refresh_counter;
 }roomGrid;
 
 typedef struct progress
@@ -67,20 +59,18 @@ typedef struct progress
 
 
 /* prototypes */
-void James_SDL_Init(roomGrid *rg);
 void James_Shit(roomGrid *rg);
 void James_SDL_Events(roomGrid *rg);
-//void James_SDL_SetDrawColour(roomGrid *rg, Uint8 r, Uint8 g, Uint8 b);
 void print_some_text(roomGrid *rg, char *instruction);
 void get_instructions(char *instructions_list[NUM_INSTRUCTIONS]);
-void look_for_action(int *refresh_counter, roomGrid *rg);
+void look_for_action(roomGrid *rg);
 void SDL_QuitChecker(roomGrid *rg);
 
 
 //void HandleEvent(SDL_Event event, SDL_Rect rcSprite, SDL_Rect rcSrc);
 void makeRoom(roomGrid *rg, FILE *fp);
 void printArray(roomGrid *rg, progress *pz);
-void draw(/*SDL_Renderer *renderer,*/ /*SDL_Window *window,*/ roomGrid *rg, progress *pz);
+void draw(roomGrid *rg, progress *pz);
 void run(roomGrid *rg, progress *pz);
 void freeArray(roomGrid *rg);
 void possible(roomGrid *rg, progress *pz);
@@ -109,7 +99,6 @@ int main(int argc, char *argv[])
 
 	makeRoom(rg, fp);
 	fclose(fp);
-
 	run(rg, pz);
 	printArray(rg, pz);
 	freeArray(rg);
@@ -195,9 +184,7 @@ void run(roomGrid *rg, progress *pz)
 		exit(1);
 	}
 
-	James_SDL_Init(rg);
 	James_Shit(rg);
-
 	draw(rg, pz);
 	atexit(SDL_Quit);
 	IMG_Quit();
@@ -205,28 +192,9 @@ void run(roomGrid *rg, progress *pz)
 }
 
 
-void James_SDL_Init(roomGrid *rg)
-{
-/*	//This is added in to create a surface to push .bmp files onto.
-	rg -> surface = SDL_GetWindowSurface(sw -> win);
-
-	//Creates a renderable surface for any pixel drawing/ screen filling.
-	rg -> renderer = SDL_GetRenderer(sw -> win);*/
-
-	
-
-	
-
-	//Set screen to black
-	//James_SDL_SetDrawColour(rg -> window, 0, 0, 0);    //Sets colour to black.
-	//SDL_RenderClear(rg -> renderer);           //Clears the screen of all rendered objects.
-	//SDL_RenderPresent(rg -> renderer);         //Updates the screen with the objects.
-}
-
-
+//List of instructions to be used for printing.
 void James_Shit(roomGrid *rg)
 {
-	//List of instructions to be used for printing.
 	char *instructions_list[NUM_INSTRUCTIONS];
 	int i;
 	rg -> finished = 0;
@@ -259,7 +227,7 @@ void get_instructions(char *instructions_list[NUM_INSTRUCTIONS])
 //Used to print sets of instructions to the screen.
 void print_some_text(roomGrid *rg, char *instruction)
 {
-	int refresh_counter = 0; 
+	rg -> refresh_counter = 0; 
 	rg -> skip_checker = 0;
 	SDL_Surface* text_one = NULL;
 	SDL_Texture* image;
@@ -267,7 +235,7 @@ void print_some_text(roomGrid *rg, char *instruction)
 	//The following few lines are used to create a filename to get the .bmp to print to screen.
 	char prefix[LENGTH_PREFIX] = "Instructions/";
 	char extension[LENGTH_EXTENSION] = ".bmp";
-	char *filename = malloc(strlen(prefix) + strlen(instruction) + strlen(extension));
+	char *filename = malloc(strlen(prefix) + strlen(instruction) + strlen(extension) + 1);
 
 	strcpy(filename, prefix);
 	strcat(filename, instruction);
@@ -287,7 +255,7 @@ void print_some_text(roomGrid *rg, char *instruction)
 	SDL_RenderPresent(rg -> renderer);
 
 	//Wait the sleep time and free the malloc for the filename.
-	look_for_action(&refresh_counter, rg);
+	look_for_action(rg);
 
 	free(filename);
 }
@@ -304,6 +272,7 @@ void James_SDL_Events(roomGrid *rg)
          		rg -> finished = 1;
          		break;
          	case SDL_MOUSEBUTTONDOWN:
+         		rg -> skip_checker = 1;
          		break;
          	case SDL_KEYDOWN:
          		rg -> skip_checker = 1;
@@ -313,23 +282,17 @@ void James_SDL_Events(roomGrid *rg)
 }
 
 
-// Trivial wrapper to avoid complexities of renderer & alpha channels
-// void James_SDL_SetDrawColour(SDL_Simplewin *sw, Uint8 r, Uint8 g, Uint8 b)
-// {
-//    SDL_SetRenderDrawColor(sw->renderer, r, g, b, SDL_ALPHA_OPAQUE);
-// }
-
-
-void look_for_action(int *refresh_counter, roomGrid *rg)
+void look_for_action(roomGrid *rg)
 {
 	do
 	{
-		++(*refresh_counter);
+		++(rg -> refresh_counter);
 		SDL_Delay(SLEEP_TIME);
 		SDL_QuitChecker(rg);
 	}
-  	while(*refresh_counter < NUM_REFRESHES && !rg -> skip_checker);
+  	while(rg -> refresh_counter < NUM_REFRESHES && !rg -> skip_checker);
 }
+
 
 void SDL_QuitChecker(roomGrid *rg)
 {
@@ -347,7 +310,6 @@ void draw(roomGrid *rg, progress *pz)
 	SDL_Texture *backtex, *spritetex;
 	rg -> gamerunning = true;
 	pz -> puzzle_1 = false;
-	//rg -> quitchecker = false;
 	rg -> xa = 0;
 	rg -> yb = 0;
 	rg -> ya = 0;
@@ -518,7 +480,6 @@ void draw(roomGrid *rg, progress *pz)
 	SDL_RenderCopy(rg -> renderer, spritetex, &rg -> rcObj, &rg -> rcSprite);		
 	SDL_RenderPresent(rg -> renderer);
 	}
-
 
 	// SDL_Delay(5000);
 	SDL_DestroyTexture(backtex);
@@ -696,6 +657,7 @@ void printArray(roomGrid *rg, progress *pz)
 		printf("\n");
 	}
 }
+
 
 void freeArray(roomGrid *rg)
 {

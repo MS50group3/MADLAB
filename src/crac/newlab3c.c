@@ -53,7 +53,6 @@ typedef struct roomGrid
 	int xc;
 	int yc;
 	int probe;
-	int skip_checker;
 }roomGrid;
 
 typedef struct progress
@@ -69,12 +68,12 @@ typedef struct progress
 /* prototypes */
 void James_SDL_Init(roomGrid *rg);
 void James_Shit(roomGrid *rg);
-void James_SDL_Events(roomGrid *rg);
+void James_SDL_Events(roomGrid *rg, int *skip_checker);
 //void James_SDL_SetDrawColour(roomGrid *rg, Uint8 r, Uint8 g, Uint8 b);
 void print_some_text(roomGrid *rg, char *instruction);
 void get_instructions(char *instructions_list[NUM_INSTRUCTIONS]);
-void look_for_action(int *refresh_counter, roomGrid *rg);
-void SDL_QuitChecker(roomGrid *rg);
+void look_for_action(int *refresh_counter, roomGrid *rg, int *skip_checker);
+void SDL_QuitChecker(roomGrid *rg, int *skip_checker);
 
 
 //void HandleEvent(SDL_Event event, SDL_Rect rcSprite, SDL_Rect rcSrc);
@@ -188,17 +187,12 @@ void run(roomGrid *rg, progress *pz)
 		printf("%d", success);
 	}
 
-	if((rg -> renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED)) == NULL)
-	{
-		fprintf(stderr, "\nUnable to initialize SDL Renderer:  %s\n", SDL_GetError());
-		SDL_Quit();
-		exit(1);
-	}
+	rg -> renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
 	James_SDL_Init(rg);
 	James_Shit(rg);
 
-	draw(rg, pz);
+	draw(/*renderer,*/ /*window,*/ rg, pz);
 	atexit(SDL_Quit);
 	IMG_Quit();
 	SDL_Quit();
@@ -213,14 +207,19 @@ void James_SDL_Init(roomGrid *rg)
 	//Creates a renderable surface for any pixel drawing/ screen filling.
 	rg -> renderer = SDL_GetRenderer(sw -> win);*/
 
-	
+	rg -> finished = 0;
 
-	
+	if(rg -> renderer == NULL)
+	{
+		fprintf(stderr, "\nUnable to initialize SDL Renderer:  %s\n", SDL_GetError());
+		SDL_Quit();
+		exit(1);
+	}
 
 	//Set screen to black
 	//James_SDL_SetDrawColour(rg -> window, 0, 0, 0);    //Sets colour to black.
-	//SDL_RenderClear(rg -> renderer);           //Clears the screen of all rendered objects.
-	//SDL_RenderPresent(rg -> renderer);         //Updates the screen with the objects.
+	SDL_RenderClear(rg -> renderer);           //Clears the screen of all rendered objects.
+	SDL_RenderPresent(rg -> renderer);         //Updates the screen with the objects.
 }
 
 
@@ -229,7 +228,6 @@ void James_Shit(roomGrid *rg)
 	//List of instructions to be used for printing.
 	char *instructions_list[NUM_INSTRUCTIONS];
 	int i;
-	rg -> finished = 0;
 
 	get_instructions(instructions_list);
 
@@ -259,8 +257,7 @@ void get_instructions(char *instructions_list[NUM_INSTRUCTIONS])
 //Used to print sets of instructions to the screen.
 void print_some_text(roomGrid *rg, char *instruction)
 {
-	int refresh_counter = 0; 
-	rg -> skip_checker = 0;
+	int refresh_counter = 0, skip_checker = 0;
 	SDL_Surface* text_one = NULL;
 	SDL_Texture* image;
 
@@ -287,13 +284,13 @@ void print_some_text(roomGrid *rg, char *instruction)
 	SDL_RenderPresent(rg -> renderer);
 
 	//Wait the sleep time and free the malloc for the filename.
-	look_for_action(&refresh_counter, rg);
+	look_for_action(&refresh_counter, rg, &skip_checker);
 
 	free(filename);
 }
 
 
-void James_SDL_Events(roomGrid *rg)
+void James_SDL_Events(roomGrid *rg, int *skip_checker)
 {
    SDL_Event event;
    while(SDL_PollEvent(&event))
@@ -306,7 +303,7 @@ void James_SDL_Events(roomGrid *rg)
          	case SDL_MOUSEBUTTONDOWN:
          		break;
          	case SDL_KEYDOWN:
-         		rg -> skip_checker = 1;
+         		*skip_checker = 1;
          		break;
        	}
     }
@@ -320,20 +317,20 @@ void James_SDL_Events(roomGrid *rg)
 // }
 
 
-void look_for_action(int *refresh_counter, roomGrid *rg)
+void look_for_action(int *refresh_counter, roomGrid *rg, int *skip_checker)
 {
 	do
 	{
 		++(*refresh_counter);
 		SDL_Delay(SLEEP_TIME);
-		SDL_QuitChecker(rg);
+		SDL_QuitChecker(rg, skip_checker);
 	}
-  	while(*refresh_counter < NUM_REFRESHES && !rg -> skip_checker);
+  	while(*refresh_counter < NUM_REFRESHES && !*skip_checker);
 }
 
-void SDL_QuitChecker(roomGrid *rg)
+void SDL_QuitChecker(roomGrid *rg, int *skip_checker)
 {
-	James_SDL_Events(rg);
+	James_SDL_Events(rg, skip_checker);
 	if(rg -> finished)
 	{
 		exit(1);
