@@ -147,7 +147,6 @@ void run(roomGrid *rg, progress *pz)
 {
 	SDL_Window *window = NULL;
 	bool success = true;
-	//rg -> finshed = false;
 
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
 	{
@@ -277,6 +276,10 @@ void James_SDL_Events(roomGrid *rg)
          	case SDL_KEYDOWN:
          		rg -> skip_checker = 1;
          		break;
+
+         	//default:	fprintf(stderr, "Skip check error!\n");
+						exit(6);
+						break;
        	}
     }
 }
@@ -342,8 +345,8 @@ void draw(roomGrid *rg, progress *pz)
 
 	while (rg -> gamerunning)
 	{
+    	SDL_Delay(20);
     	SDL_Event event; //call SDL_Event
-
 		if (SDL_PollEvent(&event))  //If there is an event
 		{
 			// HandleEvent(event, rcSrc, rcSprite); //Run the HandleEvent function
