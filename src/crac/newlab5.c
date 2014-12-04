@@ -276,10 +276,6 @@ void James_SDL_Events(roomGrid *rg)
          	case SDL_KEYDOWN:
          		rg -> skip_checker = 1;
          		break;
-
-         	//default:	fprintf(stderr, "Skip check error!\n");
-						exit(6);
-						break;
        	}
     }
 }
