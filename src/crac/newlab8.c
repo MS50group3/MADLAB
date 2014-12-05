@@ -70,7 +70,7 @@ void SDL_QuitChecker(roomGrid *rg);
 //void HandleEvent(SDL_Event event, SDL_Rect rcSprite, SDL_Rect rcSrc);
 void makeRoom(roomGrid *rg, FILE *fp);
 void printArray(roomGrid *rg, progress *pz);
-void draw(roomGrid *rg, progress *pz);
+void draw(roomGrid *rg, progress *pz, Mix_Chunk *mus);
 void run(roomGrid *rg, progress *pz);
 void freeArray(roomGrid *rg);
 void possible(roomGrid *rg, progress *pz);
@@ -183,11 +183,16 @@ void run(roomGrid *rg, progress *pz)
         exit(1);
     }
 
-    James_Shit(rg);
-    draw(rg, pz);
-    atexit(SDL_Quit);
-    IMG_Quit();
-    SDL_Quit();
+    // Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, AUDIO_S16SYS, 2, 4096);
+    // Mix_Chunk *mus = Mix_LoadWAV("20141124b.wav");
+
+  atexit(SDL_Quit);
+  IMG_Quit();
+  Mix_HaltMusic(); 
+  Mix_FreeMusic(mus); 
+  Mix_CloseAudio();  
+  Mix_Quit();
+  SDL_Quit();
 }
 
 
@@ -303,7 +308,7 @@ void SDL_QuitChecker(roomGrid *rg)
 }
 
 
-void draw(roomGrid *rg, progress *pz)
+void draw(roomGrid *rg, progress *pz, Mix_Chunk *mus)
 {
     SDL_Surface *background, *sprite;
     SDL_Texture *backtex, *spritetex;
@@ -337,6 +342,8 @@ void draw(roomGrid *rg, progress *pz)
 
     rg -> rc_Block.w = TILE_SIZE;
     rg -> rc_Block.h = TILE_SIZE;
+
+    //Mix_PlayChannel(-1, mus, -1);
 
     while (rg -> gamerunning)
     {
