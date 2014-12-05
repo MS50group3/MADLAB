@@ -341,7 +341,7 @@ void draw(roomGrid *rg, progress *pz, Mix_Chunk *mus)
     rg -> rc_Block.w = TILE_SIZE;
     rg -> rc_Block.h = TILE_SIZE;
 
-    Mix_PlayChannel(-1, mus, 0);
+    Mix_PlayChannel(-1, mus, -1);
 
     while (rg -> gamerunning)
     {
