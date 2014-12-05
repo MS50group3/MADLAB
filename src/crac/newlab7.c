@@ -183,12 +183,16 @@ void run(roomGrid *rg, progress *pz)
         exit(1);
     }
 
-    // Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, AUDIO_S16SYS, 2, 4096);
-    // Mix_Chunk *mus = Mix_LoadWAV("20141124b.wav");
+    Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, AUDIO_S16SYS, 2, 4096);
+    Mix_Chunk *mus = Mix_LoadWAV("20141124b.wav");
 
     James_Shit(rg);
     draw(rg, pz, mus);
     atexit(SDL_Quit);
+    //Mix_HaltMusic(); 
+    //Mix_FreeChunk(mus); 
+    //Mix_CloseAudio();  
+   // Mix_Quit();
     IMG_Quit();
     SDL_Quit();
 }
@@ -341,7 +345,7 @@ void draw(roomGrid *rg, progress *pz, Mix_Chunk *mus)
     rg -> rc_Block.w = TILE_SIZE;
     rg -> rc_Block.h = TILE_SIZE;
 
-    //Mix_PlayChannel(-1, mus, -1);
+    Mix_PlayChannel(-1, mus, -1);
 
     while (rg -> gamerunning)
     {
