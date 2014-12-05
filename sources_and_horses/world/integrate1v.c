@@ -1,4 +1,4 @@
-/************************************
+/**************************************
 *  World & First Problem Integration  *
 *		       1 Dec 2014             *
 **************************************/
@@ -205,6 +205,7 @@ void run(roomGrid *rg, progress *pz)
 	bool success = true;
 /*	SDL_Window *window = NULL;
 	bool success = true;
+
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
 	{
 		fprintf(stderr, "\nUnable to initialise SDL:  %s\n",
@@ -218,6 +219,7 @@ void run(roomGrid *rg, progress *pz)
 								 SDL_WINDOWPOS_UNDEFINED,       //y-axis screen coordinate
 								 SCREEN_WIDTH, SCREEN_HEIGHT,   //size of the window
 								 SDL_WINDOW_RESIZABLE);         //make the window resizeable       
+
 		if (window == NULL) 
 		{
 			printf("Could not create window: %s\n", SDL_GetError());
@@ -610,6 +612,12 @@ void get_instructions(char *instructions_list[NUM_INSTRUCTIONS])
 	instructions_list[8] = "find_neill";
 	instructions_list[9] = "lets_go";
 }
+
+
+
+
+
+
 
 int action(roomGrid *rg, progress *pz)
 {
