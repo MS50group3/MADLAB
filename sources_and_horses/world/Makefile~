@@ -1,0 +1,5 @@
+integrate:	integrate1.c
+	gcc -std=c99 -Wall -Werror -pedantic integrate.c -o integrate -lSDL2 -lSDL2_image -lSDL2_mixer
+
+clean:
+	rm integrate

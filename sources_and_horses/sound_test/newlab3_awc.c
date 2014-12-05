@@ -122,7 +122,8 @@ void run(roomGrid *rg, progress *pz)
 
   if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
   {
-    fprintf(stderr, "\nUnable to initialise SDL:  %s\n", SDL_GetError());
+    fprintf(stderr, "\nUnable to initialise SDL:  %s\n", 
+            SDL_GetError());
     exit(1);
   }
   else
@@ -139,9 +140,10 @@ void run(roomGrid *rg, progress *pz)
     }
   }
 
-  if(!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG)) //Initialise PNG loading library 
+  if(!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG))              //initialise PNG loading library 
     { 
-      printf( "SDL_image could not initialise! SDL_image Error: %s\n", IMG_GetError()); success = false; //test it
+      printf( "SDL_image could not initialise! SDL_image Error: %s\n", 
+               IMG_GetError()); success = false; //test it
       printf("%d", success);
     }
 
@@ -160,8 +162,7 @@ void run(roomGrid *rg, progress *pz)
     success = false;    
   }*/
   Mix_Music *mus;                    //Background Music 
-  mus = Mix_LoadMUS("acdc.ogg");     //load the file and create a pointer
-  Mix_PlayMusic(mus,0);              //Music loop=1
+  mus = Mix_LoadMUS("20141124.ogg");     //load the file and create a pointer
 
   SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
   draw(renderer, window, rg, pz, mus);
@@ -226,7 +227,8 @@ void draw(SDL_Renderer *renderer, SDL_Window *window, roomGrid *rg, progress *pz
     {
       // HandleEvent(event, rcSrc, rcSprite); //Run the HandleEvent function
       switch (event.type)
-      {Mix_PlayMusic(mus,0); //Music loop=1
+      {
+
         case SDL_KEYDOWN:
                
         switch (event.key.keysym.sym)     
@@ -281,6 +283,30 @@ void draw(SDL_Renderer *renderer, SDL_Window *window, roomGrid *rg, progress *pz
           case SDLK_SPACE:
             interactProbe(rg, pz);
             break;
+          case SDLK_9:
+          //If there is no 
+          if( Mix_PlayingMusic() == 0 )
+          {
+            //Play the music
+            Mix_PlayMusic(mus,-1); //To loop: -1
+          }
+        //If music is being played
+          else
+          {
+            //If the music is paused
+            if( Mix_PausedMusic() == 1 )
+            {
+                //Resume the music
+                Mix_ResumeMusic();
+            }
+            //If the music is playing
+            else
+            {
+                //Pause the music
+                Mix_PauseMusic();
+            }
+        }
+          
           }
           break;
       }
