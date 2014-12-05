@@ -183,9 +183,6 @@ void run(roomGrid *rg, progress *pz)
         exit(1);
     }
 
-    Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, AUDIO_S16SYS, 2, 4096);
-    Mix_Chunk *mus = Mix_LoadWAV("20141124b.wav");
-
     James_Shit(rg);
     draw(rg, pz);
     atexit(SDL_Quit);
@@ -340,8 +337,6 @@ void draw(roomGrid *rg, progress *pz)
 
     rg -> rc_Block.w = TILE_SIZE;
     rg -> rc_Block.h = TILE_SIZE;
-
-    Mix_PlayChannel(-1, mus, 0);
 
     while (rg -> gamerunning)
     {
