@@ -147,7 +147,6 @@ void run(roomGrid *rg, progress *pz)
 {
 	SDL_Window *window = NULL;
 	bool success = true;
-	//rg -> finshed = false;
 
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
 	{
@@ -342,8 +341,8 @@ void draw(roomGrid *rg, progress *pz)
 
 	while (rg -> gamerunning)
 	{
+    	SDL_Delay(20);
     	SDL_Event event; //call SDL_Event
-
 		if (SDL_PollEvent(&event))  //If there is an event
 		{
 			// HandleEvent(event, rcSrc, rcSprite); //Run the HandleEvent function
