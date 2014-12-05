@@ -70,7 +70,7 @@ void SDL_QuitChecker(roomGrid *rg);
 //void HandleEvent(SDL_Event event, SDL_Rect rcSprite, SDL_Rect rcSrc);
 void makeRoom(roomGrid *rg, FILE *fp);
 void printArray(roomGrid *rg, progress *pz);
-void draw(roomGrid *rg, progress *pz);
+void draw(roomGrid *rg, progress *pz, Mix_Chunk *mus);
 void run(roomGrid *rg, progress *pz);
 void freeArray(roomGrid *rg);
 void possible(roomGrid *rg, progress *pz);
@@ -187,7 +187,7 @@ void run(roomGrid *rg, progress *pz)
     Mix_Chunk *mus = Mix_LoadWAV("20141124b.wav");
 
     James_Shit(rg);
-    draw(rg, pz);
+    draw(rg, pz, mus);
     atexit(SDL_Quit);
     IMG_Quit();
     SDL_Quit();
@@ -306,7 +306,7 @@ void SDL_QuitChecker(roomGrid *rg)
 }
 
 
-void draw(roomGrid *rg, progress *pz)
+void draw(roomGrid *rg, progress *pz, Mix_Chunk *mus)
 {
     SDL_Surface *background, *sprite;
     SDL_Texture *backtex, *spritetex;
