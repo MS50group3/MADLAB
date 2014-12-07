@@ -1,6 +1,4 @@
-#include <stdlib.h>
 #include "display.h"
-#include <stdbool.h>
 
 void runloadscreen(){
     
