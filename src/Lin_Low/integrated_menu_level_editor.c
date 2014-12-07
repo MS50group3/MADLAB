@@ -1,32 +1,7 @@
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <stdlib.h>
-#include <stdbool.h>
 #include "display.h"
 
-#define WWIDTH 800
-#define WHEIGHT 600
-#define WALL 1
-#define BLANK 0
-
-/* display.h contains SDL includes, hash defines and some
+/* display.h contains SDL includes, hash defines, typedefs and some
  premade functions */
-
-typedef struct Cursor
-{
-    int x, y, tileID;
-} Cursor;
-
-typedef struct input
-{
-    int mouse_x, mouse_y;
-    int add, remove;
-} Input;
-
-typedef struct map
-{
-    int width, height;
-} Map;
 
 void save(int array[ROOM_Y][ROOM_X]){
     
