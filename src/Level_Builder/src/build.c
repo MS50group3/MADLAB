@@ -1,5 +1,6 @@
 #include "newlab3.h"
 
+#define ALT 2
 #define WALL 1
 #define BLANK 0
 
@@ -22,6 +23,8 @@ typedef struct map
 	int width, height;
 } Map;
 
+
+/* Output a text file containing the blocking codes for the new level */
 void save(int array[ROOM_Y][ROOM_X]){
 
 	FILE *of;
@@ -56,8 +59,6 @@ int main(void){
 	input.remove = 0;
 
 	int array[ROOM_Y][ROOM_X];
-
-
 	// Init to zero
 	for (int i = 0; i < ROOM_Y; ++i) {
 		for (int j = 0; j < ROOM_X; ++j) {	
@@ -86,19 +87,29 @@ int main(void){
 	SDL_Texture *backtex;
 
 	// Tile stuff
-	SDL_Surface *tile_surf;
-	SDL_Texture *tiletex;
+	SDL_Surface *black_surf;
+	SDL_Texture *blacktex;
+
 	SDL_Rect tile_src, tile_dst;
+
+	// Alternative tile stuff
+	SDL_Surface *red_surf;
+	SDL_Texture *redtex;
 
 	// Cursor stuff
 	SDL_Surface *cursor_surf;
 	SDL_Texture *cursor_tex;
-	SDL_Rect cursor_src, cursor_dst;
+	SDL_Rect cursor_src, cursor_dst;	
 
-	/* Make the tile */
-	tile_surf = IMG_Load("../gfx/block.png");
-	tiletex = SDL_CreateTextureFromSurface(renderer, tile_surf);
-	SDL_FreeSurface(tile_surf);
+	/* Make the wall tile */
+	black_surf = IMG_Load("../gfx/block.png");
+	blacktex = SDL_CreateTextureFromSurface(renderer, black_surf);
+	SDL_FreeSurface(black_surf);
+
+	/* Make an alternative tile */
+	red_surf = IMG_Load("../gfx/block_red.png");
+	redtex = SDL_CreateTextureFromSurface(renderer, red_surf);
+	SDL_FreeSurface(red_surf);
 
 	/* Make the cursor */
 	cursor_surf = IMG_Load("../gfx/cursor.png");
@@ -155,15 +166,15 @@ int main(void){
 			    	}
 			    break;
 
-			    // Click
+			    // On left click, INCREMENT the tile type. will need a modulus later.
 			    case SDL_MOUSEBUTTONDOWN:
 					switch(event.button.button)
 					{
-						case SDL_BUTTON_LEFT:
+						case SDL_BUTTON_LEFT: // Left click: Add a tile
 							input.add = 1;
 						break;
 						
-						case SDL_BUTTON_RIGHT:
+						case SDL_BUTTON_RIGHT: // Right click: Remove a tile
 							input.remove = 1;
 						break;
 						
@@ -209,7 +220,7 @@ int main(void){
 		cursor.x = input.mouse_x;
 		cursor.y = input.mouse_y;
 
-		// Where to get the image from (relative)
+		// Where to get the cursor image from (relative)
 		cursor_src.y = 0;
 		cursor_src.x = 0;
 		cursor_src.w = TILE_SIZE;
@@ -228,7 +239,8 @@ int main(void){
 
 		if(input.add == 1)
 		{
-			array[tile_y][tile_x] = WALL;
+			array[tile_y][tile_x]++; // Increment the tile code
+			array[tile_y][tile_x] = array[tile_y][tile_x] % 3; // Mod with 1+ max tile code
 		}
 
 		if (input.remove == 1)
@@ -249,15 +261,24 @@ int main(void){
 				if (array[i][j] == WALL)
 				{	
 					// If the array element is a 1, draw a wall
-					SDL_RenderCopy(renderer, tiletex, &tile_src, &tile_dst);
+					SDL_RenderCopy(renderer, blacktex, &tile_src, &tile_dst);
 				}
-				else if (array[i][j] == BLANK)
-				{	// If the element is a 0, draw a floor tile
+				
+				if (array[i][j] == BLANK)
+				{	
+					// If the element is a 0, draw a floor tile
 					SDL_RenderCopy(renderer, backtex, &tile_src, &tile_dst);
+				}
+				
+				if (array[i][j] == ALT)
+				{	
+					// If the element is a 2, draw a red tile
+					SDL_RenderCopy(renderer, redtex, &tile_src, &tile_dst);
 				}
 			}
 		}
 
+		// Draw the transparent cursor to the screen
 		SDL_RenderCopy(renderer, cursor_tex, &cursor_src, &cursor_dst);
 
 		/* Update the screen with the latest render */
