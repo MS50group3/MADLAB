@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
 	SDL_Simplewin sw;
 
 	//List of instructions to be used for printing.
-	char *instructions_list[NUM_INSTRUCTIONS + 2];
+	char *instructions_list[NUM_INSTRUCTIONS_ONE + NUM_INSTRUCTIONS_TWO];
 
 	//Used for looping through the instructions.
 	int i;
@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
 	get_instructions(instructions_list);
 
 	//Prints the first list of instructions.
-	for(i = 0; i < NUM_INSTRUCTIONS; ++i){
+	for(i = 0; i < NUM_INSTRUCTIONS_ONE; ++i){
 		print_text(&sw, instructions_list[i]);
 	}
 
@@ -38,7 +38,8 @@ int main(int argc, char *argv[])
 		input_screen(&sw, &correct_indicator);
 	}while(correct_indicator != correct);
 
-	for(i = NUM_INSTRUCTIONS; i < NUM_INSTRUCTIONS + 2; ++i){
+	//Prints the follow up set of instructions.
+	for(i = NUM_INSTRUCTIONS_ONE; i < NUM_INSTRUCTIONS_ONE + NUM_INSTRUCTIONS_TWO; ++i){
 		print_text(&sw, instructions_list[i]);
 	}
 
