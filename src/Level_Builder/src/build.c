@@ -166,7 +166,7 @@ int main(void){
 			    	}
 			    break;
 
-			    // On left click, INCREMENT the tile type. will need a modulus later.
+			    // "Click" - set the values
 			    case SDL_MOUSEBUTTONDOWN:
 					switch(event.button.button)
 					{
@@ -237,10 +237,11 @@ int main(void){
 		tile_src.w=TILE_SIZE;
 		tile_src.h=TILE_SIZE;
 
+
 		if(input.add == 1)
 		{
-			array[tile_y][tile_x]++; // Increment the tile code
-			array[tile_y][tile_x] = array[tile_y][tile_x] % 3; // Mod with 1+ max tile code
+			array[tile_y][tile_x]++;
+			array[tile_y][tile_x] = array[tile_y][tile_x] % 3;
 		}
 
 		if (input.remove == 1)
@@ -287,7 +288,9 @@ int main(void){
 
 	// Tear everything down
     SDL_DestroyTexture(backtex);
-	SDL_DestroyRenderer(renderer);
+    SDL_DestroyTexture(redtex);
+    SDL_DestroyTexture(blacktex);
+    SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
     SDL_Quit();
 
