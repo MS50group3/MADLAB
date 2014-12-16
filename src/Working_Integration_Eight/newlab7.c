@@ -144,7 +144,7 @@ void rcsrc_set(int x_coord, int y_coord, int width, int height, SDL_Texture *bac
 
 void run_menu_screen(roomGrid *room_grid);
 void startFrame(roomGrid *room_grid);
-void drawBox(roomGrid *room_grid, int x);
+void drawBox(roomGrid *room_grid, int x, SDL_Texture *menu_tex, SDL_Texture *options_tex);
 void endFrame(roomGrid *room_grid);
 void quit(roomGrid *room_grid);
 bool getEvent(roomGrid *room_grid);
@@ -1243,19 +1243,9 @@ void startFrame(roomGrid *room_grid)
 }
 
 //draw correct part of background image each time (a rectangular box around the written options)
-void drawBox(roomGrid *room_grid, int x){
+void drawBox(roomGrid *room_grid, int x, SDL_Texture *menu_tex, SDL_Texture *options_tex){
     
-   SDL_Surface *menu_surf, *options_surf;
-   SDL_Texture *menu_tex, *options_tex;
    SDL_Rect tile_src, tile_drc;
-
-   menu_surf = IMG_Load("screen2.png");
-   menu_tex = SDL_CreateTextureFromSurface(room_grid -> renderer, menu_surf);
-   SDL_FreeSurface(menu_surf);
-
-   options_surf = IMG_Load("controls.png");
-   options_tex = SDL_CreateTextureFromSurface(room_grid -> renderer, options_surf);
-   SDL_FreeSurface(options_surf);
 
     if(x==1){
         //draw original background so all options are white apart from "new game", which will become yellow
@@ -1304,10 +1294,21 @@ void LoadScreen(roomGrid *room_grid){
     SDL_Event event;
     bool gameRunning=true;
     int x=1;
+
+    SDL_Surface *menu_surf, *options_surf;
+    SDL_Texture *menu_tex, *options_tex;
+
+    menu_surf = IMG_Load("screen2.png");
+    menu_tex = SDL_CreateTextureFromSurface(room_grid -> renderer, menu_surf);
+    SDL_FreeSurface(menu_surf);
+
+    options_surf = IMG_Load("controls.png");
+    options_tex = SDL_CreateTextureFromSurface(room_grid -> renderer, options_surf);
+    SDL_FreeSurface(options_surf);
     
     while(gameRunning)
     {
-        drawBox(room_grid, x);
+        drawBox(room_grid, x, menu_tex, options_tex);
         
         if(SDL_PollEvent(&event))
         {
@@ -1325,7 +1326,7 @@ void LoadScreen(roomGrid *room_grid){
                         if(x==2||x==3||x==4){
                             x--;
                         }
-                        drawBox(room_grid, x);
+                        drawBox(room_grid, x, menu_tex, options_tex);
                         break;
                     }
                     case SDLK_DOWN:
@@ -1334,7 +1335,7 @@ void LoadScreen(roomGrid *room_grid){
                         if(x==1||x==2||x==3){
                             x++;
                         }
-                        drawBox(room_grid, x);
+                        drawBox(room_grid, x, menu_tex, options_tex);
                         break;
                         
                     }
@@ -1349,7 +1350,7 @@ void LoadScreen(roomGrid *room_grid){
                         if(x==3){
                             //options 3 is controls page
                             x=x+4;
-                            drawBox(room_grid, x);
+                            drawBox(room_grid, x, menu_tex, options_tex);
                             break;
                         }
                         
@@ -1370,7 +1371,7 @@ void LoadScreen(roomGrid *room_grid){
                                         switch(event.key.keysym.sym)
                                     {
                                         case SDLK_SPACE:
-                                            drawBox(room_grid, x);
+                                            drawBox(room_grid, x, menu_tex, options_tex);
                                             break;
                                             
                                     }
@@ -1381,7 +1382,7 @@ void LoadScreen(roomGrid *room_grid){
                 }
             }
             
-        endFrame(room_grid);
+        //endFrame(room_grid);
         
         }
     
