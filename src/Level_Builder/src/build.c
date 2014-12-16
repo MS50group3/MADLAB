@@ -45,7 +45,6 @@ void save(int array[ROOM_Y][ROOM_X]){
 
 
 
-
 int main(void){
 
 	bool success = true;
