@@ -35,6 +35,7 @@
 #define MOVEMENT_INCREMENT 		  8
 #define WALL                      1
 #define BLANK                     0
+#define SCAN_SUCCESS              1
 
 // TYPEDEFS AND ENUMERATION
 
@@ -43,6 +44,18 @@ typedef enum compass compass;
 
 enum tileType{path = 0, obstacle = 1, puz_1 = 2, puz_2 = 3, puz_3 = 4, puz_4 = 5, puz_5 = 6};
 typedef enum tileType tileType;
+
+enum wrong_right {correct, incorrect};
+typedef enum wrong_right wrong_right;
+
+enum fin_unfin {unfinished, finished};
+typedef enum fin_unfin fin_unfin;
+
+enum on_off {off, on};
+typedef enum on_off on_off;
+
+enum menu_options{new_game = 1, load_game = 2, options = 3,  editor = 4, in_option_screen = 7};
+typedef enum menu_options menu_options;
 
 typedef struct roomGrid
 {
@@ -96,14 +109,6 @@ struct map{
 };
 typedef struct map map;
 
-enum wrong_right {correct, incorrect};
-typedef enum wrong_right wrong_right;
-
-enum fin_unfin {unfinished, finished};
-typedef enum fin_unfin fin_unfin;
-
-enum on_off {off, on};
-typedef enum on_off on_off;
 
 //FUNCTIONS FOR PROBLEMS
 
@@ -143,13 +148,16 @@ void rcsrc_set(int x_coord, int y_coord, int width, int height, SDL_Texture *bac
 //FUNCTIONS FOR MENU
 
 void run_menu_screen(roomGrid *room_grid);
-void startFrame(roomGrid *room_grid);
-void drawBox(roomGrid *room_grid, int x, SDL_Texture *menu_tex, SDL_Texture *options_tex);
+void load_menu_frame(roomGrid *room_grid);
+void highlight_area(roomGrid *room_grid, int current_selection, SDL_Texture *menu_tex, SDL_Texture *options_tex);
 bool getEvent(roomGrid *room_grid);
-void LoadScreen(roomGrid *room_grid);
+void cycle_options(roomGrid *room_grid);
 void getloadscreenevent(roomGrid *room_grid);
 void getkeyEvent(roomGrid *room_grid, int x);
 void runloadscreen();
+void menu_space_press(roomGrid *room_grid, int current_selection, SDL_Texture *menu_tex, SDL_Texture *options_tex, bool *menu_running);
+void level_editor(roomGrid *room_grid);
+void load_menu_images(roomGrid *room_grid, SDL_Surface **menu_surf, SDL_Surface **options_surf, SDL_Texture **menu_tex, SDL_Texture **options_tex);
 
 //MAIN
 
@@ -193,8 +201,8 @@ void makeRoom(roomGrid *room_grid, FILE *map_file)
 {
     int i, j;
 
-    room_grid -> room_array = 0;
-    room_grid -> room_array = (int **)calloc((ROOM_Y) + 1, sizeof(int *));
+    room_grid -> room_array = 0;                                                        //Why is this here?
+    room_grid -> room_array = (int **)calloc((ROOM_Y) + 1, sizeof(int *));              //Why the +1?
 
     if (room_grid -> room_array == NULL){
 
@@ -571,8 +579,6 @@ void collision_detection(roomGrid *room_grid)
     SDL_RenderClear(room_grid -> renderer);
 }
 
-//What the fuck is going on in this function?
-
 void draw_room(SDL_Surface *background, SDL_Surface *sprite, SDL_Texture *backtex, SDL_Texture *spritetex, roomGrid *room_grid)
 {
     for (int i = 0; i <= ROOM_Y; i++){
@@ -626,8 +632,6 @@ void rcsrc_set(int x_coord, int y_coord, int width, int height, SDL_Texture *bac
 
     SDL_RenderCopy(room_grid -> renderer, backtex, &room_grid -> rcSrc1, &room_grid -> rc_Block);
 }
-
-//What the fuck are left_x_coord and top_y_coord?!
 
 void possible(roomGrid *room_grid, progress *puzzle)
 {
@@ -765,16 +769,20 @@ int action(roomGrid *room_grid, progress *puzzle, char *instructions_list[NUM_IN
                             }
                             break;
 
-        case(puz_2):        return 0;
+        case(puz_2):        printf("Puzzle 2 active\n");
+                            return 0;
                             break;
 
-        case(puz_3):        return 0;
+        case(puz_3):        printf("Puzzle 3 active\n");
+                            return 0;
                             break;
 
-        case(puz_4):        return 0;
+        case(puz_4):        printf("Puzzle 4 active\n");
+                            return 0;
                             break; 
 
-        case(puz_5):        return 0;
+        case(puz_5):        printf("Puzzle 5 active\n");
+                            return 0;
                             break;
 
         default:            fprintf(stderr, "PANIC!\n");
@@ -838,7 +846,6 @@ void input_screen(roomGrid *room_grid, wrong_right *correct_indicator)
     char input_string[MAX_INPUT_CHARS], possible_answer[MAX_INPUT_CHARS];
     int input_index = 0, finish_checker = unfinished;
 
-    //clear_screen(sw);
     initialise_input_string(input_string);
     initialise_drcrect(&drcrect, input_index);
 
@@ -954,20 +961,25 @@ void check_user_variable_input(roomGrid *room_grid, char *input_string, int *inp
 
 void run_menu_screen(roomGrid *room_grid)
 {
-    initialise_SDL_component(room_grid->window, room_grid);
+    static int first_pass = 0;
 
-    startFrame(room_grid);
+    if(first_pass == 0){
+        initialise_SDL_component(room_grid->window, room_grid);
+        ++first_pass;
+    }
+
+    load_menu_frame(room_grid);
     
-    LoadScreen(room_grid);
+    cycle_options(room_grid);
 
-    // quit(room_grid);
 }
 
 void save(int array[ROOM_Y][ROOM_X]){
     
-    FILE *of;
-    of = fopen("../src/Your_level.txt","w");
-    if(of == NULL) {
+    FILE *writing_file;
+
+    writing_file = fopen("Your_level.txt","w");
+    if(writing_file == NULL) {
         printf("ERROR opening file...exiting\n");
     }
     
@@ -975,18 +987,17 @@ void save(int array[ROOM_Y][ROOM_X]){
     {
         for (int j = 0; j < ROOM_X; ++j)
         {
-            fprintf(of, "%d ", array[i][j]);
+            fprintf(writing_file, "%d ", array[i][j]);
         }
         
-        fprintf(of,"\n");
+        fprintf(writing_file,"\n");
     }
     
-    fclose(of);
+    fclose(writing_file);
 }
 
-void runEditorfromLoadscreen(roomGrid *room_grid){
+void level_editor(roomGrid *room_grid){
     
-    //bool success = true;
     bool running = true;
     input input;
     cursor cursor;
@@ -1189,18 +1200,26 @@ void runEditorfromLoadscreen(roomGrid *room_grid){
         SDL_RenderPresent(room_grid -> renderer);
     }
     
-    // Tear everything down
-    SDL_DestroyTexture(backtex);
-    SDL_DestroyRenderer(room_grid -> renderer);
-    SDL_DestroyWindow(room_grid -> window);
-    SDL_Quit();
-    exit(1);
+    load_menu_frame(room_grid);
+
+    SDL_Surface *menu_surf, *options_surf;
+    SDL_Texture *menu_tex, *options_tex;
+
+    menu_surf = IMG_Load("screen2.png");
+    menu_tex = SDL_CreateTextureFromSurface(room_grid -> renderer, menu_surf);
+    SDL_FreeSurface(menu_surf);
+
+    options_surf = IMG_Load("controls.png");
+    options_tex = SDL_CreateTextureFromSurface(room_grid -> renderer, options_surf);
+    SDL_FreeSurface(options_surf);
+    
+    highlight_area(room_grid, editor, menu_tex, options_tex);
     
 }
 
 
 // Draw original backgroud
-void startFrame(roomGrid *room_grid)
+void load_menu_frame(roomGrid *room_grid)
 {
 
     SDL_Surface *background_surf;
@@ -1216,45 +1235,37 @@ void startFrame(roomGrid *room_grid)
 }
 
 //draw correct part of background image each time (a rectangular box around the written options)
-void drawBox(roomGrid *room_grid, int x, SDL_Texture *menu_tex, SDL_Texture *options_tex){
+void highlight_area(roomGrid *room_grid, int current_selection, SDL_Texture *menu_tex, SDL_Texture *options_tex){
     
    SDL_Rect tile_src, tile_drc;
 
-    if(x==1){
-        //draw original background so all options are white apart from "new game", which will become yellow
-        startFrame(room_grid);
+   //Draw original background.
+   load_menu_frame(room_grid);
+
+    if(current_selection == new_game){
         tile_src = (SDL_Rect) {333,442,143,31};
         tile_drc = (SDL_Rect) {333,472,143,31};
-        SDL_RenderCopy(room_grid -> renderer, menu_tex, &tile_src, &tile_drc);
-        SDL_RenderPresent(room_grid -> renderer);
     }
-    else if(x==2){
-        //draw original background so all options are white apart from "load game", which will become yellow
-        startFrame(room_grid);
+    else if(current_selection == load_game){
         tile_src = (SDL_Rect) {336,473,143,31};
         tile_drc = (SDL_Rect) {336,504,143,31};
-        SDL_RenderCopy(room_grid -> renderer, menu_tex, &tile_src, &tile_drc);
-        SDL_RenderPresent(room_grid -> renderer);
     }
-    else if(x==3){
-        //draw original background so all options are white apart from "controls", which will become yellow
-        startFrame(room_grid);
+    else if(current_selection == options){
         tile_src = (SDL_Rect) {344,499,119,32};
         tile_drc = (SDL_Rect) {344,532,119,32};
-        SDL_RenderCopy(room_grid -> renderer, menu_tex, &tile_src, &tile_drc);
-        SDL_RenderPresent(room_grid -> renderer);
 
     }
-    else if(x==4){
-        //draw original background so all options are white apart from final option, which will become yellow
-        startFrame(room_grid);
+    else if(current_selection == editor){
         tile_src = (SDL_Rect) {331,526,140,30};
         tile_drc = (SDL_Rect) {331,560,140,30};
+    }
+
+    if(current_selection == new_game || current_selection == load_game || current_selection == options || current_selection == editor){
         SDL_RenderCopy(room_grid -> renderer, menu_tex, &tile_src, &tile_drc);
         SDL_RenderPresent(room_grid -> renderer);
     }
-    else if(x==7){
-        //draw controls screen
+    else if(current_selection == in_option_screen){ 
+        //Draw controls screen
         SDL_RenderCopy(room_grid -> renderer, options_tex, NULL, NULL);
         SDL_RenderPresent(room_grid -> renderer);;
        
@@ -1262,27 +1273,20 @@ void drawBox(roomGrid *room_grid, int x, SDL_Texture *menu_tex, SDL_Texture *opt
    
 }
 
-void LoadScreen(roomGrid *room_grid){
+void cycle_options(roomGrid *room_grid){
     
     SDL_Event event;
-    bool gameRunning=true;
-    int x=1;
+    bool menu_running = true;
+    int current_selection = new_game;
 
-    SDL_Surface *menu_surf, *options_surf;
-    SDL_Texture *menu_tex, *options_tex;
+    SDL_Surface *menu_surf = NULL, *options_surf = NULL;
+    SDL_Texture *menu_tex = NULL, *options_tex = NULL;
 
-    menu_surf = IMG_Load("screen2.png");
-    menu_tex = SDL_CreateTextureFromSurface(room_grid -> renderer, menu_surf);
-    SDL_FreeSurface(menu_surf);
-
-    options_surf = IMG_Load("controls.png");
-    options_tex = SDL_CreateTextureFromSurface(room_grid -> renderer, options_surf);
-    SDL_FreeSurface(options_surf);
+    load_menu_images(room_grid, &menu_surf, &options_surf, &menu_tex, &options_tex);
     
+    highlight_area(room_grid, current_selection, menu_tex, options_tex);
 
-    drawBox(room_grid, x, menu_tex, options_tex);
-
-    while(gameRunning)
+    while(menu_running)
     {
         
         if(SDL_PollEvent(&event))
@@ -1298,60 +1302,24 @@ void LoadScreen(roomGrid *room_grid){
                 {
                     case SDLK_UP:
                     {
-                        if(x==2||x==3||x==4){
-                            x--;
+                        if( current_selection == load_game || current_selection == options || current_selection == editor ){
+                            current_selection--;
                         }
-                        drawBox(room_grid, x, menu_tex, options_tex);
+                        highlight_area(room_grid, current_selection, menu_tex, options_tex);
                         break;
                     }
                     case SDLK_DOWN:
                     {
-                        
-                        if(x==1||x==2||x==3){
-                            x++;
+                        if( current_selection == new_game || current_selection == load_game || current_selection == options ){
+                            current_selection++;
                         }
-                        drawBox(room_grid, x, menu_tex, options_tex);
-                        break;
-                        
+                        highlight_area(room_grid, current_selection, menu_tex, options_tex);
+                        break;   
                     }
                         
                     case SDLK_SPACE:
 
-                        if(x==1){
-                            gameRunning=false;
-                            break;
-                        }
-
-                        if(x==3){
-
-                            drawBox(room_grid, 7, menu_tex, options_tex);
-
-                            while(x == 3){
-                                if(SDL_PollEvent(&event)){
-                                    switch(event.type)
-                                    {
-                                        case SDL_KEYDOWN:
-                                            switch(event.key.keysym.sym)
-                                        {
-                                            case SDLK_SPACE:
-                                                x = 1;
-                                                drawBox(room_grid, x, menu_tex, options_tex);
-                                                break;
-                                                
-                                        }
-                                    }
-                                }
-                            }
-
-                            break;
-                        }
-                        
-                        if(x==4){
-                            //Option 4 opens editor/level builder
-                            runEditorfromLoadscreen(room_grid);
-                            break;
-                            
-                        }
+                        menu_space_press(room_grid, current_selection, menu_tex, options_tex, &menu_running);
                 
                 }
             }
@@ -1359,4 +1327,57 @@ void LoadScreen(roomGrid *room_grid){
         }
     
     }
+}
+
+void load_menu_images(roomGrid *room_grid, SDL_Surface **menu_surf, SDL_Surface **options_surf, SDL_Texture **menu_tex, SDL_Texture **options_tex)
+{
+    *menu_surf = IMG_Load("screen2.png");
+    *menu_tex = SDL_CreateTextureFromSurface(room_grid -> renderer, *menu_surf);
+    SDL_FreeSurface(*menu_surf);
+
+    *options_surf = IMG_Load("controls.png");
+    *options_tex = SDL_CreateTextureFromSurface(room_grid -> renderer, *options_surf);
+    SDL_FreeSurface(*options_surf);
+}
+
+void menu_space_press(roomGrid *room_grid, int current_selection, SDL_Texture *menu_tex, SDL_Texture *options_tex, bool *menu_running)
+{
+    SDL_Event event;
+
+    if( current_selection == new_game ){
+        *menu_running = false;
+    }
+
+    if( current_selection == options){
+
+        highlight_area(room_grid, in_option_screen, menu_tex, options_tex);
+
+        while(current_selection == options){
+            if(SDL_PollEvent(&event)){
+
+                switch(event.type){
+
+                    case SDL_KEYDOWN:
+
+                        switch(event.key.keysym.sym){
+
+                        case SDLK_SPACE:
+                        
+                            current_selection = new_game;
+                            highlight_area(room_grid, current_selection, menu_tex, options_tex);
+                            break;
+                            
+                    }
+                }
+            }
+        }
+    }
+    
+    if( current_selection == editor){
+
+        //Option 4 opens editor/level builder
+        level_editor(room_grid);
+
+    }
+
 }
