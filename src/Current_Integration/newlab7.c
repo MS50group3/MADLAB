@@ -155,9 +155,11 @@ void cycle_options(roomGrid *room_grid);
 void getloadscreenevent(roomGrid *room_grid);
 void getkeyEvent(roomGrid *room_grid, int x);
 void runloadscreen();
-void menu_space_press(roomGrid *room_grid, int current_selection, SDL_Texture *menu_tex, SDL_Texture *options_tex, bool *menu_running);
+void menu_space_press(roomGrid *room_grid, int *current_selection, SDL_Texture *menu_tex, SDL_Texture *options_tex, bool *menu_running);
 void level_editor(roomGrid *room_grid);
-void load_menu_images(roomGrid *room_grid, SDL_Surface **menu_surf, SDL_Surface **options_surf, SDL_Texture **menu_tex, SDL_Texture **options_tex);
+void initialise_level_editor_map(int array[ROOM_Y][ROOM_X]);
+void load_image(roomGrid *room_grid, SDL_Surface **surf, SDL_Texture **tex, char *image_name);
+void editor_interactions(int map_array[ROOM_Y][ROOM_X], bool *running, input *input);
 
 //MAIN
 
@@ -957,8 +959,6 @@ void check_user_variable_input(roomGrid *room_grid, char *input_string, int *inp
 
 }
 
-//#include "display.h"
-
 void run_menu_screen(roomGrid *room_grid)
 {
     static int first_pass = 0;
@@ -1005,127 +1005,47 @@ void level_editor(roomGrid *room_grid){
     input.add = 0;
     input.remove = 0;
     
-    int array[ROOM_Y][ROOM_X];
+    int map_array[ROOM_Y][ROOM_X];
     
-    
-    // Init to zero
-    for (int i = 0; i < ROOM_Y; ++i) {
-        for (int j = 0; j < ROOM_X; ++j) {
-            array[i][j]=0;
-        }
-    }
+    initialise_level_editor_map(map_array);
     
     // Background stuff
     SDL_Surface *back_surf;
-    SDL_Texture *backtex;
+    SDL_Texture *back_tex;
     
     // Tile stuff
     SDL_Surface *tile_surf;
-    SDL_Texture *tiletex;
+    SDL_Texture *tile_tex;
     SDL_Rect tile_src, tile_dst;
     
-    // curstor stuff
+    // Cursor stuff
     SDL_Surface *cursor_surf;
     SDL_Texture *cursor_tex;
     SDL_Rect cursor_src, cursor_dst;
+
+    // Menu stuff
+    SDL_Surface *menu_surf, *options_surf;
+    SDL_Texture *menu_tex, *options_tex;
     
     // Make the tile
-    tile_surf = IMG_Load("block.png");
-    tiletex = SDL_CreateTextureFromSurface(room_grid -> renderer, tile_surf);
-    SDL_FreeSurface(tile_surf);
-    
+    load_image(room_grid, &tile_surf, &tile_tex, "block.png");
+
     // Make the cursor
     cursor_surf = IMG_Load("cursor.png");
-
     Uint32 colorkey = SDL_MapRGB(cursor_surf->format, 127, 0, 127);
+
     SDL_SetColorKey( cursor_surf, SDL_TRUE, colorkey);
-    
     cursor_tex = SDL_CreateTextureFromSurface(room_grid -> renderer, cursor_surf);
+
     SDL_FreeSurface (cursor_surf);
     
     // Make the background
-    back_surf = IMG_Load("labtile2.png");
-
-    backtex = SDL_CreateTextureFromSurface(room_grid -> renderer, back_surf);
-    SDL_FreeSurface(back_surf);
-    
+    load_image(room_grid, &back_surf, &back_tex, "labtile2.png");    
     
     // Run the meat of the program.
     while(running){
         
-        // Event handling time
-        SDL_Event event;
-        
-        if (SDL_PollEvent(&event))  // If there is an event
-        {
-            switch (event.type)
-            {
-                    // Quit
-                case SDL_QUIT:
-                    exit(0);
-                    break;
-                    
-                    // Keydowns
-                case SDL_KEYDOWN:
-                    switch (event.key.keysym.sym)
-                {
-                    case SDLK_q:
-                        running = false;
-                        break;
-                        
-                    case SDLK_s:
-                        save(array);
-                        break;
-                        
-                    default:
-                        break;
-                }
-                    break;
-                    
-                    // Key ups
-                case SDL_KEYUP:
-                    switch (event.key.keysym.sym)
-                {
-                    default:
-                        break;
-                }
-                    break;
-                    
-                    // Click
-                case SDL_MOUSEBUTTONDOWN:
-                    switch(event.button.button)
-                {
-                    case SDL_BUTTON_LEFT:
-                        input.add = 1;
-                        break;
-                        
-                    case SDL_BUTTON_RIGHT:
-                        input.remove = 1;
-                        break;
-                        
-                    default:
-                        break;
-                }
-                    break;
-                    
-                    // "Unclick" - reset the values on the key release
-                case SDL_MOUSEBUTTONUP:
-                    switch(event.button.button)
-                {
-                    case SDL_BUTTON_LEFT:
-                        input.add = 0;
-                        break;
-                        
-                    case SDL_BUTTON_RIGHT:
-                        input.remove = 0;
-                        break;
-                        
-                    default:
-                        break;
-                }
-                    break;
-            }
-        }
+        editor_interactions(map_array, &running, &input);
         
         // Get the mouse coords
         SDL_GetMouseState(&input.mouse_x, &input.mouse_y);
@@ -1164,12 +1084,12 @@ void level_editor(roomGrid *room_grid){
         
         if(input.add == 1)
         {
-            array[tile_y][tile_x] = WALL;
+            map_array[tile_y][tile_x] = WALL;
         }
         
         if (input.remove == 1)
         {
-            array[tile_y][tile_x] = BLANK;
+            map_array[tile_y][tile_x] = BLANK;
         }
         
         for (int i = 0; i < ROOM_Y; ++i)
@@ -1182,14 +1102,14 @@ void level_editor(roomGrid *room_grid){
                 tile_dst.w = TILE_SIZE;
                 tile_dst.h = TILE_SIZE;
                 
-                if (array[i][j] == WALL)
+                if (map_array[i][j] == WALL)
                 {   
                     // If the array element is a 1, draw a wall
-                    SDL_RenderCopy(room_grid -> renderer, tiletex, &tile_src, &tile_dst);
+                    SDL_RenderCopy(room_grid -> renderer, tile_tex, &tile_src, &tile_dst);
                 }
-                else if (array[i][j] == BLANK)
+                else if ( map_array[i][j] == BLANK)
                 {   // If the element is a 0, draw a floor tile
-                    SDL_RenderCopy(room_grid -> renderer, backtex, &tile_src, &tile_dst);
+                    SDL_RenderCopy(room_grid -> renderer, back_tex, &tile_src, &tile_dst);
                 }
             }
         }
@@ -1202,19 +1122,101 @@ void level_editor(roomGrid *room_grid){
     
     load_menu_frame(room_grid);
 
-    SDL_Surface *menu_surf, *options_surf;
-    SDL_Texture *menu_tex, *options_tex;
+    load_image(room_grid, &menu_surf, &menu_tex, "screen2.png");
 
-    menu_surf = IMG_Load("screen2.png");
-    menu_tex = SDL_CreateTextureFromSurface(room_grid -> renderer, menu_surf);
-    SDL_FreeSurface(menu_surf);
-
-    options_surf = IMG_Load("controls.png");
-    options_tex = SDL_CreateTextureFromSurface(room_grid -> renderer, options_surf);
-    SDL_FreeSurface(options_surf);
+    load_image(room_grid, &options_surf, &options_tex, "controls.png");
     
     highlight_area(room_grid, editor, menu_tex, options_tex);
     
+}
+
+void editor_interactions(int map_array[ROOM_Y][ROOM_X], bool *running, input *input)
+{
+    // Event handling time
+    SDL_Event event;
+    
+    if (SDL_PollEvent(&event))  // If there is an event
+    {
+        switch (event.type)
+        {
+                // Quit
+            case SDL_QUIT:
+                exit(0);
+                break;
+                
+                // Keydowns
+            case SDL_KEYDOWN:
+                switch (event.key.keysym.sym)
+            {
+                case SDLK_q:
+                    *running = false;
+                    break;
+                    
+                case SDLK_s:
+                    save(map_array);
+                    break;
+                    
+                default:
+                    break;
+            }
+                break;
+                
+                // Key ups
+            case SDL_KEYUP:
+                switch (event.key.keysym.sym)
+            {
+                default:
+                    break;
+            }
+                break;
+                
+                // Click
+            case SDL_MOUSEBUTTONDOWN:
+                switch(event.button.button)
+            {
+                case SDL_BUTTON_LEFT:
+                    input -> add = 1;
+                    break;
+                    
+                case SDL_BUTTON_RIGHT:
+                    input -> remove = 1;
+                    break;
+                    
+                default:
+                    break;
+            }
+                break;
+                
+                // "Unclick" - reset the values on the key release
+            case SDL_MOUSEBUTTONUP:
+                switch(event.button.button)
+            {
+                case SDL_BUTTON_LEFT:
+                    input -> add = 0;
+                    break;
+                    
+                case SDL_BUTTON_RIGHT:
+                    input -> remove = 0;
+                    break;
+                    
+                default:
+                    break;
+            }
+                break;
+        }
+    }
+}
+
+void initialise_level_editor_map(int map_array[ROOM_Y][ROOM_X])
+{
+    int i, j;
+
+    for (i = 0; i < ROOM_Y; ++i) {
+        for (j = 0; j < ROOM_X; ++j) {
+            map_array[i][j] = 0;
+        }
+    }
+
 }
 
 
@@ -1225,9 +1227,7 @@ void load_menu_frame(roomGrid *room_grid)
     SDL_Surface *background_surf;
     SDL_Texture *background_tex;
 
-    background_surf = IMG_Load("screen1.png");
-    background_tex = SDL_CreateTextureFromSurface(room_grid -> renderer, background_surf);
-    SDL_FreeSurface(background_surf);
+    load_image(room_grid, &background_surf, &background_tex, "screen1.png");
 
     SDL_RenderCopy(room_grid -> renderer, background_tex, NULL, NULL);
     SDL_RenderPresent(room_grid -> renderer);
@@ -1282,7 +1282,9 @@ void cycle_options(roomGrid *room_grid){
     SDL_Surface *menu_surf = NULL, *options_surf = NULL;
     SDL_Texture *menu_tex = NULL, *options_tex = NULL;
 
-    load_menu_images(room_grid, &menu_surf, &options_surf, &menu_tex, &options_tex);
+    load_image(room_grid, &menu_surf, &menu_tex, "screen2.png");
+
+    load_image(room_grid, &options_surf, &options_tex, "controls.png");
     
     highlight_area(room_grid, current_selection, menu_tex, options_tex);
 
@@ -1319,7 +1321,7 @@ void cycle_options(roomGrid *room_grid){
                         
                     case SDLK_SPACE:
 
-                        menu_space_press(room_grid, current_selection, menu_tex, options_tex, &menu_running);
+                        menu_space_press(room_grid, &current_selection, menu_tex, options_tex, &menu_running);
                 
                 }
             }
@@ -1329,30 +1331,26 @@ void cycle_options(roomGrid *room_grid){
     }
 }
 
-void load_menu_images(roomGrid *room_grid, SDL_Surface **menu_surf, SDL_Surface **options_surf, SDL_Texture **menu_tex, SDL_Texture **options_tex)
+void load_image(roomGrid *room_grid, SDL_Surface **surf, SDL_Texture **tex, char *image_name)
 {
-    *menu_surf = IMG_Load("screen2.png");
-    *menu_tex = SDL_CreateTextureFromSurface(room_grid -> renderer, *menu_surf);
-    SDL_FreeSurface(*menu_surf);
-
-    *options_surf = IMG_Load("controls.png");
-    *options_tex = SDL_CreateTextureFromSurface(room_grid -> renderer, *options_surf);
-    SDL_FreeSurface(*options_surf);
+    *surf = IMG_Load(image_name);
+    *tex = SDL_CreateTextureFromSurface(room_grid -> renderer, *surf);
+    SDL_FreeSurface(*surf);
 }
 
-void menu_space_press(roomGrid *room_grid, int current_selection, SDL_Texture *menu_tex, SDL_Texture *options_tex, bool *menu_running)
+void menu_space_press(roomGrid *room_grid, int *current_selection, SDL_Texture *menu_tex, SDL_Texture *options_tex, bool *menu_running)
 {
     SDL_Event event;
 
-    if( current_selection == new_game ){
+    if( *current_selection == new_game ){
         *menu_running = false;
     }
 
-    if( current_selection == options){
+    if( *current_selection == options){
 
         highlight_area(room_grid, in_option_screen, menu_tex, options_tex);
 
-        while(current_selection == options){
+        while( *current_selection == options ){
             if(SDL_PollEvent(&event)){
 
                 switch(event.type){
@@ -1363,8 +1361,8 @@ void menu_space_press(roomGrid *room_grid, int current_selection, SDL_Texture *m
 
                         case SDLK_SPACE:
                         
-                            current_selection = new_game;
-                            highlight_area(room_grid, current_selection, menu_tex, options_tex);
+                            *current_selection = new_game;
+                            highlight_area(room_grid, *current_selection, menu_tex, options_tex);
                             break;
                             
                     }
@@ -1373,7 +1371,7 @@ void menu_space_press(roomGrid *room_grid, int current_selection, SDL_Texture *m
         }
     }
     
-    if( current_selection == editor){
+    if( *current_selection == editor ){
 
         //Option 4 opens editor/level builder
         level_editor(room_grid);
