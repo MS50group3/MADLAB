@@ -107,7 +107,7 @@ int main(void){
 	SDL_FreeSurface(black_surf);
 
 	/* Make an alternative tile */
-	red_surf = IMG_Load("../gfx/block_red.png");
+	red_surf = IMG_Load("../gfx/computer.png");
 	redtex = SDL_CreateTextureFromSurface(renderer, red_surf);
 	SDL_FreeSurface(red_surf);
 
@@ -130,7 +130,7 @@ int main(void){
 		
 		// Event handling time
 		SDL_Event event; 
-
+		SDL_Delay(10);
 		if (SDL_PollEvent(&event))  // If there is an event
 		{
 			switch (event.type) 
@@ -239,7 +239,8 @@ int main(void){
 
 
 		if(input.add == 1)
-		{
+		{	
+			SDL_Delay(200);
 			array[tile_y][tile_x]++;
 			array[tile_y][tile_x] = array[tile_y][tile_x] % 3;
 		}
