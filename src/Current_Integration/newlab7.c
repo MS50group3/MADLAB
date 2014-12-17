@@ -160,6 +160,7 @@ void level_editor(roomGrid *room_grid);
 void initialise_level_editor_map(int array[ROOM_Y][ROOM_X]);
 void load_image(roomGrid *room_grid, SDL_Surface **surf, SDL_Texture **tex, char *image_name);
 void editor_interactions(int map_array[ROOM_Y][ROOM_X], bool *running, input *input);
+void configure_mouse(int excess, int *tile_x, int *tile_y, input input, cursor cursor, SDL_Rect *cursor_src, SDL_Rect *cursor_dst, SDL_Rect *tile_src);
 
 //MAIN
 
@@ -1044,43 +1045,15 @@ void level_editor(roomGrid *room_grid){
     
     // Run the meat of the program.
     while(running){
+
+        int excess = 0, tile_x = 0, tile_y = 0;
         
         editor_interactions(map_array, &running, &input);
         
         // Get the mouse coords
         SDL_GetMouseState(&input.mouse_x, &input.mouse_y);
-        
-        // Round the coords to the nearest multiple of TILE_SIZE
-        int excess = input.mouse_x % TILE_SIZE;
-        input.mouse_x = input.mouse_x - excess;
-        
-        excess = input.mouse_y % TILE_SIZE;
-        input.mouse_y = input.mouse_y - excess;
-        
-        // Which tile 'element' are we in
-        int tile_x = input.mouse_x / TILE_SIZE;
-        int tile_y = input.mouse_y / TILE_SIZE;
-        
-        // curstor details
-        cursor.x = input.mouse_x;
-        cursor.y = input.mouse_y;
-        
-        // Where to get the image from (relative)
-        cursor_src.y = 0;
-        cursor_src.x = 0;
-        cursor_src.w = TILE_SIZE;
-        cursor_src.h = TILE_SIZE;
-        
-        // Where to put it (relative)
-        cursor_dst.y = cursor.y;
-        cursor_dst.x = cursor.x;
-        cursor_dst.w = TILE_SIZE;
-        cursor_dst.h = TILE_SIZE;
-        
-        tile_src.y=0;
-        tile_src.x=0;
-        tile_src.w=TILE_SIZE;
-        tile_src.h=TILE_SIZE;
+
+        configure_mouse(excess, &tile_x, &tile_y, input, cursor, &cursor_src, &cursor_dst, &tile_src);
         
         if(input.add == 1)
         {
@@ -1128,6 +1101,41 @@ void level_editor(roomGrid *room_grid){
     
     highlight_area(room_grid, editor, menu_tex, options_tex);
     
+}
+
+void configure_mouse(int excess, int *tile_x, int *tile_y, input input, cursor cursor, SDL_Rect *cursor_src, SDL_Rect *cursor_dst, SDL_Rect *tile_src)
+{
+    // Round the coords to the nearest multiple of TILE_SIZE
+    excess = input.mouse_x % TILE_SIZE;
+    input.mouse_x = input.mouse_x - excess;
+    
+    excess = input.mouse_y % TILE_SIZE;
+    input.mouse_y = input.mouse_y - excess;
+    
+    // Which tile 'element' are we in
+    *tile_x = input.mouse_x / TILE_SIZE;
+    *tile_y = input.mouse_y / TILE_SIZE;
+    
+    // curstor details
+    cursor.x = input.mouse_x;
+    cursor.y = input.mouse_y;
+    
+    // Where to get the image from (relative)
+    cursor_src->y = 0;
+    cursor_src->x = 0;
+    cursor_src->w = TILE_SIZE;
+    cursor_src->h = TILE_SIZE;
+    
+    // Where to put it (relative)
+    cursor_dst->y = cursor.y;
+    cursor_dst->x = cursor.x;
+    cursor_dst->w = TILE_SIZE;
+    cursor_dst->h = TILE_SIZE;
+    
+    tile_src->y=0;
+    tile_src->x=0;
+    tile_src->w=TILE_SIZE;
+    tile_src->h=TILE_SIZE;
 }
 
 void editor_interactions(int map_array[ROOM_Y][ROOM_X], bool *running, input *input)
