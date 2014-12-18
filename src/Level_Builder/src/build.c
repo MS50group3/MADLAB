@@ -54,6 +54,7 @@ int main(void){
 	bool running = true;
 	Input input;
 	Cursor cursor;
+	int previous;
 
 	input.add = 0;
 	input.remove = 0;
@@ -107,7 +108,7 @@ int main(void){
 	SDL_FreeSurface(black_surf);
 
 	/* Make an alternative tile */
-	red_surf = IMG_Load("../gfx/computer.png");
+	red_surf = IMG_Load("../gfx/block_red.png");
 	redtex = SDL_CreateTextureFromSurface(renderer, red_surf);
 	SDL_FreeSurface(red_surf);
 
@@ -124,13 +125,16 @@ int main(void){
 	backtex = SDL_CreateTextureFromSurface(renderer, back_surf);
 	SDL_FreeSurface(back_surf);
 
+	int src_tile = 0; // Saves the value in the first tile clicked before a drag motion
+	int hold = 0; // drag and hold flag. should be set 1 by down click and 0 by up.
+	// While 1 ----> no other down clicks should be effective
 
 	// Run the meat of the program.
 	while(running){
 		
 		// Event handling time
 		SDL_Event event; 
-		SDL_Delay(10);
+		SDL_Delay(20);
 		if (SDL_PollEvent(&event))  // If there is an event
 		{
 			switch (event.type) 
@@ -202,6 +206,7 @@ int main(void){
 			}
 		}
 
+
 		// Get the mouse coords
 		SDL_GetMouseState(&input.mouse_x, &input.mouse_y);
 
@@ -237,13 +242,18 @@ int main(void){
 		tile_src.w=TILE_SIZE;
 		tile_src.h=TILE_SIZE;
 
+		if (input.add == previous && previous == 1) // If the mouse has been held down
+		{
+			hold = 1;
+			array[tile_y][tile_x] = src_tile;
+		}
 
-		if(input.add == 1)
+		else if(input.add == 1) // If we've got a new add signal, add a tile
 		{	
-			SDL_Delay(200);
 			array[tile_y][tile_x]++;
 			array[tile_y][tile_x] = array[tile_y][tile_x] % 3;
-		}
+			src_tile = array[tile_y][tile_x];
+		} 
 
 		if (input.remove == 1)
 		{
@@ -285,6 +295,9 @@ int main(void){
 
 		/* Update the screen with the latest render */
 		SDL_RenderPresent(renderer);
+
+		previous = input.add; // Save the last event input
+
 	}
 
 	// Tear everything down
@@ -294,7 +307,6 @@ int main(void){
     SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
     SDL_Quit();
-
 
 }
 
