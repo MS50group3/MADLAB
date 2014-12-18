@@ -78,6 +78,7 @@ typedef struct roomGrid
     int y_sprite_centre;
     int probe;
     int skip_checker;
+    int problem_quitter;
     int refresh_counter;
     Mix_Chunk *mus;
     int paused;
@@ -132,7 +133,7 @@ typedef struct map map;
 
 void print_instruction(roomGrid *room_grid, char *instructions_list[NUM_INSTRUCTIONS], int start, int end);
 void James_SDL_Events(roomGrid *room_grid);
-void print_some_text(roomGrid *room_grid, char *instruction);
+void print_instruction_to_screen(roomGrid *room_grid, char *instruction);
 void get_instructions(char *instructions_list[NUM_INSTRUCTIONS]);
 void look_for_action(roomGrid *room_grid);
 void SDL_QuitChecker(roomGrid *room_grid);
@@ -148,10 +149,10 @@ void check_user_variable_input(roomGrid *room_grid, char *input_string, int *inp
 //FUNCTIONS FOR MOVEMENT
 
 void makeRoom(roomGrid *room_grid, FILE *map_file);
-void printroom_array(roomGrid *room_grid, progress *puzzle);
+void print_room_array(roomGrid *room_grid, progress *puzzle);
 void draw(roomGrid *room_grid, progress *puzzle, char *instructions_list[NUM_INSTRUCTIONS], Chicken *hen);
 void run_main_game(roomGrid *room_grid, progress *puzzle, Chicken *hen);
-void freeroom_array(roomGrid *room_grid);
+void free_room_array(roomGrid *room_grid);
 void sound_on_off(roomGrid *room_grid);
 void possible(roomGrid *room_grid, progress *puzzle);
 int action(roomGrid *room_grid, progress *puzzle, char *instructions_list[NUM_INSTRUCTIONS], Chicken *hen);
@@ -187,7 +188,7 @@ void draw_edited_map(int map_array[ROOM_Y][ROOM_X], input input, int tile_x, int
 
 //MAIN
 
-int main(int aroom_gridc, char *aroom_gridv[])
+int main(int aroom_gridc, char *argv[])
 {
     roomGrid roomStuff, *room_grid;
     room_grid = &roomStuff;
@@ -199,7 +200,7 @@ int main(int aroom_gridc, char *aroom_gridv[])
     hen = &Fowl;
 
     FILE *map_file = NULL;
-    map_file = fopen(aroom_gridv[1], "r");
+    map_file = fopen(argv[1], "r");
 
     if (map_file == NULL){
         printf("File could not be opened.\n");
@@ -216,9 +217,9 @@ int main(int aroom_gridc, char *aroom_gridv[])
 
     run_main_game(room_grid, puzzle, hen);
 
-    printroom_array(room_grid, puzzle);
+    print_room_array(room_grid, puzzle);
 
-    freeroom_array(room_grid);
+    free_room_array(room_grid);
 
     return(0);
 }
@@ -266,10 +267,7 @@ void makeRoom(roomGrid *room_grid, FILE *map_file)
 //The main part of the game running problems and movement etc.
 void run_main_game(roomGrid *room_grid, progress *puzzle, Chicken *hen)
 {
-    //SDL_Window *window = NULL;
     char *instructions_list[NUM_INSTRUCTIONS];
-
-    //initialise_SDL_component(window, room_grid);
 
     get_instructions(instructions_list);
 
@@ -342,9 +340,12 @@ void print_instruction(roomGrid *room_grid, char *instructions_list[NUM_INSTRUCT
 {
     int i;
     room_grid->finished = unfinished;
+    room_grid -> problem_quitter = off;
 
     for (i = start; i < end; ++i){
-        print_some_text(room_grid, instructions_list[i]);
+        if(room_grid -> problem_quitter == off){
+            print_instruction_to_screen(room_grid, instructions_list[i]);
+        }
     }
 
 }
@@ -393,12 +394,12 @@ void get_instructions(char *instructions_list[NUM_INSTRUCTIONS])
 
 
 // Used to print sets of instructions to the screen.
-void print_some_text(roomGrid *room_grid, char *instruction)
+void print_instruction_to_screen(roomGrid *room_grid, char *instruction)
 {
     room_grid->refresh_counter = 0;
     room_grid->skip_checker = off;
-    SDL_Surface* text_one = NULL;
-    SDL_Texture* image;
+    SDL_Surface* image_surf = NULL;
+    SDL_Texture* image_tex;
 
     // The following few lines are used to create a filename to get the .bmp to print to screen.
     char prefix[LENGTH_PREFIX] = "Instructions/";
@@ -410,15 +411,16 @@ void print_some_text(roomGrid *room_grid, char *instruction)
     strcat(filename, extension);
 
     // Loads image in and checks it.
-    text_one = SDL_LoadBMP(filename);
-    image = SDL_CreateTextureFromSurface(room_grid -> renderer, text_one);
+    image_surf = SDL_LoadBMP(filename);
 
-    if (text_one == NULL){
+    if (image_surf == NULL){
         printf("Unable to load image %s! SDL Error: %s\n", filename, SDL_GetError());
     }
 
+    image_tex = SDL_CreateTextureFromSurface(room_grid -> renderer, image_surf);
+
     // Update the surface and apply the image.
-    SDL_RenderCopy(room_grid -> renderer, image, NULL, NULL);
+    SDL_RenderCopy(room_grid -> renderer, image_tex, NULL, NULL);
     SDL_RenderPresent(room_grid -> renderer);
 
     // Wait the sleep time and free the malloc for the filename.
@@ -442,8 +444,15 @@ void James_SDL_Events(roomGrid *room_grid)
                 room_grid -> skip_checker = 1;
                 break;
             case SDL_KEYDOWN:
-                room_grid -> skip_checker = 1;
-                break;
+                switch (event.key.keysym.sym)
+                {
+                    case SDLK_x:
+                        room_grid -> problem_quitter = on;
+                        break;
+                    case SDLK_SPACE:
+                        room_grid -> skip_checker = 1;
+                        break;
+                }
         }
     }
 }
@@ -457,7 +466,7 @@ void look_for_action(roomGrid *room_grid)
         SDL_Delay(SLEEP_TIME);
         SDL_QuitChecker(room_grid);
     }
-    while(room_grid -> refresh_counter < NUM_REFRESHES && !room_grid -> skip_checker);
+    while(room_grid -> refresh_counter < NUM_REFRESHES && !room_grid -> skip_checker && !room_grid -> problem_quitter);
 }
 
 
@@ -475,20 +484,9 @@ void draw(roomGrid *room_grid, progress *puzzle, char *instructions_list[NUM_INS
     SDL_Surface *background, *sprite, *chicken;
     SDL_Texture *backtex, *spritetex, *chickentex;
 
-    /* making dat dere background */
-    background = IMG_Load("lab1sheet.png");
-    backtex = SDL_CreateTextureFromSurface(room_grid -> renderer, background);
-    SDL_FreeSurface (background);
-
-    /* I have created life itself yo */
-    sprite = IMG_Load("prof2.png");
-    spritetex = SDL_CreateTextureFromSurface(room_grid -> renderer, sprite);
-    SDL_FreeSurface (sprite);
-
-    /* makin dat dere cheerkan */
-    chicken = IMG_Load("chicken.png");
-    chickentex = SDL_CreateTextureFromSurface(room_grid -> renderer, chicken);
-    SDL_FreeSurface (chicken);
+    load_image(room_grid, &background, &backtex, "lab1sheet.png");
+    load_image(room_grid, &sprite, &spritetex, "prof2.png");
+    load_image(room_grid, &chicken, &chickentex, "chicken.png");
 
     initialise_roomgrid_components(room_grid, puzzle);
     position_sprite(room_grid);
@@ -674,16 +672,16 @@ void movement(roomGrid *room_grid, progress *puzzle, char *instructions_list[NUM
 
 void sound_on_off(roomGrid *room_grid)
 {
-    if (room_grid -> paused == 0)
+    if (room_grid -> paused == off)
     {
         Mix_Pause(-1);
-        room_grid -> paused = 1;
+        room_grid -> paused = on;      
     }
 
-    else if (room_grid -> paused == 1)
+    else if (room_grid -> paused == on)
     {
         Mix_Resume(-1);
-        room_grid -> paused = 0;
+        room_grid -> paused = off;
     }
 }
 
@@ -709,10 +707,6 @@ void collision_detection(roomGrid *room_grid)
 
     SDL_RenderClear(room_grid -> renderer);
 }
-
-
-
-
 
 void possible(roomGrid *room_grid, progress *puzzle)
 {
@@ -863,8 +857,7 @@ int action(roomGrid *room_grid, progress *puzzle, char *instructions_list[NUM_IN
         case(puz_4):        return 0;
                             break; 
 
-        case(puz_5):        initialise_chicken(hen, room_grid);
-                            //room_grid -> (room_array[room_grid -> bottom_y_coord][room_grid -> left_x_coord]) == 
+        case(puz_5):        initialise_chicken(hen, room_grid); 
                             printf("Bring out the chicken!\n");
                             return 0;
                             break;
@@ -906,16 +899,18 @@ void first_problem(roomGrid *room_grid, char *instructions_list[NUM_INSTRUCTIONS
     print_instruction(room_grid, instructions_list, 22, 27);
 
     //Now we go to the input screen for the text.
-	do{
-		input_screen(room_grid, &correct_indicator);
-	}while(correct_indicator != correct);
+    while(correct_indicator != correct && room_grid -> problem_quitter == off){
+        input_screen(room_grid, &correct_indicator);
+    }
 
     //Prints second part of the instructions.
-	print_instruction(room_grid, instructions_list, 27, 29);
+    if(room_grid -> problem_quitter == off){
+        print_instruction(room_grid, instructions_list, 27, 29);
+    }
 
 }
 
-void printroom_array(roomGrid *room_grid, progress *puzzle)
+void print_room_array(roomGrid *room_grid, progress *puzzle)
 {
     for (int i = 0; i < ROOM_Y; i++){
         for (int j = 0; j < ROOM_X; j++){
@@ -926,7 +921,7 @@ void printroom_array(roomGrid *room_grid, progress *puzzle)
 }
 
 
-void freeroom_array(roomGrid *room_grid)
+void free_room_array(roomGrid *room_grid)
 {
     for (int i = 0; i < ROOM_Y; i++){
         free(room_grid -> room_array[i]);
@@ -944,7 +939,6 @@ void input_screen(roomGrid *room_grid, wrong_right *correct_indicator)
     char input_string[MAX_INPUT_CHARS], possible_answer[MAX_INPUT_CHARS];
     int input_index = 0, finish_checker = unfinished;
 
-    //clear_screen(sw);
     initialise_input_string(input_string);
     initialise_drcrect(&drcrect, input_index);
 
@@ -986,6 +980,8 @@ void input_screen(roomGrid *room_grid, wrong_right *correct_indicator)
     if( strcmp(possible_answer, "fan < too hot") == 0){
         *correct_indicator = correct;
     }
+
+    look_for_action(room_grid);
 }
 
 void create_answer_for_checking(char possible_answer[MAX_INPUT_CHARS], char input_string[MAX_INPUT_CHARS])
@@ -1107,23 +1103,10 @@ void level_editor(roomGrid *room_grid)
     
     initialise_level_editor_map(map_array);
     
-    // Background stuff
-    SDL_Surface *back_surf;
-    SDL_Texture *back_tex;
-    
-    // Tile stuff
-    SDL_Surface *tile_surf;
-    SDL_Texture *tile_tex;
-    SDL_Rect tile_src, tile_dst;
-    
-    // Cursor stuff
-    SDL_Surface *cursor_surf;
-    SDL_Texture *cursor_tex;
-    SDL_Rect cursor_src, cursor_dst;
-
-    // Menu stuff
-    SDL_Surface *menu_surf, *options_surf;
-    SDL_Texture *menu_tex, *options_tex;
+    // Background, tile, cursor and menu stuff
+    SDL_Surface *back_surf, *tile_surf, *cursor_surf, *menu_surf, *options_surf;
+    SDL_Texture *back_tex, *tile_tex, *cursor_tex, *menu_tex, *options_tex;
+    SDL_Rect tile_src, tile_dst, cursor_src, cursor_dst;
     
     // Make the tile
     load_image(room_grid, &tile_surf, &tile_tex, "block.png");
@@ -1170,42 +1153,42 @@ void draw_edited_map(int map_array[ROOM_Y][ROOM_X], input input, int tile_x, int
                      roomGrid *room_grid, SDL_Texture *cursor_tex, SDL_Rect cursor_src, SDL_Rect cursor_dst, SDL_Texture *back_tex)
 {
 
-        if(input.add == 1)
-        {
-            map_array[tile_y][tile_x] = WALL;
-        }
-        
-        if (input.remove == 1)
-        {
-            map_array[tile_y][tile_x] = BLANK;
-        }
-        
-        for (int i = 0; i < ROOM_Y; ++i)
-        {
-            for (int j = 0; j < ROOM_X; ++j)
+    if(input.add == 1)
+    {
+        map_array[tile_y][tile_x] = WALL;
+    }
+    
+    if (input.remove == 1)
+    {
+        map_array[tile_y][tile_x] = BLANK;
+    }
+    
+    for (int i = 0; i < ROOM_Y; ++i)
+    {
+        for (int j = 0; j < ROOM_X; ++j)
+        {   
+            // Where to put the tile
+            tile_dst.x = j*TILE_SIZE;
+            tile_dst.y = i*TILE_SIZE;
+            tile_dst.w = TILE_SIZE;
+            tile_dst.h = TILE_SIZE;
+            
+            if (map_array[i][j] == WALL)
             {   
-                // Where to put the tile
-                tile_dst.x = j*TILE_SIZE;
-                tile_dst.y = i*TILE_SIZE;
-                tile_dst.w = TILE_SIZE;
-                tile_dst.h = TILE_SIZE;
-                
-                if (map_array[i][j] == WALL)
-                {   
-                    // If the array element is a 1, draw a wall
-                    SDL_RenderCopy(room_grid -> renderer, tile_tex, &tile_src, &tile_dst);
-                }
-                else if ( map_array[i][j] == BLANK)
-                {   // If the element is a 0, draw a floor tile
-                    SDL_RenderCopy(room_grid -> renderer, back_tex, &tile_src, &tile_dst);
-                }
+                // If the array element is a 1, draw a wall
+                SDL_RenderCopy(room_grid -> renderer, tile_tex, &tile_src, &tile_dst);
+            }
+            else if ( map_array[i][j] == BLANK)
+            {   // If the element is a 0, draw a floor tile
+                SDL_RenderCopy(room_grid -> renderer, back_tex, &tile_src, &tile_dst);
             }
         }
+    }
 
-        SDL_RenderCopy(room_grid -> renderer, cursor_tex, &cursor_src, &cursor_dst);
-        
-        // Update the screen with the latest render 
-        SDL_RenderPresent(room_grid -> renderer);
+    SDL_RenderCopy(room_grid -> renderer, cursor_tex, &cursor_src, &cursor_dst);
+    
+    // Update the screen with the latest render 
+    SDL_RenderPresent(room_grid -> renderer);
         
 }
 
