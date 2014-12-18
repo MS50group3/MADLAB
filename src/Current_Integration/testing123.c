@@ -37,6 +37,7 @@
 #define MUSIC_CONST_TWO        4096
 #define MOVEMENT_INCREMENT 		  8
 #define WALL                      1
+#define ALT                       2
 #define BLANK                     0
 
 // TYPEDEFS AND ENUMERATION
@@ -128,6 +129,12 @@ struct map{
 };
 typedef struct map map;
 
+struct edit{
+    int previous;
+    int src_value;
+};
+typedef struct edit Edit;
+
 
 //FUNCTIONS FOR PROBLEMS
 
@@ -183,8 +190,8 @@ void initialise_level_editor_map(int array[ROOM_Y][ROOM_X]);
 void load_image(roomGrid *room_grid, SDL_Surface **surf, SDL_Texture **tex, char *image_name);
 void editor_interactions(int map_array[ROOM_Y][ROOM_X], bool *running, input *input);
 void configure_mouse(int excess, int *tile_x, int *tile_y, input input, cursor cursor, SDL_Rect *cursor_src, SDL_Rect *cursor_dst, SDL_Rect *tile_src);
-void draw_edited_map(int map_array[ROOM_Y][ROOM_X], input input, int tile_x, int tile_y, SDL_Texture *tile_tex, SDL_Rect tile_src, SDL_Rect tile_dst, 
-                     roomGrid *room_grid, SDL_Texture *cursor_tex, SDL_Rect cursor_src, SDL_Rect cursor_dst, SDL_Texture *back_tex, int previous, int src_tile);
+Edit draw_edited_map(int map_array[ROOM_Y][ROOM_X], input input, int tile_x, int tile_y, SDL_Texture *tile_tex, SDL_Rect tile_src, SDL_Rect tile_dst, 
+                     roomGrid *room_grid, SDL_Texture *cursor_tex, SDL_Rect cursor_src, SDL_Rect cursor_dst, SDL_Texture *back_tex, SDL_Texture *red_tex, Edit edit);
 
 //MAIN
 
@@ -1091,28 +1098,32 @@ void save(int array[ROOM_Y][ROOM_X]){
 
 void level_editor(roomGrid *room_grid)
 {
-    
+    Edit edit;
     bool running = true;
     input input;
     cursor cursor;
     
     input.add = 0;
     input.remove = 0;
-    int previous  = 0;
-    int src_tile = 0;
-
+    
+    edit.previous  = 0;
+    edit.src_value = 0;
     
     int map_array[ROOM_Y][ROOM_X];
     
     initialise_level_editor_map(map_array);
     
     // Background, tile, cursor and menu stuff
-    SDL_Surface *back_surf, *tile_surf, *cursor_surf, *menu_surf, *options_surf;
-    SDL_Texture *back_tex, *tile_tex, *cursor_tex, *menu_tex, *options_tex;
+    SDL_Surface *back_surf, *tile_surf, *red_surf, *cursor_surf, *menu_surf, *options_surf;
+    SDL_Texture *back_tex, *tile_tex, *red_tex, *cursor_tex, *menu_tex, *options_tex;
     SDL_Rect tile_src, tile_dst, cursor_src, cursor_dst;
     
     // Make the tile
     load_image(room_grid, &tile_surf, &tile_tex, "block.png");
+
+    red_surf = IMG_Load("block_red.png");
+    red_tex = SDL_CreateTextureFromSurface(room_grid -> renderer, red_surf);
+    SDL_FreeSurface(red_surf);
 
     // Make the cursor
     cursor_surf = IMG_Load("cursor.png");
@@ -1126,10 +1137,12 @@ void level_editor(roomGrid *room_grid)
     // Make the background
     load_image(room_grid, &back_surf, &back_tex, "labtile2.png");    
     
+    int excess = 0, tile_x = 0, tile_y = 0;
+    
     // Run the meat of the program.
     while(running){
 
-        int excess = 0, tile_x = 0, tile_y = 0;
+        SDL_Delay(20);
         
         editor_interactions(map_array, &running, &input);
         
@@ -1138,7 +1151,7 @@ void level_editor(roomGrid *room_grid)
 
         configure_mouse(excess, &tile_x, &tile_y, input, cursor, &cursor_src, &cursor_dst, &tile_src);
 
-        draw_edited_map(map_array, input, tile_x, tile_y, tile_tex, tile_src, tile_dst, room_grid, cursor_tex, cursor_src, cursor_dst, back_tex, previous, src_tile);
+        edit = draw_edited_map(map_array, input, tile_x, tile_y, tile_tex, tile_src, tile_dst, room_grid, cursor_tex, cursor_src, cursor_dst, back_tex, red_tex, edit);
         
     }
     
@@ -1152,20 +1165,20 @@ void level_editor(roomGrid *room_grid)
     
 }
 
-void draw_edited_map(int map_array[ROOM_Y][ROOM_X], input input, int tile_x, int tile_y, SDL_Texture *tile_tex, SDL_Rect tile_src, SDL_Rect tile_dst, 
-                     roomGrid *room_grid, SDL_Texture *cursor_tex, SDL_Rect cursor_src, SDL_Rect cursor_dst, SDL_Texture *back_tex, int previous, int src_tile)
+Edit draw_edited_map(int map_array[ROOM_Y][ROOM_X], input input, int tile_x, int tile_y, SDL_Texture *tile_tex, SDL_Rect tile_src, SDL_Rect tile_dst, 
+                     roomGrid *room_grid, SDL_Texture *cursor_tex, SDL_Rect cursor_src, SDL_Rect cursor_dst, SDL_Texture *back_tex, SDL_Texture *red_tex, Edit edit)
 {
 
-    if (input.add == previous && previous == 1) // If the mouse has been held down
+    if (input.add == edit.previous && edit.previous == 1) // If the mouse has been held down
         {
-            map_array[tile_y][tile_x] = src_tile;
+            map_array[tile_y][tile_x] = edit.src_value;
         }
 
         else if(input.add == 1) // If we've got a new add signal, add a tile
         {   
             map_array[tile_y][tile_x]++;
             map_array[tile_y][tile_x] = map_array[tile_y][tile_x] % 3;
-            src_tile = map_array[tile_y][tile_x];
+            edit.src_value = map_array[tile_y][tile_x];
         } 
     
     if (input.remove == 1)
@@ -1188,9 +1201,15 @@ void draw_edited_map(int map_array[ROOM_Y][ROOM_X], input input, int tile_x, int
                 // If the array element is a 1, draw a wall
                 SDL_RenderCopy(room_grid -> renderer, tile_tex, &tile_src, &tile_dst);
             }
+
             else if ( map_array[i][j] == BLANK)
             {   // If the element is a 0, draw a floor tile
                 SDL_RenderCopy(room_grid -> renderer, back_tex, &tile_src, &tile_dst);
+            }
+
+            else if ( map_array[i][j] == ALT)
+            {   // If the element is a 2, draw a red tile
+                SDL_RenderCopy(room_grid -> renderer, red_tex, &tile_src, &tile_dst);
             }
         }
     }
@@ -1199,7 +1218,10 @@ void draw_edited_map(int map_array[ROOM_Y][ROOM_X], input input, int tile_x, int
     
     // Update the screen with the latest render 
     SDL_RenderPresent(room_grid -> renderer);
-        
+
+    edit.previous = input.add;
+
+    return edit;   
 }
 
 void configure_mouse(int excess, int *tile_x, int *tile_y, input input, cursor cursor, SDL_Rect *cursor_src, SDL_Rect *cursor_dst, SDL_Rect *tile_src)
