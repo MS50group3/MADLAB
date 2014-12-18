@@ -126,9 +126,7 @@ int main(void){
 	SDL_FreeSurface(back_surf);
 
 	int src_tile = 0; // Saves the value in the first tile clicked before a drag motion
-	int hold = 0; // drag and hold flag. should be set 1 by down click and 0 by up.
-	// While 1 ----> no other down clicks should be effective
-
+	
 	// Run the meat of the program.
 	while(running){
 		
@@ -244,7 +242,6 @@ int main(void){
 
 		if (input.add == previous && previous == 1) // If the mouse has been held down
 		{
-			hold = 1;
 			array[tile_y][tile_x] = src_tile;
 		}
 
