@@ -26,7 +26,6 @@
 #define NUM_REFRESHES     		 50
 #define MAX_INPUT_CHARS  		 20
 #define INPUT_FINISHED    100000000
-#define CHARS_IN_ANS             13
 #define RECT_X  				190
 #define RECT_Y  				255
 #define RECT_W  				700
@@ -59,6 +58,9 @@ typedef enum on_off on_off;
 
 enum menu_options{new_game = 1, load_game = 2, options = 3,  editor = 4, in_option_screen = 7};
 typedef enum menu_options menu_options;
+
+enum special_buttons{enter = '\r', backspace = '\b', escape = 27};
+typedef enum special_buttons special_buttons;
 
 typedef struct roomGrid
 {
@@ -147,11 +149,12 @@ void SDL_QuitChecker(roomGrid *room_grid);
 void initialise_SDL_component(SDL_Window *window, roomGrid *room_grid);
 void neill_notes(roomGrid *room_grid, char *instructions_list[NUM_INSTRUCTIONS]);
 void first_problem(roomGrid *room_grid, char *instructions_list[NUM_INSTRUCTIONS]);
-void input_screen(roomGrid *room_grid, wrong_right *correct_indicator);
-void create_answer_for_checking(char possible_answer[MAX_INPUT_CHARS], char input_string[MAX_INPUT_CHARS]);
+void input_screen(roomGrid *room_grid, wrong_right *correct_indicator, char *correct_answer, int chars_in_ans);
+void create_answer_for_checking(char possible_answer[MAX_INPUT_CHARS], char input_string[MAX_INPUT_CHARS], int chars_in_ans);
 void initialise_input_string(char input_string[MAX_INPUT_CHARS]);
 void initialise_drcrect(SDL_Rect *drcrect, int input_index);
 void check_user_variable_input(roomGrid *room_grid, char *input_string, int *input_index, int *finish_checker);
+void second_problem(roomGrid *room_grid, char *instructions_list[NUM_INSTRUCTIONS]);
 
 //FUNCTIONS FOR MOVEMENT
 
@@ -397,6 +400,18 @@ void get_instructions(char *instructions_list[NUM_INSTRUCTIONS])
     //Second part of first problem instrucions.
 	instructions_list[27] = "that_worked";
 	instructions_list[28] = "room_cooling";
+
+    //First block of instructions
+    instructions_list[29] = "door_locked_two";
+    instructions_list[30] = "find_code";
+    instructions_list[31] = "anywhere";
+    instructions_list[32] = "found_code";
+    instructions_list[33] = "code1";
+    instructions_list[34] = "code_user";
+
+    //Second block of instructions
+    instructions_list[35] = "door_unlocked";
+
 }
 
 
@@ -505,7 +520,7 @@ void draw(roomGrid *room_grid, progress *puzzle, char *instructions_list[NUM_INS
         movement(room_grid, puzzle, instructions_list, hen);     
         collision_detection(room_grid);
         SDL_RenderClear(room_grid -> renderer);
-        draw_room(background, /*sprite,*/ backtex, /*spritetex,*/ room_grid);
+        draw_room(background, backtex, room_grid);
 
         /*RenderClear to wipe framebuffer, RenderCopy to compose final framebuffer, RenderPresent puts on screen*/
         SDL_RenderCopy(room_grid -> renderer, spritetex, &room_grid -> rcObj, &room_grid -> rcSprite);
@@ -856,9 +871,22 @@ int action(roomGrid *room_grid, progress *puzzle, char *instructions_list[NUM_IN
                             break;
 
         case(puz_2):        return 0;
-                            break;
+                            break; 
 
-        case(puz_3):        return 0;
+        case(puz_3):        printf("in puz_3 case\n");
+                            if ((puzzle -> puzzle_3) == false){
+                                printf("Spaced!\n");
+
+                                second_problem(room_grid, instructions_list);
+
+                                puzzle -> puzzle_3 = true;
+                                return 1;
+                            }
+                            else{
+                                printf("Already spaced!\n");
+
+                                return 0;
+                            }
                             break;
 
         case(puz_4):        return 0;
@@ -875,6 +903,26 @@ int action(roomGrid *room_grid, progress *puzzle, char *instructions_list[NUM_IN
     }
 }
 
+void second_problem(roomGrid *room_grid, char *instructions_list[NUM_INSTRUCTIONS])
+{
+    room_grid -> finished = 0;
+    wrong_right correct_indicator = incorrect;
+    char *correct_answer = "0101";
+
+    //Prints first part of the instructions.
+    print_instruction(room_grid, instructions_list, 29, 34);
+
+    //Now we go to the input screen for the text.
+    while(correct_indicator != correct && room_grid -> problem_quitter == off){
+        input_screen(room_grid, &correct_indicator, correct_answer, 4);
+    }
+
+    //Prints second part of the instructions.
+    if(room_grid -> problem_quitter == off){
+        print_instruction(room_grid, instructions_list, 34, 35);
+    }
+
+}
 
 void changeChickenDirection(Chicken *hen)
 {
@@ -901,13 +949,14 @@ void first_problem(roomGrid *room_grid, char *instructions_list[NUM_INSTRUCTIONS
 {
     room_grid -> finished = 0;
     wrong_right correct_indicator = incorrect;
+    char *correct_answer = "fan < too hot";
 
     //Prints first part of the instructions.
     print_instruction(room_grid, instructions_list, 22, 27);
 
     //Now we go to the input screen for the text.
     while(correct_indicator != correct && room_grid -> problem_quitter == off){
-        input_screen(room_grid, &correct_indicator);
+        input_screen(room_grid, &correct_indicator, correct_answer, 13);
     }
 
     //Prints second part of the instructions.
@@ -938,7 +987,7 @@ void free_room_array(roomGrid *room_grid)
 }
 
 //Used to read in and print out the person's input.
-void input_screen(roomGrid *room_grid, wrong_right *correct_indicator)
+void input_screen(roomGrid *room_grid, wrong_right *correct_indicator, char *correct_answer, int chars_in_ans)
 {
     SDL_Texture* image, *image_one;
     SDL_Surface *text, *text_one;
@@ -976,30 +1025,30 @@ void input_screen(roomGrid *room_grid, wrong_right *correct_indicator)
         SDL_RenderCopy(room_grid->renderer, image, NULL, &drcrect);
         SDL_RenderPresent(room_grid->renderer);
 
-        if(input_index == CHARS_IN_ANS + 1){
+        if(input_index == chars_in_ans + 1){
           finish_checker = finished;
         }
 
-    }while(input_index < MAX_INPUT_CHARS && !finish_checker);
+    }while(input_index < MAX_INPUT_CHARS && !finish_checker && room_grid -> problem_quitter == off);
 
-    create_answer_for_checking(possible_answer, input_string);
+    create_answer_for_checking(possible_answer, input_string, chars_in_ans);
 
-    if( strcmp(possible_answer, "fan < too hot") == 0){
+    if( strcmp(possible_answer, correct_answer) == 0){
         *correct_indicator = correct;
     }
 
     look_for_action(room_grid);
 }
 
-void create_answer_for_checking(char possible_answer[MAX_INPUT_CHARS], char input_string[MAX_INPUT_CHARS])
+void create_answer_for_checking(char possible_answer[MAX_INPUT_CHARS], char input_string[MAX_INPUT_CHARS], int chars_in_ans)
 {
   int i;
 
-  for(i = 0; i < CHARS_IN_ANS; ++i){
+  for(i = 0; i < chars_in_ans; ++i){
         possible_answer[i] = input_string[i];
     }
 
-  possible_answer[CHARS_IN_ANS] = '\0';
+  possible_answer[chars_in_ans] = '\0';
 }
 
 void initialise_input_string(char input_string[MAX_INPUT_CHARS])
@@ -1026,11 +1075,11 @@ void check_user_variable_input(roomGrid *room_grid, char *input_string, int *inp
 
   int gameover = 0;
 
-  while (gameover != INPUT_FINISHED){                                                                 //to make screen stay on.
-    while( SDL_PollEvent( &event ) ){                                                                 //checks for events.
-      if(event.type == SDL_KEYDOWN){                                                                  //checks for key being pressed
-        char c = event.key.keysym.sym;                                                                //if the key is pressed assigns character
-        if( (c >= 'a' && c <= 'z') || (c == ' ' || c == '=' || c == ',' || c == '.' ) ){
+  while (gameover != INPUT_FINISHED){                                                                                   //to make screen stay on.
+    while( SDL_PollEvent( &event ) ){                                                                                   //checks for events.
+      if(event.type == SDL_KEYDOWN){                                                                                    //checks for key being pressed
+        char c = event.key.keysym.sym;                                                                                  //if the key is pressed assigns character
+        if( (c >= 'a' && c <= 'z') || (c == ' ' || c == '=' || c == ',' || c == '.' ) || (c >= '0' && c <= '9') ){
               if(c == ','){
                 input_string[*input_index] = '<';
               }
@@ -1039,17 +1088,21 @@ void check_user_variable_input(roomGrid *room_grid, char *input_string, int *inp
               }
               else{
                 input_string[*input_index] = c;
-              }                                                                                      //puts all pressed characters in an room_array.
-              ++(*input_index);                                                                      //adds one to the index.
+              }                                                                                                          //puts all pressed characters in an room_array.
+              ++(*input_index);                                                                                          //adds one to the index.
               gameover = INPUT_FINISHED;
         }
-        else if( c == '\b'){
+        else if( c == backspace){
           input_string[--(*input_index)] = ' ';
           gameover = INPUT_FINISHED; 
         }
-        else if(c == '\r'){
+        else if(c == enter){
           *finish_checker = finished;
           gameover = INPUT_FINISHED; 
+        }
+        else if(c == escape){
+            room_grid -> problem_quitter = on;
+            gameover = INPUT_FINISHED;
         }
       }
     }
@@ -1110,6 +1163,7 @@ void level_editor(roomGrid *room_grid)
     edit.src_value = 0;
     
     int map_array[ROOM_Y][ROOM_X];
+    int excess = 0, tile_x = 0, tile_y = 0;
     
     initialise_level_editor_map(map_array);
     
@@ -1137,12 +1191,12 @@ void level_editor(roomGrid *room_grid)
     // Make the background
     load_image(room_grid, &back_surf, &back_tex, "labtile2.png");    
     
-    int excess = 0, tile_x = 0, tile_y = 0;
     
     // Run the meat of the program.
     while(running){
 
         SDL_Delay(20);
+
         
         editor_interactions(map_array, &running, &input);
         
