@@ -1194,9 +1194,6 @@ void level_editor(roomGrid *room_grid)
     
     // Run the meat of the program.
     while(running){
-
-        SDL_Delay(20);
-
         
         editor_interactions(map_array, &running, &input);
         
