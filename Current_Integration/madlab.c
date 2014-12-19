@@ -180,7 +180,7 @@ void changeChickenDirection(Chicken *hen);
 void position_sprite(roomGrid *room_grid);
 void movement(roomGrid *room_grid, progress *puzzle, char *instructions_list[NUM_INSTRUCTIONS], Chicken *hen);
 void edge_detection(roomGrid *room_grid);
-void draw_room(SDL_Surface *background, /*SDL_Surface *sprite,*/ SDL_Texture *backtex, /*SDL_Texture *spritetex,*/ roomGrid *room_grid);
+void draw_room(SDL_Surface *background, SDL_Texture *backtex, roomGrid *room_grid);
 void rcsrc_set(int x_coord, int y_coord, int width, int height, SDL_Texture *backtex, roomGrid *room_grid);
 void initialise_chicken(Chicken *hen, roomGrid *room_grid);
 void changeChickenDirection(Chicken *hen);
@@ -189,6 +189,8 @@ void chicken_walks(Chicken *hen, roomGrid *room_grid);
 void chicken_edge_detection(roomGrid *room_grid, Chicken *hen);
 void permit_chicken(Chicken *hen, roomGrid *room_grid);
 void eggfault(Chicken *hen, roomGrid *room_grid);
+void chicken_help(Chicken *hen, roomGrid *room_grid);
+void chicken_direction(Chicken *hen, roomGrid *room_grid);
 
 //FUNCTIONS FOR MENU
 
@@ -520,8 +522,8 @@ void draw(roomGrid *room_grid, progress *puzzle, char *instructions_list[NUM_INS
     SDL_Texture *backtex, *spritetex, *chickentex;
 
     load_image(room_grid, &background, &backtex, "lab1sheet.png");
-    load_image(room_grid, &sprite, &spritetex, "prof2.png");
-    load_image(room_grid, &chicken, &chickentex, "chicken.png");
+    load_image(room_grid, &sprite, &spritetex, "tile_array.png");
+    load_image(room_grid, &chicken, &chickentex, "tile_array.png");
 
     initialise_roomgrid_components(room_grid, puzzle);
     initialise_chicken(hen, room_grid);
@@ -678,7 +680,7 @@ void position_chicken(Chicken *hen, roomGrid *room_grid)
     hen -> srcChicken.w = TILE_SIZE;
     hen -> srcChicken.h = TILE_SIZE;
 
-    hen -> dstChicken.y = 400;
+    hen -> dstChicken.y = 320;
     hen -> dstChicken.x = 320;
     hen -> dstChicken.w = TILE_SIZE;
     hen -> dstChicken.h = TILE_SIZE;
@@ -704,18 +706,22 @@ void movement(roomGrid *room_grid, progress *puzzle, char *instructions_list[NUM
                     break;
                 case SDLK_LEFT:
                     room_grid -> direction = left;
+                    (room_grid -> rcObj.x == 224) ? (room_grid -> rcObj.x = 256): (room_grid -> rcObj.x = 224);
                     (!((room_grid -> rcSprite.x) % TILE_SIZE)) ? possible(room_grid, puzzle): move(room_grid, puzzle);
                     break;
                 case SDLK_RIGHT:
                     room_grid -> direction = right;
+                    (room_grid -> rcObj.x == 160) ? (room_grid -> rcObj.x = 192): (room_grid -> rcObj.x = 160);
                     (!((room_grid -> rcSprite.x) % TILE_SIZE)) ? possible(room_grid, puzzle): move(room_grid, puzzle);
                     break;
                 case SDLK_UP:
                     room_grid -> direction = up;
+                    (room_grid -> rcObj.x == 32) ? (room_grid -> rcObj.x = 64): (room_grid -> rcObj.x = 32);
                     (!((room_grid -> rcSprite.y) % TILE_SIZE)) ? possible(room_grid, puzzle): move(room_grid, puzzle);
                     break;
                 case SDLK_DOWN:
                     room_grid -> direction = down;
+                    (room_grid -> rcObj.x == 96) ? (room_grid -> rcObj.x = 128): (room_grid -> rcObj.x = 96);
                     (!((room_grid -> rcSprite.y) % TILE_SIZE)) ? possible(room_grid, puzzle): move(room_grid, puzzle);
                     break;
                 case SDLK_SPACE:
@@ -827,20 +833,16 @@ void move(roomGrid *room_grid, progress *puzzle)
 {
     switch(room_grid -> direction)
     {       
-        case(left):     (room_grid -> rcObj.x == 224) ? (room_grid -> rcObj.x = 256): (room_grid -> rcObj.x = 224);
-                        room_grid -> rcSprite.x -= MOVEMENT_INCREMENT;
+        case(left):     room_grid -> rcSprite.x -= MOVEMENT_INCREMENT;
                         break;
 
-        case(down):     (room_grid -> rcObj.x == 96) ? (room_grid -> rcObj.x = 128): (room_grid -> rcObj.x = 96);
-                        room_grid -> rcSprite.y += MOVEMENT_INCREMENT;                  
+        case(down):     room_grid -> rcSprite.y += MOVEMENT_INCREMENT;                  
                         break;
 
-        case(right):    (room_grid -> rcObj.x == 160) ? (room_grid -> rcObj.x = 192): (room_grid -> rcObj.x = 160);
-                        room_grid -> rcSprite.x += MOVEMENT_INCREMENT;
+        case(right):    room_grid -> rcSprite.x += MOVEMENT_INCREMENT;
                         break;
 
-        case(up):       (room_grid -> rcObj.x == 32) ? (room_grid -> rcObj.x = 64): (room_grid -> rcObj.x = 32);
-                        room_grid -> rcSprite.y -= MOVEMENT_INCREMENT;
+        case(up):       room_grid -> rcSprite.y -= MOVEMENT_INCREMENT;
                         break;
 
         default:        fprintf(stderr, "Problem moving!\n");
@@ -950,10 +952,7 @@ void permit_chicken(Chicken *hen, roomGrid *room_grid)
     switch (hen -> chick_facing)
     {       
         case(left):     if(!((hen -> dstChicken.x) % TILE_SIZE)){
-                            if(!((hen -> dstChicken.y) % TILE_SIZE*3)){
-                            hen -> chick_facing = rand() % 4;
-                            }
-                            chicken_walks(hen, room_grid);
+                            chicken_help(hen, room_grid);
                         } 
                         else{
                             (hen -> dstChicken.x -= MOVEMENT_INCREMENT);
@@ -961,10 +960,7 @@ void permit_chicken(Chicken *hen, roomGrid *room_grid)
                         break;
 
         case(down):     if(!((hen -> dstChicken.y) % TILE_SIZE)){
-                            if(!((hen -> dstChicken.y) % TILE_SIZE*3)){
-                            hen -> chick_facing = rand() % 4;
-                            }
-                            chicken_walks(hen, room_grid);
+                            chicken_help(hen, room_grid);
                         }
                         else{
                             (hen -> dstChicken.y += MOVEMENT_INCREMENT);
@@ -972,10 +968,7 @@ void permit_chicken(Chicken *hen, roomGrid *room_grid)
                         break;
 
         case(right):    if(!((hen -> dstChicken.x) % TILE_SIZE)){
-                            if(!((hen -> dstChicken.y) % TILE_SIZE*3)){
-                            hen -> chick_facing = rand() % 4;
-                            }
-                            chicken_walks(hen, room_grid);
+                            chicken_help(hen, room_grid);
                         }
                         else{
                             (hen -> dstChicken.x += MOVEMENT_INCREMENT);
@@ -984,22 +977,23 @@ void permit_chicken(Chicken *hen, roomGrid *room_grid)
 
         case(up):       if(!((hen -> dstChicken.y) % TILE_SIZE)){
                             if (hen -> dstChicken.y != 0){
-                                if(!((hen -> dstChicken.y) % TILE_SIZE*3)){
-                            hen -> chick_facing = rand() % 4;
-                            }
-                            chicken_walks(hen, room_grid);
+                            chicken_help(hen, room_grid);
                             }
                         }
                         else{
                             (hen -> dstChicken.y -= MOVEMENT_INCREMENT);
                         }
-                    
-                        
                         break;
 
         default:        fprintf(stderr, "Problem probing!\n");
                         exit(6);
     }
+}
+
+void chicken_help(Chicken *hen, roomGrid *room_grid)
+{
+    hen -> chick_facing = rand() % 4;
+    chicken_walks(hen, room_grid);
 }
 
 
@@ -1014,7 +1008,7 @@ void chicken_walks(Chicken *hen, roomGrid *room_grid)
     {       
         case(left):     if ((room_grid -> room_array[hen -> chick_ty_coord][hen -> chick_lx_coord - 1]) == (room_grid -> room_array[hen -> chick_by_coord][hen -> chick_lx_coord - 1])){
                             if(room_grid -> room_array[hen -> chick_by_coord][hen -> chick_lx_coord - 1] == 0){
-                                hen -> dstChicken.x -= MOVEMENT_INCREMENT;
+                                chicken_direction(hen, room_grid);  
                             }
                             else {
                                 hen -> chick_facing = rand() % 4;
@@ -1024,7 +1018,7 @@ void chicken_walks(Chicken *hen, roomGrid *room_grid)
 
         case(down):     if ((room_grid -> room_array[hen -> chick_by_coord + 1][hen -> chick_lx_coord]) == (room_grid -> room_array[hen -> chick_by_coord + 1][hen -> chick_rx_coord])){
                             if(room_grid -> room_array[hen -> chick_by_coord + 1][hen -> chick_lx_coord] == 0){
-                                hen -> dstChicken.y += MOVEMENT_INCREMENT;
+                                chicken_direction(hen, room_grid);  
                             }
                             else {
                                 hen -> chick_facing = rand() % 4;
@@ -1034,7 +1028,7 @@ void chicken_walks(Chicken *hen, roomGrid *room_grid)
 
         case(right):    if ((room_grid -> room_array[hen -> chick_ty_coord][hen -> chick_rx_coord + 1]) == (room_grid -> room_array[hen -> chick_by_coord][hen -> chick_rx_coord + 1])){
                             if(room_grid -> room_array[hen -> chick_ty_coord][hen -> chick_rx_coord + 1] == 0){
-                                hen -> dstChicken.x += MOVEMENT_INCREMENT;
+                                chicken_direction(hen, room_grid);
                             } 
                             else {
                                 hen -> chick_facing = rand() % 4;
@@ -1044,14 +1038,40 @@ void chicken_walks(Chicken *hen, roomGrid *room_grid)
 
         case(up):       if (hen -> dstChicken.y != 0){
                             if ((room_grid -> room_array[hen -> chick_by_coord-1][hen -> chick_lx_coord]) == (room_grid -> room_array[hen -> chick_by_coord-1][hen -> chick_rx_coord])){
-                            if (room_grid -> room_array[hen -> chick_by_coord - 1][hen -> chick_lx_coord] == 0){
-                                hen -> dstChicken.y -= MOVEMENT_INCREMENT;
-                            }
-                        else {
-                            hen -> chick_facing = rand() % 4;   
+                                if (room_grid -> room_array[hen -> chick_by_coord - 1][hen -> chick_lx_coord] == 0){
+                                    chicken_direction(hen, room_grid);
+                                }
+                            else {
+                                hen -> chick_facing = rand() % 4;   
+                                }
                             }
                         }
-                    }
+                        break;
+
+        default:        fprintf(stderr, "Problem probing!\n");
+                        exit(6);
+    }
+}
+
+
+void chicken_direction(Chicken *hen, roomGrid *room_grid)
+{
+    switch (hen -> chick_facing)
+    {       
+        case(left):     (hen -> srcChicken.x == 364) ? (hen -> srcChicken.x = 396): (hen -> srcChicken.x = 364);
+                        hen -> dstChicken.x -= MOVEMENT_INCREMENT;
+                        break;
+
+        case(down):     (hen -> srcChicken.x == 364) ? (hen -> srcChicken.x = 396): (hen -> srcChicken.x = 364);
+                        hen -> dstChicken.y += MOVEMENT_INCREMENT;
+                        break;
+
+        case(right):    (hen -> srcChicken.x == 300) ? (hen -> srcChicken.x = 332): (hen -> srcChicken.x = 300);
+                        hen -> dstChicken.x += MOVEMENT_INCREMENT;
+                        break;
+
+        case(up):       (hen -> srcChicken.x == 300) ? (hen -> srcChicken.x = 332): (hen -> srcChicken.x = 300);
+                        hen -> dstChicken.y -= MOVEMENT_INCREMENT;
                         break;
 
         default:        fprintf(stderr, "Problem probing!\n");
@@ -1097,6 +1117,7 @@ void eggfault(Chicken *hen, roomGrid *room_grid)
     if (((room_grid -> room_array[hen -> x_chick_centre]) == (room_grid -> room_array[room_grid -> x_sprite_centre]))
         && (room_grid -> room_array[hen -> y_chick_centre] == room_grid -> room_array[room_grid -> y_sprite_centre])){
         free_room_array(room_grid);
+    //rg -> gamerunning = false;
     }
 }
 
@@ -1213,7 +1234,6 @@ void input_screen(roomGrid *room_grid, wrong_right *correct_indicator, char *cor
     SDL_Color fg = { 0, 0, 0, 0};
 
     do{
-
         check_user_variable_input(room_grid, input_string, &input_index, &finish_checker);
 
         text = TTF_RenderText_Solid(font, input_string, fg) ;
