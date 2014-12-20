@@ -62,7 +62,7 @@ typedef struct roomGrid
 {
     int **room_array;
     compass direction;
-    SDL_Rect rcSprite, rcSrc1, rcObj, rcSrc3, rc_Block;
+    SDL_Rect rc_sprite, rc_sprite_pos, rc_src, rc_obj, rc_obj_dest, rc_dest;
     SDL_Window *window;
     SDL_Renderer *renderer;
     SDL_Surface *surface;
@@ -180,10 +180,10 @@ void changeChickenDirection(Chicken *hen);
 void position_sprite(roomGrid *room_grid);
 void movement(roomGrid *room_grid, progress *puzzle, char *instructions_list[NUM_INSTRUCTIONS], Chicken *hen);
 void edge_detection(roomGrid *room_grid);
-void draw_room(SDL_Surface *background, /*SDL_Surface *sprite,*/ SDL_Texture *backtex, /*SDL_Texture *spritetex,*/ roomGrid *room_grid);
-void rcsrc_set(int x_coord, int y_coord, int width, int height, SDL_Texture *backtex, roomGrid *room_grid);
-void initialise_chicken(Chicken *hen, roomGrid *room_grid);
-void changeChickenDirection(Chicken *hen);
+void draw_room(SDL_Texture *grafix_tex, roomGrid *room_grid);
+void draw_obj(SDL_Texture *grafix_tex, roomGrid *room_grid);
+void rcsrc_set(int x_coord, int y_coord, int width, int height, SDL_Texture *grafix_tex, roomGrid *room_grid);
+void rcobj_set(int x_coord, int y_coord, int width, int height, int dest_x, int dest_y, SDL_Texture *grafix_tex, roomGrid *room_grid);
 void position_chicken(Chicken *hen, roomGrid *room_grid);
 void chicken_walks(Chicken *hen, roomGrid *room_grid);
 void chicken_edge_detection(roomGrid *room_grid, Chicken *hen);
@@ -258,19 +258,15 @@ void makeRoom(roomGrid *room_grid, FILE *map_file)
     room_grid -> room_array = (int **)calloc((ROOM_Y) + 1, sizeof(int *));
 
     if (room_grid -> room_array == NULL){
-
         fprintf(stderr, "No memory available.\n");
         exit(3);
-
     }
 
     for (i = 0; i <= ROOM_Y; i++){
         room_grid -> room_array[i] = (int *)calloc((ROOM_X) + 1, sizeof(int));
         if (room_grid -> room_array[i] ==  NULL){
-
             fprintf(stderr, "No memory available.\n");
             exit(4);
-
         }
     }
 
@@ -278,7 +274,6 @@ void makeRoom(roomGrid *room_grid, FILE *map_file)
         for (j = 0; j < ROOM_X; j++){
             if (fscanf(map_file, "%1d", &room_grid -> room_array[i][j]) == 1);
             else{
-
                 fprintf(stderr, "Invalid room_array size.\n");
                 exit(5);
 
@@ -304,10 +299,11 @@ void run_main_game(roomGrid *room_grid, progress *puzzle, Chicken *hen)
 
     atexit(SDL_Quit);
 
-    //Mix_HaltMusic(); 
-    //Mix_FreeChunk(mus); 
-    //Mix_CloseAudio();  
-   // Mix_Quit();
+    /*shut down SDL, Music, go outside, and have a nice day*/
+    Mix_HaltMusic(); 
+    Mix_FreeChunk(room_grid -> mus); 
+    Mix_CloseAudio();  
+    Mix_Quit();
     IMG_Quit();
     SDL_Quit();
 }
@@ -318,16 +314,15 @@ void initialise_SDL_component(SDL_Window *window, roomGrid *room_grid)
 
     //Initialise SDL.
     if (SDL_Init(SDL_INIT_EVERYTHING) != SUCCESSFUL){
-        fprintf(stderr, "\nUnable to initialise SDL:  %s\n",
-                        SDL_GetError());
+        fprintf(stderr, "\nUnable to initialise SDL:  %s\n", SDL_GetError());
         exit(1);
     }
     else{
-        window = SDL_CreateWindow ("MADLAB!",                   //window name
-                                 SDL_WINDOWPOS_UNDEFINED,       //x-axis on the screen coordinate
-                                 SDL_WINDOWPOS_UNDEFINED,       //y-axis screen coordinate
-                                 SCREEN_WIDTH, SCREEN_HEIGHT,   //size of the window
-                                 SDL_WINDOW_SHOWN);             //make the window resizeable       
+        window = SDL_CreateWindow ("MADLAB!",                      //window name
+                                    SDL_WINDOWPOS_UNDEFINED,       //x-axis on the screen coordinate
+                                    SDL_WINDOWPOS_UNDEFINED,       //y-axis screen coordinate
+                                    SCREEN_WIDTH, SCREEN_HEIGHT,   //size of the window
+                                    SDL_WINDOW_SHOWN);             //make the window resizeable       
 
         if (window == NULL)
         {
@@ -336,21 +331,21 @@ void initialise_SDL_component(SDL_Window *window, roomGrid *room_grid)
         }
     }
 
-    //Initialize PNG loading.
+    //Initialise PNG loading.
     if (!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG)){ 
-        printf( "SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError());
+        printf( "SDL_image could not initialise! SDL_image Error: %s\n", IMG_GetError());
     }
 
     //Initialise renderer.
     if ((room_grid -> renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED)) == NULL){
-        fprintf(stderr, "\nUnable to initialize SDL Renderer:  %s\n", SDL_GetError());
+        fprintf(stderr, "\nUnable to initialise SDL Renderer:  %s\n", SDL_GetError());
         SDL_Quit();
         exit(1);
     }
 
     //Initialise TTF component.
     if( TTF_Init() != SUCCESSFUL){
-    	fprintf(stderr, "\nUnable to initialize TTF.\n");
+    	fprintf(stderr, "\nUnable to initialise TTF.\n");
     	SDL_Quit();
     	exit(1);
    }
@@ -500,8 +495,7 @@ void look_for_action(roomGrid *room_grid)
         ++(room_grid -> refresh_counter);
         SDL_Delay(SLEEP_TIME);
         SDL_QuitChecker(room_grid);
-    }
-    while(room_grid -> refresh_counter < NUM_REFRESHES && !room_grid -> skip_checker && !room_grid -> problem_quitter);
+    }while(room_grid -> refresh_counter < NUM_REFRESHES && !room_grid -> skip_checker && !room_grid -> problem_quitter);
 }
 
 
@@ -516,12 +510,13 @@ void SDL_QuitChecker(roomGrid *room_grid)
 
 void draw(roomGrid *room_grid, progress *puzzle, char *instructions_list[NUM_INSTRUCTIONS], Chicken *hen)
 {
-    SDL_Surface *background, *sprite, *chicken;
-    SDL_Texture *backtex, *spritetex, *chickentex;
+    SDL_Surface *grafix;
+    SDL_Texture *grafix_tex;
 
-    load_image(room_grid, &background, &backtex, "lab1sheet.png");
-    load_image(room_grid, &sprite, &spritetex, "prof2.png");
-    load_image(room_grid, &chicken, &chickentex, "chicken.png");
+    /*One texture to rule them all*/
+    grafix = IMG_Load("tile_array.png");  //if you want to add new items, to code, ensure to check the txt file with the coordinates
+    grafix_tex = SDL_CreateTextureFromSurface(room_grid -> renderer, grafix);
+    SDL_FreeSurface (grafix);
 
     initialise_roomgrid_components(room_grid, puzzle);
     initialise_chicken(hen, room_grid);
@@ -542,75 +537,83 @@ void draw(roomGrid *room_grid, progress *puzzle, char *instructions_list[NUM_INS
             eggfault(hen, room_grid);
         }
 
-        draw_room(background, backtex, room_grid);
+        draw_room(grafix_tex, room_grid);
+        draw_obj(grafix_tex, room_grid);
 
         /*RenderClear to wipe framebuffer, RenderCopy to compose final framebuffer, RenderPresent puts on screen*/
-        SDL_RenderCopy(room_grid -> renderer, chickentex, &hen -> srcChicken, &hen -> dstChicken);
-        SDL_RenderCopy(room_grid -> renderer, spritetex, &room_grid -> rcObj, &room_grid -> rcSprite);
+       // SDL_RenderCopy(room_grid -> renderer, chickentex, &hen -> srcChicken, &hen -> dstChicken);
+        SDL_RenderCopy(room_grid -> renderer, grafix_tex, &room_grid -> rc_sprite_pos, &room_grid -> rc_sprite);  //draws 
         SDL_RenderPresent(room_grid -> renderer);
     }
 
     // SDL_Delay(5000);
-    SDL_DestroyTexture(backtex);
-    SDL_DestroyTexture(spritetex);
-    SDL_DestroyTexture(chickentex);
+    SDL_DestroyTexture(grafix_tex);
     SDL_DestroyRenderer(room_grid -> renderer);
     SDL_DestroyWindow(room_grid -> window);
 }
 
 
-void draw_room(SDL_Surface *background, /*SDL_Surface *sprite,*/ SDL_Texture *backtex, /*SDL_Texture *spritetex,*/ roomGrid *room_grid)
+void draw_room(SDL_Texture *grafix_tex, roomGrid *room_grid)
 {
     for (int i = 0; i <= ROOM_Y; i++){
         for (int j = 0; j < ROOM_X; j++){
 
-            room_grid -> rc_Block.x = (j * TILE_SIZE);  // set the room_array location to the tile size and Block size
-            room_grid -> rc_Block.y = (i * TILE_SIZE);
+            room_grid -> rc_dest.x = (j * TILE_SIZE);              //the destination rects are set to i and j
+            room_grid -> rc_dest.y = (i * TILE_SIZE);
 
-            //First ground tile does not go in a loop. It populates everything so just draw it. 
-            //You also free up 0!
-            rcsrc_set(41, 0, 32, 29, backtex, room_grid);
+            rcsrc_set(34, 138, 32, 32, grafix_tex, room_grid);     //first ground tile does not go in an if statement; it populates everything. 
             
             if (room_grid -> room_array[i][j] == 1){
-                rcsrc_set(71, 81, 45, 34, backtex, room_grid);
+                rcsrc_set(3, 174, 31, 31, grafix_tex, room_grid);  //draw desk
+                rcsrc_set(71, 138, 32, 32, grafix_tex, room_grid); //draw computer on top of it
             }
 
             if (room_grid -> room_array[i][j] == 2){
-                rcsrc_set(73, 0, 32, 29, backtex, room_grid);
+                rcsrc_set(0, 138, 32, 32, grafix_tex, room_grid);  //draw a wall
             }
 
             if (room_grid -> room_array[i][j] == 3){
-                rcsrc_set(121, 56, 76, 59, backtex, room_grid);
-            }
-
-            if (room_grid -> room_array[i][j] == 4){
-                rcsrc_set(207, 70, 61, 41, backtex, room_grid);
-            }
-
-            if (room_grid -> room_array[i][j] == 5){
-                rcsrc_set(279, 8, 55, 127, backtex, room_grid);
-            }
-
-            if (room_grid -> room_array[i][j] == 6){
-                rcsrc_set(141, 0, 32, 32, backtex, room_grid);
-            }
-
-            if (room_grid -> room_array[i][j] == 7){
-                rcsrc_set(279, 8, 55, 127, backtex, room_grid);
+                rcsrc_set(121, 56, 76, 59, grafix_tex, room_grid);
             }
         }
     }
 }
 
 
-void rcsrc_set(int x_coord, int y_coord, int width, int height, SDL_Texture *backtex, roomGrid *room_grid)
+void rcsrc_set(int x_coord, int y_coord, int width, int height, SDL_Texture *grafix_tex, roomGrid *room_grid)
 {
-    room_grid -> rcSrc1.x = x_coord;
-    room_grid -> rcSrc1.y = y_coord;
-    room_grid -> rcSrc1.w = width;
-    room_grid -> rcSrc1.h = height;
+    room_grid -> rc_src.x = x_coord;
+    room_grid -> rc_src.y = y_coord;
+    room_grid -> rc_src.w = width;
+    room_grid -> rc_src.h = height;
 
-    SDL_RenderCopy(room_grid -> renderer, backtex, &room_grid -> rcSrc1, &room_grid -> rc_Block);
+    SDL_RenderCopy(room_grid -> renderer, grafix_tex, &room_grid -> rc_src, &room_grid -> rc_dest);
+}
+
+/*draws an object by selecting values from the tile sheet and drawing them to a destination on the game map*/
+void draw_obj(SDL_Texture *grafix_tex, roomGrid *room_grid)
+{
+    /*draw extractor*/
+    rcobj_set(264, 63, 64, 64, 0, 0, grafix_tex, room_grid);
+
+    /*draw fan*/
+    rcobj_set(264, 63, 64, 64, 0, 0, grafix_tex, room_grid);
+
+}
+
+void rcobj_set(int x_coord, int y_coord, int width, int height, int dest_x, int dest_y, SDL_Texture *grafix_tex, roomGrid *room_grid)
+{
+    room_grid -> rc_obj.x = x_coord;                     //the x-coordinate of the object on the tile sheet
+    room_grid -> rc_obj.y = y_coord;                     //the y-coordiante of the object on the tile sheet
+    room_grid -> rc_obj.w = width;                       //the height and width for objects are 64 normally, but really can be anything
+    room_grid -> rc_obj.h = height;
+
+    room_grid -> rc_obj_dest.x = dest_x;                 //the x-coordinate of the object on the game map; takes some trial and error to figure out
+    room_grid -> rc_obj_dest.y = dest_y;                 //the y-coordinate of the object on the game map;
+    room_grid -> rc_obj_dest.w = room_grid -> rc_obj.w;  //these are set to be the same so another value does not have to be passed
+    room_grid -> rc_obj_dest.h = room_grid -> rc_obj.h;
+
+    SDL_RenderCopy(room_grid -> renderer, grafix_tex, &room_grid -> rc_obj, &room_grid -> rc_obj_dest);
 }
 
 
@@ -618,17 +621,17 @@ void initialise_roomgrid_components(roomGrid *room_grid, progress *puzzle)
 {
     room_grid -> gamerunning = true;
 
-    puzzle -> puzzle_1_seen = false;
+    puzzle -> puzzle_1_seen   = false;
     puzzle -> puzzle_1_solved = false;
-    puzzle -> puzzle_2_seen = false;
+    puzzle -> puzzle_2_seen   = false;
     puzzle -> puzzle_2_solved = false;
-    puzzle -> puzzle_3_seen = false;
+    puzzle -> puzzle_3_seen   = false;
     puzzle -> puzzle_3_solved = false;
-    puzzle -> puzzle_4_seen = false;
+    puzzle -> puzzle_4_seen   = false;
     puzzle -> puzzle_4_solved = false;
-    puzzle -> puzzle_5_seen = false;
+    puzzle -> puzzle_5_seen   = false;
     puzzle -> puzzle_5_solved = false;
-    puzzle -> puzzle_6_seen = false;
+    puzzle -> puzzle_6_seen   = false;
     puzzle -> puzzle_6_solved = false;
 
     room_grid -> paused = 0;
@@ -655,18 +658,18 @@ void position_sprite(roomGrid *room_grid)
 {
 
     /* set sprite "source" position - as called by RenderCopy, choose which to be */
-    room_grid -> rcSprite.y = TILE_SIZE*3;
-    room_grid -> rcSprite.x = TILE_SIZE*3;
-    room_grid -> rcSprite.w = TILE_SIZE;
-    room_grid -> rcSprite.h = TILE_SIZE;
+    room_grid -> rc_sprite.y = TILE_SIZE*3;
+    room_grid -> rc_sprite.x = TILE_SIZE*3;
+    room_grid -> rc_sprite.w = TILE_SIZE;
+    room_grid -> rc_sprite.h = TILE_SIZE;
 
-    room_grid -> rcObj.x = 0;  
-    room_grid -> rcObj.y = 0;
-    room_grid -> rcObj.w = TILE_SIZE;
-    room_grid -> rcObj.h = TILE_SIZE;
+    room_grid -> rc_sprite_pos.x = 0;  
+    room_grid -> rc_sprite_pos.y = 0;
+    room_grid -> rc_sprite_pos.w = TILE_SIZE;
+    room_grid -> rc_sprite_pos.h = TILE_SIZE; 
 
-    room_grid -> rc_Block.w = TILE_SIZE;
-    room_grid -> rc_Block.h = TILE_SIZE;
+    room_grid -> rc_dest.w = TILE_SIZE;
+    room_grid -> rc_dest.h = TILE_SIZE;
 }
 
 
@@ -704,19 +707,19 @@ void movement(roomGrid *room_grid, progress *puzzle, char *instructions_list[NUM
                     break;
                 case SDLK_LEFT:
                     room_grid -> direction = left;
-                    (!((room_grid -> rcSprite.x) % TILE_SIZE)) ? possible(room_grid, puzzle): move(room_grid, puzzle);
+                    (!((room_grid -> rc_sprite_pos.x) % TILE_SIZE)) ? possible(room_grid, puzzle): move(room_grid, puzzle);
                     break;
                 case SDLK_RIGHT:
                     room_grid -> direction = right;
-                    (!((room_grid -> rcSprite.x) % TILE_SIZE)) ? possible(room_grid, puzzle): move(room_grid, puzzle);
+                    (!((room_grid -> rc_sprite_pos.x) % TILE_SIZE)) ? possible(room_grid, puzzle): move(room_grid, puzzle);
                     break;
                 case SDLK_UP:
                     room_grid -> direction = up;
-                    (!((room_grid -> rcSprite.y) % TILE_SIZE)) ? possible(room_grid, puzzle): move(room_grid, puzzle);
+                    (!((room_grid -> rc_sprite_pos.y) % TILE_SIZE)) ? possible(room_grid, puzzle): move(room_grid, puzzle);
                     break;
                 case SDLK_DOWN:
                     room_grid -> direction = down;
-                    (!((room_grid -> rcSprite.y) % TILE_SIZE)) ? possible(room_grid, puzzle): move(room_grid, puzzle);
+                    (!((room_grid -> rc_sprite_pos.y) % TILE_SIZE)) ? possible(room_grid, puzzle): move(room_grid, puzzle);
                     break;
                 case SDLK_SPACE:
                     interactProbe(room_grid, puzzle, instructions_list, hen);
@@ -750,20 +753,20 @@ void sound_on_off(roomGrid *room_grid)
 void edge_detection(roomGrid *room_grid)
 {
     //Left edge.
-    if (room_grid -> rcSprite.x <= 0){
-        room_grid -> rcSprite.x = 0;
+    if (room_grid -> rc_sprite.x <= 0){
+        room_grid -> rc_sprite.x  = 0;
     }
     //Right edge
-    if (room_grid -> rcSprite.x >= SCREEN_WIDTH - TILE_SIZE){
-        room_grid -> rcSprite.x = SCREEN_WIDTH - TILE_SIZE;
+    if (room_grid -> rc_sprite.x >= SCREEN_WIDTH - TILE_SIZE){
+        room_grid -> rc_sprite.x  = SCREEN_WIDTH - TILE_SIZE;
     }
     //Top edge
-    if (room_grid -> rcSprite.y <= 0){
-        room_grid -> rcSprite.y = 0;
+    if (room_grid -> rc_sprite.y <= 0){
+        room_grid -> rc_sprite.y  = 0;
     }
     //Bottom edge
-    if (room_grid -> rcSprite.y >= SCREEN_HEIGHT - TILE_SIZE){ 
-        room_grid -> rcSprite.y = SCREEN_HEIGHT - TILE_SIZE;
+    if (room_grid -> rc_sprite.y >= SCREEN_HEIGHT - TILE_SIZE){ 
+        room_grid -> rc_sprite.y  = SCREEN_HEIGHT - TILE_SIZE;
     }
 
     SDL_RenderClear(room_grid -> renderer);
@@ -771,10 +774,10 @@ void edge_detection(roomGrid *room_grid)
 
 void possible(roomGrid *room_grid, progress *puzzle)
 {
-    room_grid -> left_x_coord = (room_grid -> rcSprite.x) / TILE_SIZE;
-    room_grid -> top_y_coord = (room_grid -> rcSprite.y) / TILE_SIZE;
-    room_grid -> bottom_y_coord = ((room_grid -> rcSprite.y - 1) + TILE_SIZE) / TILE_SIZE;
-    room_grid -> right_x_coord = ((room_grid -> rcSprite.x - 1) + TILE_SIZE) / TILE_SIZE;
+    room_grid -> left_x_coord = (room_grid -> rc_sprite.x) / TILE_SIZE;
+    room_grid -> top_y_coord = (room_grid -> rc_sprite.y) / TILE_SIZE;
+    room_grid -> bottom_y_coord = ((room_grid -> rc_sprite.y - 1) + TILE_SIZE) / TILE_SIZE;
+    room_grid -> right_x_coord = ((room_grid -> rc_sprite.x - 1) + TILE_SIZE) / TILE_SIZE;
 
     switch (room_grid -> direction)
     {       
@@ -805,7 +808,7 @@ void possible(roomGrid *room_grid, progress *puzzle)
                         }
                         break;
 
-        case(up):       if (room_grid -> rcSprite.y != 0)
+        case(up):       if (room_grid -> rc_sprite.y != 0)
                         {
                             if ((room_grid -> room_array[room_grid -> bottom_y_coord-1][room_grid -> left_x_coord]) == (room_grid -> room_array[room_grid -> bottom_y_coord-1][room_grid -> right_x_coord])){
                             if (room_grid -> room_array[room_grid -> bottom_y_coord - 1][room_grid -> left_x_coord] == 0){
@@ -827,20 +830,20 @@ void move(roomGrid *room_grid, progress *puzzle)
 {
     switch(room_grid -> direction)
     {       
-        case(left):     (room_grid -> rcObj.x == 224) ? (room_grid -> rcObj.x = 256): (room_grid -> rcObj.x = 224);
-                        room_grid -> rcSprite.x -= MOVEMENT_INCREMENT;
+        case(left):     (room_grid -> rc_sprite_pos.x == 224) ? (room_grid -> rc_sprite_pos.x = 256): (room_grid -> rc_sprite_pos.x = 224);
+                        room_grid -> rc_sprite.x -= MOVEMENT_INCREMENT;
                         break;
 
-        case(down):     (room_grid -> rcObj.x == 96) ? (room_grid -> rcObj.x = 128): (room_grid -> rcObj.x = 96);
-                        room_grid -> rcSprite.y += MOVEMENT_INCREMENT;                  
+        case(down):     (room_grid -> rc_sprite_pos.x == 96) ? (room_grid -> rc_sprite_pos.x = 128): (room_grid -> rc_sprite_pos.x = 96);
+                        room_grid -> rc_sprite.y += MOVEMENT_INCREMENT;                  
                         break;
 
-        case(right):    (room_grid -> rcObj.x == 160) ? (room_grid -> rcObj.x = 192): (room_grid -> rcObj.x = 160);
-                        room_grid -> rcSprite.x += MOVEMENT_INCREMENT;
+        case(right):    (room_grid -> rc_sprite_pos.x == 160) ? (room_grid -> rc_sprite_pos.x = 192): (room_grid -> rc_sprite_pos.x = 160);
+                        room_grid -> rc_sprite.x += MOVEMENT_INCREMENT;
                         break;
 
-        case(up):       (room_grid -> rcObj.x == 32) ? (room_grid -> rcObj.x = 64): (room_grid -> rcObj.x = 32);
-                        room_grid -> rcSprite.y -= MOVEMENT_INCREMENT;
+        case(up):       (room_grid -> rc_sprite_pos.x == 32) ? (room_grid -> rc_sprite_pos.x = 64): (room_grid -> rc_sprite_pos.x = 32);
+                        room_grid -> rc_sprite.y -= MOVEMENT_INCREMENT;
                         break;
 
         default:        fprintf(stderr, "Problem moving!\n");
@@ -851,8 +854,8 @@ void move(roomGrid *room_grid, progress *puzzle)
 
 void interactProbe(roomGrid *room_grid, progress *puzzle, char *instructions_list[NUM_INSTRUCTIONS], Chicken *hen)
 {
-    room_grid -> x_sprite_centre = (room_grid -> rcSprite.x + (TILE_SIZE / 2)) / TILE_SIZE;
-    room_grid -> y_sprite_centre = (room_grid -> rcSprite.y + (TILE_SIZE / 2)) / TILE_SIZE;
+    room_grid -> x_sprite_centre = (room_grid -> rc_sprite.x + (TILE_SIZE / 2)) / TILE_SIZE;
+    room_grid -> y_sprite_centre = (room_grid -> rc_sprite.y + (TILE_SIZE / 2)) / TILE_SIZE;
     room_grid -> probe = 0;
 
     switch (room_grid -> direction)
@@ -875,7 +878,7 @@ void interactProbe(roomGrid *room_grid, progress *puzzle, char *instructions_lis
                         };
                         break;
 
-        case(up):       if (room_grid -> rcSprite.y != 0)
+        case(up):       if (room_grid -> rc_sprite.y != 0)
                         {
                             room_grid -> probe = room_grid -> room_array[room_grid -> y_sprite_centre - 1][room_grid -> x_sprite_centre];
                             if (action(room_grid, puzzle, instructions_list, hen)){
@@ -1091,8 +1094,8 @@ void eggfault(Chicken *hen, roomGrid *room_grid)
 {
     hen -> x_chick_centre = (hen -> dstChicken.x + (TILE_SIZE / 2)) / TILE_SIZE;
     hen -> y_chick_centre = (hen -> dstChicken.y + (TILE_SIZE / 2)) / TILE_SIZE;
-    room_grid -> x_sprite_centre = (room_grid -> rcSprite.x + (TILE_SIZE / 2)) / TILE_SIZE;
-    room_grid -> y_sprite_centre = (room_grid -> rcSprite.y + (TILE_SIZE / 2)) / TILE_SIZE;
+    room_grid -> x_sprite_centre = (room_grid -> rc_sprite.x + (TILE_SIZE / 2)) / TILE_SIZE;
+    room_grid -> y_sprite_centre = (room_grid -> rc_sprite.y + (TILE_SIZE / 2)) / TILE_SIZE;
 
     if (((room_grid -> room_array[hen -> x_chick_centre]) == (room_grid -> room_array[room_grid -> x_sprite_centre]))
         && (room_grid -> room_array[hen -> y_chick_centre] == room_grid -> room_array[room_grid -> y_sprite_centre])){
