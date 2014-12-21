@@ -17,7 +17,7 @@
 #define SPRITE_VEL         		  5
 #define SDL_8BITCOLOUR   		256
 #define SLEEP_TIME       		100
-#define NUM_INSTRUCTIONS  		 36
+#define NUM_INSTRUCTIONS  		 62
 #define LENGTH_EXTENSION   		  5
 #define LENGTH_PREFIX     		 14
 #define NUM_REFRESHES     		 50
@@ -42,7 +42,7 @@
 enum compass{up = 0, right = 1, down = 2, left = 3};
 typedef enum compass compass;
 
-enum tileType{path = 0, obstacle = 1, puz_1 = 2, puz_2 = 3, puz_3 = 4, puz_4 = 5, puz_5 = 6};
+enum tileType{path = 0, obstacle = 1, puz_1 = 9, puz_2 = 3, puz_3 = 1, puz_4 = 7, puz_5 = 6, puz_6 = 5};
 typedef enum tileType tileType;
 
 enum wrong_right {correct, incorrect};
@@ -114,6 +114,11 @@ struct progress
     bool puzzle_5_solved;
     bool puzzle_6_seen;
     bool puzzle_6_solved;
+
+    bool player_has_a_weight;
+    bool player_has_b_weight;
+    bool a_weight_on_hinge;
+    bool b_weight_on_hinge;
 };
 typedef struct progress progress;
 
@@ -174,6 +179,9 @@ void check_user_variable_input(roomGrid *room_grid, char *input_string, int *inp
 
 void initialise_problem(problem *prob_point, char *correct_answer, int first_inst_start, int first_instr_end,
                         int num_chars_ans, int second_inst_end);
+void door_hinge_problem(roomGrid *room_grid, progress *puzzle, char *instructions_list[NUM_INSTRUCTIONS]);
+void find_weight_a(roomGrid *room_grid, progress *puzzle, char *instructions_list[NUM_INSTRUCTIONS]);
+void find_weight_b(roomGrid *room_grid, progress *puzzle, char *instructions_list[NUM_INSTRUCTIONS]);
 
 
 
@@ -206,9 +214,10 @@ void position_chicken(Chicken *hen, roomGrid *room_grid);
 void chicken_walks(Chicken *hen, roomGrid *room_grid);
 void chicken_edge_detection(roomGrid *room_grid, Chicken *hen);
 void permit_chicken(Chicken *hen, roomGrid *room_grid);
-void eggfault(Chicken *hen, roomGrid *room_grid);
+void eggfault(Chicken *hen, roomGrid *room_grid, char *instructions_list[NUM_INSTRUCTIONS]);
 void chicken_help(Chicken *hen, roomGrid *room_grid);
 void chicken_direction(Chicken *hen, roomGrid *room_grid);
+void hen_sequence(Chicken *hen, roomGrid *room_grid, char *instructions_list[NUM_INSTRUCTIONS]);
 
 //FUNCTIONS FOR MENU
 
@@ -439,6 +448,42 @@ void get_instructions(char *instructions_list[NUM_INSTRUCTIONS])
     //Second block of instructions
     instructions_list[35] = "door_open";
 
+    //Hen related .bmp images
+    instructions_list[36] = "chicken_in_here";
+    instructions_list[37] = "leave_it_alone";
+    instructions_list[38] = "come_back_let_it_out";
+    instructions_list[39] = "latch_loose";
+    instructions_list[40] = "got_out";
+    instructions_list[41] = "eggfault";
+
+    //Discovering the x problem.
+    instructions_list[42] = "door_still_locked";
+    instructions_list[43] = "oh_my_word";
+    instructions_list[44] = "hinge_sticks";
+    instructions_list[45] = "x_part_hinge";
+    instructions_list[46] = "swing_open";
+    instructions_list[47] = "x_eq_five";
+    instructions_list[48] = "two_weights";
+    instructions_list[49] = "a_weight_b_weight";
+    instructions_list[50] = "a_eq_b_eq";
+    instructions_list[51] = "go_find";
+    instructions_list[52] = "finally_get_out";
+
+    //Picking up the a weight.
+    instructions_list[53] = "a_weight";
+    instructions_list[54] = "put_by_door";
+
+    //Picking up the b weight.
+    instructions_list[55] = "found_b";
+    instructions_list[56] = "put_on_door_hinge";
+
+    //Combining the weights.
+    instructions_list[57] = "a_weight_on_hinge";
+    instructions_list[58] = "b_weight_on_hinge";
+    instructions_list[59] = "both_weights";
+    instructions_list[60] = "x_is_eq";
+    instructions_list[61] = "door_finally_open";
+
 }
 
 
@@ -553,7 +598,7 @@ void draw(roomGrid *room_grid, progress *puzzle, char *instructions_list[NUM_INS
         {
             chicken_edge_detection(room_grid, hen);
             permit_chicken(hen, room_grid);
-            eggfault(hen, room_grid);
+            eggfault(hen, room_grid, instructions_list);
         }
 
         draw_room(grafix_tex, room_grid);
@@ -647,6 +692,11 @@ void initialise_roomgrid_components(roomGrid *room_grid, progress *puzzle)
     puzzle -> puzzle_5_solved = false;
     puzzle -> puzzle_6_seen   = false;
     puzzle -> puzzle_6_solved = false;
+
+    puzzle -> player_has_a_weight = false;
+    puzzle -> player_has_b_weight = false;
+    puzzle -> a_weight_on_hinge = false;
+    puzzle -> b_weight_on_hinge = false;
 
     room_grid -> paused = 0;
     room_grid -> left_x_coord = 0;
@@ -911,22 +961,16 @@ int action(roomGrid *room_grid, progress *puzzle, char *instructions_list[NUM_IN
 
     switch(room_grid -> probe)
     {
-        case(puz_1):        printf("in puz_1 case\n");
-                            if ((puzzle -> puzzle_1_seen) == false){
-
-                                printf("Spaced!\n");
+        case(puz_1):        if ((puzzle -> puzzle_1_seen) == false){
 
                                 neill_notes(room_grid, instructions_list);
-
                                 puzzle -> puzzle_1_seen = true;
 
                                 return 1;
                             }
                             else if( (puzzle -> puzzle_1_solved) == false){     
-                                printf("Already spaced!\n");
 
                                 initialise_problem(prob_point, "fan < too hot", 22, 27, 13, 29);
-
                                 problem_generator(room_grid, instructions_list, prob_point, &puzzle -> puzzle_1_solved, "Instructions/code_entry.bmp");
 
                                 return 0;
@@ -934,15 +978,13 @@ int action(roomGrid *room_grid, progress *puzzle, char *instructions_list[NUM_IN
                             return 1;
                             break;
 
-        case(puz_2):        return 0;
+        case(puz_2):        door_hinge_problem(room_grid, puzzle, instructions_list);
+                            return 0;
                             break; 
 
-        case(puz_3):        printf("in puz_3 case\n");
-                            if ((puzzle -> puzzle_3_solved) == false){
-                                printf("Spaced!\n");
+        case(puz_3):        if ((puzzle -> puzzle_3_solved) == false){
 
                                 initialise_problem(prob_point, "0101", 29, 35, 4, 36);
-
                                 problem_generator(room_grid, instructions_list, prob_point, &puzzle -> puzzle_3_solved, "Instructions/code_entry_two.bmp");
 
                                 return 0;
@@ -950,22 +992,81 @@ int action(roomGrid *room_grid, progress *puzzle, char *instructions_list[NUM_IN
                             return 1;
                             break;
 
-        case(puz_4):        return 0;
+        case(puz_4):        find_weight_a(room_grid, puzzle, instructions_list);
+                            return 0;
                             break; 
 
-        case(puz_5):        if(!(hen -> chicken_cross_road))
-                            {
-                                printf("Bring out the chicken!\n");
-                                position_chicken(hen, room_grid);
-                                hen -> chicken_cross_road = true;
-                            }
+        case(puz_5):        hen_sequence(hen, room_grid, instructions_list);
                             return 0;
                             break;
+
+        case(puz_6):        find_weight_b(room_grid, puzzle, instructions_list);
+                            return 0;
+                            break; 
 
         default:            fprintf(stderr, "PANIC!\n");
                             return 0;
                             break;
     }
+}
+
+void door_hinge_problem(roomGrid *room_grid, progress *puzzle, char *instructions_list[NUM_INSTRUCTIONS])
+{
+    if(puzzle -> puzzle_2_seen == false){
+        print_instruction(room_grid, instructions_list, 42, 53);
+        puzzle -> puzzle_2_seen = true;
+    }
+    
+    if(puzzle -> player_has_a_weight == true){
+        print_instruction(room_grid, instructions_list, 57, 58);
+        puzzle -> player_has_a_weight = false;
+        puzzle -> a_weight_on_hinge = true;
+    }
+    
+    if(puzzle -> player_has_b_weight == true){
+        print_instruction(room_grid, instructions_list, 58, 59);
+        puzzle -> player_has_b_weight = false;
+        puzzle -> b_weight_on_hinge = true;
+    }
+    
+    if(puzzle -> a_weight_on_hinge == true && puzzle -> b_weight_on_hinge == true){
+        print_instruction(room_grid, instructions_list, 59, 62);
+    }
+}
+
+void find_weight_a(roomGrid *room_grid, progress *puzzle, char *instructions_list[NUM_INSTRUCTIONS])
+{
+    print_instruction(room_grid, instructions_list, 53, 55);
+    puzzle -> player_has_a_weight = true;
+}
+
+void find_weight_b(roomGrid *room_grid, progress *puzzle, char *instructions_list[NUM_INSTRUCTIONS])
+{
+    print_instruction(room_grid, instructions_list, 55, 57);
+    puzzle -> player_has_b_weight = true;
+}
+
+void hen_sequence(Chicken *hen, roomGrid *room_grid, char *instructions_list[NUM_INSTRUCTIONS])
+{
+    static int interaction_counter = 0;
+
+    if(interaction_counter == 0){
+        print_instruction(room_grid, instructions_list, 36, 38);
+        ++interaction_counter;
+    }
+    else if(interaction_counter == 1){
+        print_instruction(room_grid, instructions_list, 38, 39);
+        ++interaction_counter;
+    }
+    else if(interaction_counter == 2 && !(hen -> chicken_cross_road)){
+        print_instruction(room_grid, instructions_list, 39, 41);
+        ++interaction_counter;
+
+        printf("Bring out the chicken!\n");
+        position_chicken(hen, room_grid);
+        hen -> chicken_cross_road = true;
+    }
+
 }
 
 void initialise_problem(problem *prob_point, char *correct_answer, int first_inst_start, int first_instr_end,
@@ -1138,7 +1239,7 @@ void chicken_edge_detection(roomGrid *room_grid, Chicken *hen)
 }
 
 
-void eggfault(Chicken *hen, roomGrid *room_grid)
+void eggfault(Chicken *hen, roomGrid *room_grid, char *instructions_list[NUM_INSTRUCTIONS])
 {
     hen -> x_chick_centre = (hen -> dstChicken.x + (TILE_SIZE / 2)) / TILE_SIZE;
     hen -> y_chick_centre = (hen -> dstChicken.y + (TILE_SIZE / 2)) / TILE_SIZE;
@@ -1147,8 +1248,9 @@ void eggfault(Chicken *hen, roomGrid *room_grid)
 
     if (((room_grid -> room_array[hen -> x_chick_centre]) == (room_grid -> room_array[room_grid -> x_sprite_centre]))
         && (room_grid -> room_array[hen -> y_chick_centre] == room_grid -> room_array[room_grid -> y_sprite_centre])){
-        free_room_array(room_grid);
-    //rg -> gamerunning = false;
+
+        print_instruction(room_grid, instructions_list, 41, 42);
+        room_grid -> gamerunning = false;
     }
 }
 
