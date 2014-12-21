@@ -1,0 +1,104 @@
+Coordinates of Tile Map
+
+PROF - TILE SIZE
+================
+Standing Still 
+x: 0
+y: 0
+
+Up
+x:32
+y: 0
+
+Up(2)
+x:64
+y: 0
+
+Down
+x: 92
+y:  0
+
+Down(2)
+x: 128
+y:   0
+
+Right
+x: 160
+y:   0
+
+Right(2)
+x:  192
+y:    0
+
+Left
+x:  224
+y:    0
+
+Left(2)
+x:  256
+y:    0
+
+
+CHICKEN - TILE SIZE
+===================
+Right
+x: 300
+y:   1
+
+Right(2)
+x: 332
+y:   1
+
+Left
+x: 364
+y:   1
+
+Left(2)
+x:  396
+y:    1
+
+
+ROOM TILE - TILE SIZE
+=====================
+x:  34
+y: 138
+
+WALL TILE - TILE SIZE
+=====================
+x:   0
+y: 138
+
+FAN - SIZE: 64x64 TILE SIZE*2
+=================
+x: 0
+y: 62
+[for movement iterate per game cycle]
+x: 64
+y: 62
+
+EXTRACTOR - TILE SIZE * 2
+=========================
+x: 264
+y: 63
+
+TERMINAL1 - TILE SIZE
+====================
+x: 71
+y: 138
+[for blinking cursor, iterate per game cycle]
+x: 103
+y: 138
+
+TERMINAL2 - TILE SIZE
+=====================
+x: 140
+y: 137
+[for blinking cursor, iterate per game cycle]
+x: 172
+y: 137
+
+DESK - TILESIZE
+===============
+x: 3
+y: 174
+
