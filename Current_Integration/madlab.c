@@ -36,6 +36,7 @@
 #define BLANK                     0
 #define NUM_DIRECTIONS            4
 
+
 // TYPEDEFS AND ENUMERATION
 
 enum compass{up = 0, right = 1, down = 2, left = 3};
@@ -162,14 +163,18 @@ void look_for_action(roomGrid *room_grid);
 void SDL_QuitChecker(roomGrid *room_grid);
 void initialise_SDL_component(SDL_Window *window, roomGrid *room_grid);
 void neill_notes(roomGrid *room_grid, char *instructions_list[NUM_INSTRUCTIONS]);
+
 void problem_generator(roomGrid *room_grid, char *instructions_list[NUM_INSTRUCTIONS], problem *prob_point, bool *current_puzzle_solved, char *input_image_name);
 void input_screen(roomGrid *room_grid, char *correct_answer, int chars_in_ans, bool *current_puzzle_solved, char *input_screen);
+
 void create_answer_for_checking(char possible_answer[MAX_INPUT_CHARS], char input_string[MAX_INPUT_CHARS], int chars_in_ans);
 void initialise_input_string(char input_string[MAX_INPUT_CHARS]);
 void initialise_drcrect(SDL_Rect *drcrect, int input_index);
 void check_user_variable_input(roomGrid *room_grid, char *input_string, int *input_index, int *finish_checker);
+
 void initialise_problem(problem *prob_point, char *correct_answer, int first_inst_start, int first_instr_end,
                         int num_chars_ans, int second_inst_end);
+
 
 
 //FUNCTIONS FOR MOVEMENT
@@ -903,6 +908,7 @@ int action(roomGrid *room_grid, progress *puzzle, char *instructions_list[NUM_IN
     problem action_problem, *prob_point;
     prob_point = &action_problem;
 
+
     switch(room_grid -> probe)
     {
         case(puz_1):        printf("in puz_1 case\n");
@@ -1219,6 +1225,7 @@ void input_screen(roomGrid *room_grid, char *correct_answer, int chars_in_ans, b
     initialise_drcrect(&drcrect, input_index);
 
     text_one = SDL_LoadBMP( input_screen );
+
     if( text_one == NULL )
     {
       printf( "Unable to load image %s! SDL Error: %s\n", "bla", SDL_GetError() );
