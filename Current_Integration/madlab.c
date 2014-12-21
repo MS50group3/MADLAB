@@ -545,7 +545,6 @@ void draw(roomGrid *room_grid, progress *puzzle, char *instructions_list[NUM_INS
         SDL_RenderPresent(room_grid -> renderer);
     }
 
-    // SDL_Delay(5000);
     SDL_DestroyTexture(grafix_tex);
     SDL_DestroyRenderer(room_grid -> renderer);
     SDL_DestroyWindow(room_grid -> window);
@@ -554,8 +553,8 @@ void draw(roomGrid *room_grid, progress *puzzle, char *instructions_list[NUM_INS
 
 void draw_room(SDL_Texture *grafix_tex, roomGrid *room_grid)
 {
-    for (int i = 0; i <= ROOM_Y; i++){
-        for (int j = 0; j < ROOM_X; j++){
+    for (int i = 0; i <= ROOM_Y; ++i){
+        for (int j = 0; j < ROOM_X; ++j){
 
             room_grid -> rc_dest.x = (j * TILE_SIZE);              //the destination rects are set to i and j
             room_grid -> rc_dest.y = (i * TILE_SIZE);
@@ -653,8 +652,8 @@ void position_sprite(roomGrid *room_grid)
 {
 
     /* set sprite "source" position - as called by RenderCopy, choose which to be */
-    room_grid -> rc_sprite.y = 500;
-    room_grid -> rc_sprite.x = 150;
+    room_grid -> rc_sprite.y = TILE_SIZE*16;  //if you want to change sprite position, make it a multiple of 32 or else you get clipping
+    room_grid -> rc_sprite.x = TILE_SIZE*5;
     room_grid -> rc_sprite.w = TILE_SIZE;
     room_grid -> rc_sprite.h = TILE_SIZE;
 
@@ -1202,7 +1201,7 @@ void input_screen(roomGrid *room_grid, wrong_right *correct_indicator, char *cor
     }
 
     image_one = SDL_CreateTextureFromSurface(room_grid->renderer, text_one);
-    TTF_Font *font = TTF_OpenFont("opendisplay.ttf", 200);
+    TTF_Font *font = TTF_OpenFont("gfx/opendisplay.ttf", 200);
 
     if(font == NULL){
         printf("\nCouldn't load text.\n");
