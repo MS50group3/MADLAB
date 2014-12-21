@@ -1036,14 +1036,21 @@ void door_hinge_problem(roomGrid *room_grid, progress *puzzle, char *instruction
 
 void find_weight_a(roomGrid *room_grid, progress *puzzle, char *instructions_list[NUM_INSTRUCTIONS])
 {
-    print_instruction(room_grid, instructions_list, 53, 55);
-    puzzle -> player_has_a_weight = true;
+    if(puzzle -> puzzle_4_seen == false){
+        print_instruction(room_grid, instructions_list, 53, 55);
+        puzzle -> player_has_a_weight = true;
+        puzzle -> puzzle_4_seen = true;
+    }
 }
 
 void find_weight_b(roomGrid *room_grid, progress *puzzle, char *instructions_list[NUM_INSTRUCTIONS])
 {
-    print_instruction(room_grid, instructions_list, 55, 57);
-    puzzle -> player_has_b_weight = true;
+    if(puzzle -> puzzle_6_seen == false){
+        print_instruction(room_grid, instructions_list, 55, 57);
+        puzzle -> player_has_b_weight = true;
+        puzzle -> puzzle_6_seen = true;
+    }
+
 }
 
 void hen_sequence(Chicken *hen, roomGrid *room_grid, char *instructions_list[NUM_INSTRUCTIONS])
