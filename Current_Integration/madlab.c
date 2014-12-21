@@ -34,6 +34,8 @@
 #define WALL                      1
 #define ALT                       2
 #define BLANK                     0
+#define NUM_DIRECTIONS            4
+
 
 // TYPEDEFS AND ENUMERATION
 
@@ -142,6 +144,14 @@ struct edit{
 };
 typedef struct edit Edit;
 
+struct problem{
+    char *correct_answer;
+    int first_instructions_start;
+    int first_instructions_end;
+    int second_instructions_end;
+    int num_chars_in_ans;
+};
+typedef struct problem problem;
 
 //FUNCTIONS FOR PROBLEMS
 
@@ -153,13 +163,18 @@ void look_for_action(roomGrid *room_grid);
 void SDL_QuitChecker(roomGrid *room_grid);
 void initialise_SDL_component(SDL_Window *window, roomGrid *room_grid);
 void neill_notes(roomGrid *room_grid, char *instructions_list[NUM_INSTRUCTIONS]);
-void first_problem(roomGrid *room_grid, char *instructions_list[NUM_INSTRUCTIONS]);
-void input_screen(roomGrid *room_grid, wrong_right *correct_indicator, char *correct_answer, int chars_in_ans);
+
+void problem_generator(roomGrid *room_grid, char *instructions_list[NUM_INSTRUCTIONS], problem *prob_point, bool *current_puzzle_solved, char *input_image_name);
+void input_screen(roomGrid *room_grid, char *correct_answer, int chars_in_ans, bool *current_puzzle_solved, char *input_screen);
+
 void create_answer_for_checking(char possible_answer[MAX_INPUT_CHARS], char input_string[MAX_INPUT_CHARS], int chars_in_ans);
 void initialise_input_string(char input_string[MAX_INPUT_CHARS]);
 void initialise_drcrect(SDL_Rect *drcrect, int input_index);
 void check_user_variable_input(roomGrid *room_grid, char *input_string, int *input_index, int *finish_checker);
-void second_problem(roomGrid *room_grid, char *instructions_list[NUM_INSTRUCTIONS]);
+
+void initialise_problem(problem *prob_point, char *correct_answer, int first_inst_start, int first_instr_end,
+                        int num_chars_ans, int second_inst_end);
+
 
 
 //FUNCTIONS FOR MOVEMENT
@@ -475,19 +490,19 @@ void James_SDL_Events(roomGrid *room_grid)
        switch (event.type){
 
             case SDL_QUIT:
-                room_grid -> finished = 1;
+                room_grid -> finished = on;
                 break;
             case SDL_MOUSEBUTTONDOWN:
-                room_grid -> skip_checker = 1;
+                room_grid -> skip_checker = on;
                 break;
             case SDL_KEYDOWN:
                 switch (event.key.keysym.sym)
                 {
-                    case SDLK_x:
+                    case SDLK_ESCAPE:
                         room_grid -> problem_quitter = on;
                         break;
                     case SDLK_SPACE:
-                        room_grid -> skip_checker = 1;
+                        room_grid -> skip_checker = on;
                         break;
                 }
         }
@@ -890,23 +905,29 @@ void interactProbe(roomGrid *room_grid, progress *puzzle, char *instructions_lis
 
 int action(roomGrid *room_grid, progress *puzzle, char *instructions_list[NUM_INSTRUCTIONS], Chicken *hen)
 {
+    problem action_problem, *prob_point;
+    prob_point = &action_problem;
+
+
     switch(room_grid -> probe)
     {
         case(puz_1):        printf("in puz_1 case\n");
                             if ((puzzle -> puzzle_1_seen) == false){
+
                                 printf("Spaced!\n");
 
                                 neill_notes(room_grid, instructions_list);
 
                                 puzzle -> puzzle_1_seen = true;
+
                                 return 1;
                             }
                             else if( (puzzle -> puzzle_1_solved) == false){     
                                 printf("Already spaced!\n");
 
-                                first_problem(room_grid, instructions_list);
+                                initialise_problem(prob_point, "fan < too hot", 22, 27, 13, 29);
 
-                                puzzle -> puzzle_1_solved = true;
+                                problem_generator(room_grid, instructions_list, prob_point, &puzzle -> puzzle_1_solved, "Instructions/code_entry.bmp");
 
                                 return 0;
                             }
@@ -920,9 +941,10 @@ int action(roomGrid *room_grid, progress *puzzle, char *instructions_list[NUM_IN
                             if ((puzzle -> puzzle_3_solved) == false){
                                 printf("Spaced!\n");
 
-                                second_problem(room_grid, instructions_list);
+                                initialise_problem(prob_point, "0101", 29, 35, 4, 36);
 
-                                puzzle -> puzzle_3_solved = true;
+                                problem_generator(room_grid, instructions_list, prob_point, &puzzle -> puzzle_3_solved, "Instructions/code_entry_two.bmp");
+
                                 return 0;
                             }
                             return 1;
@@ -946,6 +968,15 @@ int action(roomGrid *room_grid, progress *puzzle, char *instructions_list[NUM_IN
     }
 }
 
+void initialise_problem(problem *prob_point, char *correct_answer, int first_inst_start, int first_instr_end,
+                        int num_chars_ans, int second_inst_end)
+{
+    prob_point -> correct_answer = correct_answer;
+    prob_point -> first_instructions_start = first_inst_start;
+    prob_point -> first_instructions_end = first_instr_end;
+    prob_point -> second_instructions_end = second_inst_end;
+    prob_point -> num_chars_in_ans = num_chars_ans;
+}
 
 void permit_chicken(Chicken *hen, roomGrid *room_grid)
 {
@@ -1121,29 +1152,6 @@ void eggfault(Chicken *hen, roomGrid *room_grid)
     }
 }
 
-
-
-void second_problem(roomGrid *room_grid, char *instructions_list[NUM_INSTRUCTIONS])
-{
-    room_grid -> finished = 0;
-    wrong_right correct_indicator = incorrect;
-    char *correct_answer = "0101";
-
-    //Prints first part of the instructions.
-    print_instruction(room_grid, instructions_list, 29, 35);
-
-    //Now we go to the input screen for the text.
-    while(correct_indicator != correct && room_grid -> problem_quitter == off){
-        input_screen(room_grid, &correct_indicator, correct_answer, 4);
-    }
-
-    //Prints second part of the instructions.
-    if(room_grid -> problem_quitter == off){
-        print_instruction(room_grid, instructions_list, 35, 36);
-    }
-
-}
-
 void changeChickenDirection(Chicken *hen)
 {
     if (hen -> chick_facing == left)
@@ -1165,23 +1173,21 @@ void neill_notes(roomGrid *room_grid, char *instructions_list[NUM_INSTRUCTIONS])
     print_instruction(room_grid, instructions_list, 10, 22);
 }
 
-void first_problem(roomGrid *room_grid, char *instructions_list[NUM_INSTRUCTIONS])
+void problem_generator(roomGrid *room_grid, char *instructions_list[NUM_INSTRUCTIONS], problem *prob_point, bool *current_puzzle_solved, char *input_image_name)
 {
     room_grid -> finished = 0;
-    wrong_right correct_indicator = incorrect;
-    char *correct_answer = "fan < too hot";
 
     //Prints first part of the instructions.
-    print_instruction(room_grid, instructions_list, 22, 27);
+    print_instruction(room_grid, instructions_list, prob_point->first_instructions_start, prob_point->first_instructions_end);
 
     //Now we go to the input screen for the text.
-    while(correct_indicator != correct && room_grid -> problem_quitter == off){
-        input_screen(room_grid, &correct_indicator, correct_answer, 13);
+    while(*current_puzzle_solved == false && room_grid -> problem_quitter == off){
+        input_screen(room_grid, prob_point->correct_answer, prob_point->num_chars_in_ans, current_puzzle_solved, input_image_name);
     }
 
     //Prints second part of the instructions.
     if(room_grid -> problem_quitter == off){
-        print_instruction(room_grid, instructions_list, 27, 29);
+        print_instruction(room_grid, instructions_list, prob_point->first_instructions_end, prob_point->second_instructions_end);
     }
 
 }
@@ -1207,7 +1213,7 @@ void free_room_array(roomGrid *room_grid)
 }
 
 //Used to read in and print out the person's input.
-void input_screen(roomGrid *room_grid, wrong_right *correct_indicator, char *correct_answer, int chars_in_ans)
+void input_screen(roomGrid *room_grid, char *correct_answer, int chars_in_ans, bool *current_puzzle_solved, char *input_screen)
 {
     SDL_Texture* image, *image_one;
     SDL_Surface *text, *text_one;
@@ -1218,7 +1224,8 @@ void input_screen(roomGrid *room_grid, wrong_right *correct_indicator, char *cor
     initialise_input_string(input_string);
     initialise_drcrect(&drcrect, input_index);
 
-    text_one = SDL_LoadBMP( "Instructions/code_entry.bmp" );
+    text_one = SDL_LoadBMP( input_screen );
+
     if( text_one == NULL )
     {
       printf( "Unable to load image %s! SDL Error: %s\n", "bla", SDL_GetError() );
@@ -1253,7 +1260,7 @@ void input_screen(roomGrid *room_grid, wrong_right *correct_indicator, char *cor
     create_answer_for_checking(possible_answer, input_string, chars_in_ans);
 
     if( strcmp(possible_answer, correct_answer) == 0){
-        *correct_indicator = correct;
+        *current_puzzle_solved = true;
     }
 
     look_for_action(room_grid);
