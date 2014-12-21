@@ -532,7 +532,7 @@ void James_SDL_Events(roomGrid *room_grid)
        switch (event.type){
 
             case SDL_QUIT:
-                room_grid -> finished = on;
+                room_grid -> finished = finished;
                 break;
             case SDL_MOUSEBUTTONDOWN:
                 room_grid -> skip_checker = on;
