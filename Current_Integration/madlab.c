@@ -34,6 +34,7 @@
 #define WALL                      1
 #define ALT                       2
 #define BLANK                     0
+#define NUM_DIRECTIONS            4
 
 // TYPEDEFS AND ENUMERATION
 
@@ -484,10 +485,10 @@ void James_SDL_Events(roomGrid *room_grid)
        switch (event.type){
 
             case SDL_QUIT:
-                room_grid -> finished = 1;
+                room_grid -> finished = on;
                 break;
             case SDL_MOUSEBUTTONDOWN:
-                room_grid -> skip_checker = 1;
+                room_grid -> skip_checker = on;
                 break;
             case SDL_KEYDOWN:
                 switch (event.key.keysym.sym)
@@ -496,7 +497,7 @@ void James_SDL_Events(roomGrid *room_grid)
                         room_grid -> problem_quitter = on;
                         break;
                     case SDLK_SPACE:
-                        room_grid -> skip_checker = 1;
+                        room_grid -> skip_checker = on;
                         break;
                 }
         }
