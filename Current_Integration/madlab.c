@@ -290,7 +290,7 @@ void run_main_game(roomGrid *room_grid, progress *puzzle, Chicken *hen)
     get_instructions(instructions_list);
 
     Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, AUDIO_S16SYS, MUSIC_CONST_ONE, MUSIC_CONST_TWO);
-    room_grid -> mus = Mix_LoadWAV("20141124b.wav");
+    room_grid -> mus = Mix_LoadWAV("sfx/20141124b.wav");
 
     //Prints the opening scene.
     print_instruction(room_grid, instructions_list, 0, 10);
@@ -365,7 +365,6 @@ void print_instruction(roomGrid *room_grid, char *instructions_list[NUM_INSTRUCT
             print_instruction_to_screen(room_grid, instructions_list[i]);
         }
     }
-
 }
 
 
@@ -514,7 +513,7 @@ void draw(roomGrid *room_grid, progress *puzzle, char *instructions_list[NUM_INS
     SDL_Texture *grafix_tex;
 
     /*One texture to rule them all*/
-    grafix = IMG_Load("tile_array.png");  //if you want to add new items, to code, ensure to check the txt file with the coordinates
+    grafix = IMG_Load("gfx/tile_array.png");  //if you want to add new items, to code, ensure to check the txt file with the coordinates
     grafix_tex = SDL_CreateTextureFromSurface(room_grid -> renderer, grafix);
     SDL_FreeSurface (grafix);
 
@@ -571,10 +570,6 @@ void draw_room(SDL_Texture *grafix_tex, roomGrid *room_grid)
             if (room_grid -> room_array[i][j] == 2){
                 rcsrc_set(0, 138, 32, 32, grafix_tex, room_grid);  //draw a wall
             }
-
-            if (room_grid -> room_array[i][j] == 3){
-                rcsrc_set(121, 56, 76, 59, grafix_tex, room_grid);
-            }
         }
     }
 }
@@ -593,11 +588,11 @@ void rcsrc_set(int x_coord, int y_coord, int width, int height, SDL_Texture *gra
 /*draws an object by selecting values from the tile sheet and drawing them to a destination on the game map*/
 void draw_obj(SDL_Texture *grafix_tex, roomGrid *room_grid)
 {
-    /*draw extractor*/
+    /*draw and position extractor*/
     rcobj_set(264, 63, 64, 64, 0, 0, grafix_tex, room_grid);
 
-    /*draw fan*/
-    rcobj_set(264, 63, 64, 64, 0, 0, grafix_tex, room_grid);
+    /*draw and position fan*/
+    rcobj_set(0, 62, 64, 64, 737, 318, grafix_tex, room_grid);
 
 }
 
@@ -658,8 +653,8 @@ void position_sprite(roomGrid *room_grid)
 {
 
     /* set sprite "source" position - as called by RenderCopy, choose which to be */
-    room_grid -> rc_sprite.y = TILE_SIZE*3;
-    room_grid -> rc_sprite.x = TILE_SIZE*3;
+    room_grid -> rc_sprite.y = 500;
+    room_grid -> rc_sprite.x = 150;
     room_grid -> rc_sprite.w = TILE_SIZE;
     room_grid -> rc_sprite.h = TILE_SIZE;
 
@@ -707,19 +702,19 @@ void movement(roomGrid *room_grid, progress *puzzle, char *instructions_list[NUM
                     break;
                 case SDLK_LEFT:
                     room_grid -> direction = left;
-                    (!((room_grid -> rc_sprite_pos.x) % TILE_SIZE)) ? possible(room_grid, puzzle): move(room_grid, puzzle);
+                    (!((room_grid -> rc_sprite.x) % TILE_SIZE)) ? possible(room_grid, puzzle): move(room_grid, puzzle);
                     break;
                 case SDLK_RIGHT:
                     room_grid -> direction = right;
-                    (!((room_grid -> rc_sprite_pos.x) % TILE_SIZE)) ? possible(room_grid, puzzle): move(room_grid, puzzle);
+                    (!((room_grid -> rc_sprite.x) % TILE_SIZE)) ? possible(room_grid, puzzle): move(room_grid, puzzle);
                     break;
                 case SDLK_UP:
                     room_grid -> direction = up;
-                    (!((room_grid -> rc_sprite_pos.y) % TILE_SIZE)) ? possible(room_grid, puzzle): move(room_grid, puzzle);
+                    (!((room_grid -> rc_sprite.y) % TILE_SIZE)) ? possible(room_grid, puzzle): move(room_grid, puzzle);
                     break;
                 case SDLK_DOWN:
                     room_grid -> direction = down;
-                    (!((room_grid -> rc_sprite_pos.y) % TILE_SIZE)) ? possible(room_grid, puzzle): move(room_grid, puzzle);
+                    (!((room_grid -> rc_sprite.y) % TILE_SIZE)) ? possible(room_grid, puzzle): move(room_grid, puzzle);
                     break;
                 case SDLK_SPACE:
                     interactProbe(room_grid, puzzle, instructions_list, hen);
