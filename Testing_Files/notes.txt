@@ -4,3 +4,7 @@ In draw_room:
 
 Why is it not else if in the loop.
 Why is there no action if the array isn't zero or one.
+
+In movement:
+
+No default for switch.

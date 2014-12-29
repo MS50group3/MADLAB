@@ -34,5 +34,13 @@ int main(int aroom_gridc, char *argv[])
 
     set_up_test("Position Chicken Suite", "Test of position_chicken()", test_position_chicken);
 
+    set_up_test("Movement Suite", "Test of movement()", test_movement);
+
+    set_up_test("Sound Suite", "Test of sound_on_off()", test_sound_on_off);
+
+    set_up_test("Edge Detection Suite", "Test of edge_detection()", test_edge_detection);
+
+    set_up_test("Possible Suite", "Test of possible()", test_possible);
+
     return(0);
 }

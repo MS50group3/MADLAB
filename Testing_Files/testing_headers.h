@@ -218,3 +218,25 @@ void test_initialise_chicken(void);
 void test_position_sprite(void);
 
 void test_position_chicken(void);
+
+void test_movement(void);
+
+void movement_case(roomGrid *room_grid, int event, int key);
+
+void test_sound_on_off(void);
+
+void sound_on_off_case(roomGrid *room_grid, on_off pause);
+
+void test_edge_detection(void);
+
+void edge_detection_case(roomGrid *room_grid, int x_coord, int y_coord);
+
+void test_possible(void);
+
+void initialise_possible_components(roomGrid *room_grid);
+
+void examine_possible_case(roomGrid *room_grid, int n1, int n2, int n3, int n4, int n5, int n6, int n7, int n8, int n9);
+
+void set_up_for_possible_case(roomGrid *room_grid, int n1, int n2, int n3, int n4, int n5, int n6, int n7, int n8, int n9);
+
+void possible_case(roomGrid *room_grid, int direction);

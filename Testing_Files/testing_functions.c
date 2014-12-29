@@ -1012,3 +1012,348 @@ void test_position_chicken(void)
 
     printf("\n");
 }
+
+void test_movement(void)
+{
+    int i, j;
+
+    roomGrid roomStuff, *room_grid;
+    room_grid = &roomStuff;
+    
+    printf("\n");
+
+    for(i = 0; i < 3; ++i){
+        for(j = 0; j < 8; ++j){
+            movement_case(room_grid, i, j);
+        }
+    }
+
+    printf("\n");
+ 
+}
+
+void movement_case(roomGrid *room_grid, int event, int key)
+{
+    switch (event) 
+    {
+        case 1:
+            assert_test(event == 1, "SDL_QUIT successfully registered.");
+
+            room_grid -> gamerunning = false;
+            assert_test(room_grid -> gamerunning == false, "Room successfully registered as quit.");
+            break;
+        case 2:
+            assert_test(event == 2, "SDL_KEYDOWN successfully registered.");
+
+        switch (key)
+        {
+            case 1:
+                assert_test(key == 1, "SDLK_q successfully registered.");
+
+                room_grid -> gamerunning = false;
+                assert_test(room_grid -> gamerunning == false, "Room successfully registered as quit.");
+                break;
+
+           case 2:
+                assert_test(key == 2, "SDLK_LEFT successfully registered.");
+
+                room_grid -> direction = left;
+                assert_test(room_grid -> direction == left, "Player directions successfully changed to left.");
+
+                break;
+
+            case 3:
+                assert_test(key == 3, "SDLK_RIGHT successfully registered.");
+
+                room_grid -> direction = right;
+                assert_test(room_grid -> direction == right, "Player directions successfully changed to right.");
+
+                break;
+
+            case 4:
+                assert_test(key == 4, "SDLK_UP successfully registered.");
+
+                room_grid -> direction = up;
+                assert_test(room_grid -> direction == up, "Player directions successfully changed to up.");
+
+                break;
+
+            case 5:
+                assert_test(key == 5, "SDLK_DOWN successfully registered.");
+
+                room_grid -> direction = down;
+                assert_test(room_grid -> direction == down, "Player directions successfully changed to down.");
+                break;
+
+            case 6:
+                assert_test(key == 6, "Interact Probe successfully turned on.");
+                break;
+            case 7:
+                assert_test(key == 7, "Sound function successfully switched to.");
+                break;
+            default:
+                assert_test(key > 7 || key < 1, "Invalid key successfully registered.");
+                break;
+        }
+        break;
+
+        default:
+            assert_test(event != 1 && event != 2, "Invalid event registered.");
+        break;
+    }
+}
+
+void test_sound_on_off(void)
+{
+    roomGrid roomStuff, *room_grid;
+    room_grid = &roomStuff;
+
+    printf("\n");
+
+    sound_on_off_case(room_grid, on);
+
+    sound_on_off_case(room_grid, off);
+
+    printf("\n");
+}
+
+void sound_on_off_case(roomGrid *room_grid, on_off pause)
+{
+    room_grid -> paused = pause;
+
+    if(room_grid -> paused == off){
+        assert_test(room_grid -> paused == off, "Sound registered to be playing.");
+
+        room_grid -> paused = on;
+        assert_test(room_grid -> paused == on, "Sound successfully paused.");      
+    }
+
+    else if(room_grid -> paused == on){
+        assert_test(room_grid -> paused == on, "Sound registered to be paused.");
+
+        room_grid -> paused = off;
+        assert_test(room_grid -> paused == off, "Sound successfully unpaused.");
+    }
+}
+
+void test_edge_detection(void)
+{
+    roomGrid roomStuff, *room_grid;
+    room_grid = &roomStuff;
+
+    printf("\n");
+
+    edge_detection_case(room_grid, -10, SCREEN_WIDTH - TILE_SIZE + 1);
+
+    edge_detection_case(room_grid, -10, -10);
+
+    edge_detection_case(room_grid, SCREEN_WIDTH - TILE_SIZE + 1, SCREEN_WIDTH - TILE_SIZE + 1);
+
+    edge_detection_case(room_grid, -10, -10);
+
+    printf("\n");
+}
+
+void edge_detection_case(roomGrid *room_grid, int x_coord, int y_coord)
+{
+    room_grid -> rc_sprite.x  = x_coord;
+    room_grid -> rc_sprite.y  = y_coord;
+
+    //Left edge.
+    if (room_grid -> rc_sprite.x <= 0){
+        assert_test(room_grid -> rc_sprite.x <= 0, "Left edge collision registered.");
+
+        room_grid -> rc_sprite.x  = 0;
+        assert_test(room_grid -> rc_sprite.x  == 0, "Left edge collision successfully dealt with.");
+    }
+    //Right edge
+    if (room_grid -> rc_sprite.x >= SCREEN_WIDTH - TILE_SIZE){
+        assert_test(room_grid -> rc_sprite.x >= SCREEN_WIDTH - TILE_SIZE, "Right edge collision registered.");
+
+        room_grid -> rc_sprite.x  = SCREEN_WIDTH - TILE_SIZE;
+        assert_test(room_grid -> rc_sprite.x  == SCREEN_WIDTH - TILE_SIZE, "Right edge collision successfully dealt with.");
+    }
+    //Top edge
+    if (room_grid -> rc_sprite.y <= 0){
+        assert_test(room_grid -> rc_sprite.y <= 0, "Top edge collision registered.");
+
+        room_grid -> rc_sprite.y  = 0;
+        assert_test(room_grid -> rc_sprite.y  == 0, "Top edge collision successfully dealt with.");
+    }
+    //Bottom edge
+    if (room_grid -> rc_sprite.y >= SCREEN_HEIGHT - TILE_SIZE){
+        assert_test(room_grid -> rc_sprite.y >= SCREEN_HEIGHT - TILE_SIZE, "Bottom edge collision registered.");
+
+        room_grid -> rc_sprite.y  = SCREEN_HEIGHT - TILE_SIZE;
+        assert_test(room_grid -> rc_sprite.y == SCREEN_HEIGHT - TILE_SIZE, "Bottom edge collision successfully dealt with.");
+    }
+
+}
+
+void test_possible(void)
+{
+    roomGrid roomStuff, *room_grid;
+    room_grid = &roomStuff;
+
+    int a, b, c, d, e, f, g, h, i;
+
+    printf("\n");
+
+    initialise_possible_components(room_grid);
+
+
+    for(a = 0; a <= 1; ++a){
+        for(b = 0; b <= 1; ++b){
+            for(c = 0; c <= 1; ++c){
+                for(d = 0; d <= 1; ++d){
+                    for(e = 0; e <= 1; ++e){
+                        for(f = 0; f <= 1; ++f){
+                            for(g = 0; g <= 1; ++g){
+                                for(h = 0; h <= 1; ++h){
+                                    for(i = 0; i <= 1; ++i){
+                                        examine_possible_case(room_grid, a, b, c, d, e, f, g, h, i);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    printf("\n");
+}
+
+void initialise_possible_components(roomGrid *room_grid)
+{
+    int i;
+
+    room_grid -> room_array = (int **)calloc((ROOM_Y) + 1, sizeof(int *));
+    CU_ASSERT(sizeof(room_grid -> room_array) == sizeof( (int **)calloc((ROOM_Y) + 1, sizeof(int *)) ) );
+    printf("\nDynamic memory for room grid room array successfully allocated.\n");
+
+    for (i = 0; i <= ROOM_Y; i++){
+        room_grid -> room_array[i] = (int *)calloc((ROOM_X) + 1, sizeof(int));
+        CU_ASSERT(sizeof(room_grid -> room_array[i]) == sizeof((int *)calloc((ROOM_X) + 1, sizeof(int))));
+    }
+    printf("\nMemory for room grid room array component successfully allocated.\n");
+
+    room_grid -> rc_sprite.x = 5;
+    room_grid -> rc_sprite.y = 5;
+
+    room_grid -> left_x_coord = (room_grid -> rc_sprite.x) / TILE_SIZE;
+    assert_test(room_grid -> left_x_coord == (room_grid -> rc_sprite.x) / TILE_SIZE, "Sprite left x coordinate in movement successfully set.");
+
+    room_grid -> top_y_coord = (room_grid -> rc_sprite.y) / TILE_SIZE;
+    assert_test(room_grid -> top_y_coord == (room_grid -> rc_sprite.y) / TILE_SIZE, "Sprite top y coordinate in movement successfully set.");
+
+    room_grid -> bottom_y_coord = ((room_grid -> rc_sprite.y - 1) + TILE_SIZE) / TILE_SIZE;
+    assert_test(room_grid -> bottom_y_coord == ((room_grid -> rc_sprite.y - 1) + TILE_SIZE) / TILE_SIZE, "Sprite bottom y coordinate in movement successfully set.");
+
+    room_grid -> right_x_coord = ((room_grid -> rc_sprite.x - 1) + TILE_SIZE) / TILE_SIZE;
+    assert_test(room_grid -> right_x_coord == ((room_grid -> rc_sprite.x - 1) + TILE_SIZE) / TILE_SIZE, "Sprite right x coordinate in movement successfully set.");
+
+}
+
+void examine_possible_case(roomGrid *room_grid, int n1, int n2, int n3, int n4, int n5, int n6, int n7, int n8, int n9)
+{
+    set_up_for_possible_case(room_grid, n1, n2, n3, n4, n5, n6, n7, n8, n9);
+
+    possible_case(room_grid, left);
+
+    possible_case(room_grid, down);
+
+    possible_case(room_grid, up);
+
+    possible_case(room_grid, right);
+}
+
+void set_up_for_possible_case(roomGrid *room_grid, int n1, int n2, int n3, int n4, int n5, int n6, int n7, int n8, int n9)
+{
+    //Sometimes equal to zero.
+    room_grid -> rc_sprite.y = n1;
+
+    //Both of these at some point equal, the bottom one equal to zero.
+    room_grid -> room_array[room_grid -> top_y_coord][room_grid -> left_x_coord - 1] = n2;
+    room_grid -> room_array[room_grid -> bottom_y_coord][room_grid -> left_x_coord - 1] = n3;
+
+    //Both of these at some point equal, the bottom one equal to zero. 
+    room_grid -> room_array[room_grid -> bottom_y_coord + 1][room_grid -> left_x_coord] = n4;
+    room_grid -> room_array[room_grid -> bottom_y_coord + 1][room_grid -> right_x_coord] = n5;
+
+    //Both of these at some point equal, the top one equal to zero. 
+    room_grid -> room_array[room_grid -> top_y_coord][room_grid -> right_x_coord + 1] = n6;
+    room_grid -> room_array[room_grid -> bottom_y_coord][room_grid -> right_x_coord + 1] = n7;
+
+    //Both of these at some point equal, the bottom one equal to zero.
+    room_grid -> room_array[room_grid -> bottom_y_coord - 1][room_grid -> left_x_coord] = n8;
+    room_grid -> room_array[room_grid -> bottom_y_coord-1][room_grid -> right_x_coord] = n9;
+}
+
+void possible_case(roomGrid *room_grid, int direction)
+{
+
+    switch (direction)
+    {       
+        case(left):     if ((room_grid -> room_array[room_grid -> top_y_coord][room_grid -> left_x_coord - 1]) == (room_grid -> room_array[room_grid -> bottom_y_coord][room_grid -> left_x_coord - 1])){
+
+                            assert_test((room_grid -> room_array[room_grid -> top_y_coord][room_grid -> left_x_coord - 1]) == (room_grid -> room_array[room_grid -> bottom_y_coord][room_grid -> left_x_coord - 1]), "First part of movement left successfully registered.");
+
+                            if(room_grid -> room_array[room_grid -> bottom_y_coord][room_grid -> left_x_coord - 1] == 0){
+
+                                    assert_test(room_grid -> room_array[room_grid -> bottom_y_coord][room_grid -> left_x_coord - 1] == 0, "Left movement successfully passed into move function.");
+
+                            }
+                        }
+                        break;
+
+        case(down):     if ((room_grid -> room_array[room_grid -> bottom_y_coord + 1][room_grid -> left_x_coord]) == (room_grid -> room_array[room_grid -> bottom_y_coord + 1][room_grid -> right_x_coord])){
+
+                            assert_test((room_grid -> room_array[room_grid -> bottom_y_coord + 1][room_grid -> left_x_coord]) == (room_grid -> room_array[room_grid -> bottom_y_coord + 1][room_grid -> right_x_coord]), "First part of movement down successfully registered.");
+
+                            if(room_grid -> room_array[room_grid -> bottom_y_coord + 1][room_grid -> left_x_coord] == 0){
+
+                                assert_test(room_grid -> room_array[room_grid -> bottom_y_coord + 1][room_grid -> left_x_coord] == 0, "Down movement successfully passed into move function.");
+
+                            }
+                        }
+                        break;
+
+        case(right):    if ((room_grid -> room_array[room_grid -> top_y_coord][room_grid -> right_x_coord + 1]) == (room_grid -> room_array[room_grid -> bottom_y_coord][room_grid -> right_x_coord + 1])){
+
+                            assert_test((room_grid -> room_array[room_grid -> top_y_coord][room_grid -> right_x_coord + 1]) == (room_grid -> room_array[room_grid -> bottom_y_coord][room_grid -> right_x_coord + 1]), "First part of movement right successfully registered.");
+
+                            if(room_grid -> room_array[room_grid -> top_y_coord][room_grid -> right_x_coord + 1] == 0){
+
+                                assert_test(room_grid -> room_array[room_grid -> top_y_coord][room_grid -> right_x_coord + 1] == 0, "Right movement successfully passed into move function.");
+
+                            }
+                        }
+                        break;
+
+        case(up):       if (room_grid -> rc_sprite.y != 0)
+                        {
+
+                            assert_test(room_grid -> rc_sprite.y != 0, "Not being at top of screen registered for upwards movement.");
+
+                            if ((room_grid -> room_array[room_grid -> bottom_y_coord - 1][room_grid -> left_x_coord]) == (room_grid -> room_array[room_grid -> bottom_y_coord-1][room_grid -> right_x_coord])){
+
+                                assert_test((room_grid -> room_array[room_grid -> bottom_y_coord - 1][room_grid -> left_x_coord]) == (room_grid -> room_array[room_grid -> bottom_y_coord-1][room_grid -> right_x_coord]), "First part of movement up successfully registered.");
+
+                                if (room_grid -> room_array[room_grid -> bottom_y_coord - 1][room_grid -> left_x_coord] == 0){
+
+                                    assert_test(room_grid -> room_array[room_grid -> bottom_y_coord - 1][room_grid -> left_x_coord] == 0, "Upwards movement successfully passed into move function.");
+
+                                }      
+                            }
+                        }
+                        break;
+
+        default:        
+
+                assert_test(direction != up && direction != down && direction != left && direction != right, "Invalid direction successfully caught.");
+
+                break;
+     }
+}
