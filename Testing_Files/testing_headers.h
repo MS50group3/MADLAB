@@ -240,3 +240,27 @@ void examine_possible_case(roomGrid *room_grid, int n1, int n2, int n3, int n4, 
 void set_up_for_possible_case(roomGrid *room_grid, int n1, int n2, int n3, int n4, int n5, int n6, int n7, int n8, int n9);
 
 void possible_case(roomGrid *room_grid, int direction);
+
+void test_move(void);
+
+void examine_move(roomGrid *room_grid, int sprite_x_coord);
+
+void move_case(roomGrid *room_grid, int direction);
+
+void test_interactProbe(void);
+
+void initialise_roomGrid_memory(roomGrid *room_grid);
+
+void initialise_interactProbe_location(roomGrid *room_grid);
+
+void examine_interactProbe_case(roomGrid *room_grid, on_off action);
+
+void interactProbe_case(roomGrid *room_grid, int direction, on_off action);
+
+void test_action(void);
+
+int action_case(problem *prob_point, roomGrid *room_grid, progress *puzzle, bool puzz_1_seen, bool puzz_1_solved, bool puzz_3_solved, int probe);
+
+void test_door_hinge_problem(void);
+
+void door_hinge_problem_case(progress *puzzle, bool puzz_2_seen, bool player_a, bool player_b);

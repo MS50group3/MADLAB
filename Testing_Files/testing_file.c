@@ -42,5 +42,13 @@ int main(int aroom_gridc, char *argv[])
 
     set_up_test("Possible Suite", "Test of possible()", test_possible);
 
+    set_up_test("Move Suite", "Test of move()", test_move);
+
+    set_up_test("Interact Probe Suite", "Test of interactProbe()", test_interactProbe);
+
+    set_up_test("Action Suite", "Test of action()", test_action);
+
+    set_up_test("Door Hinge Problem Suite", "Test of door_hinge_problem()", test_door_hinge_problem);
+
     return(0);
 }

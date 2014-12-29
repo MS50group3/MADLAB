@@ -1,0 +1,4420 @@
+
+
+     CUnit - A unit testing framework for C - Version 2.1-2
+     http://cunit.sourceforge.net/
+
+
+Suite: Make Room Suite
+  Test: Test of makeRoom() ...
+
+No memory for room grid allocation correctly identified.
+
+Room grid room array successfully integrated to zero.
+
+Dynamic memory for room grid room array successfully allocated.
+
+File was opened.
+
+Memory available for room grid allocation correctly identified.
+
+Memory for room grid room array components successfully allocated.
+
+passed
+
+Run Summary:    Type  Total    Ran Passed Failed Inactive
+              suites      1      1    n/a      0        0
+               tests      1      1      1      0        0
+             asserts     25     25     25      0      n/a
+
+Elapsed time =    0.000 seconds
+
+
+     CUnit - A unit testing framework for C - Version 2.1-2
+     http://cunit.sourceforge.net/
+
+
+Suite: Print Instruction Suite
+  Test: Test of print_instruction() ...
+
+Room grid finished index correctly initialised to off.
+
+Room grid problem indicator index correctly initialised to off.
+
+Instructions correctly sent through for printing
+
+Problem quitter set to on.
+
+Instructions correctly not sent through for printing
+
+passed
+
+Run Summary:    Type  Total    Ran Passed Failed Inactive
+              suites      1      1    n/a      0        0
+               tests      1      1      1      0        0
+             asserts     22     22     22      0      n/a
+
+Elapsed time =    0.000 seconds
+
+
+     CUnit - A unit testing framework for C - Version 2.1-2
+     http://cunit.sourceforge.net/
+
+
+Suite: Get Instructions Suite
+  Test: Test of get_instructions() ...
+
+Instruction 0 successfully set to MadLab.
+
+Instruction 1 successfully set to Where_am_I.
+
+Instruction 2 successfully set to looks_like.
+
+Instruction 3 successfully set to door_locked.
+
+Instruction 4 successfully set to shenanigans.
+
+Instruction 5 successfully set to neill_shenanigans.
+
+Instruction 6 successfully set to maybe_if_I.
+
+Instruction 7 successfully set to press_spacebar.
+
+Instruction 8 successfully set to find_neill.
+
+Instruction 9 successfully set to lets_go.
+
+Instruction 10 successfully set to neill_note.
+
+Instruction 11 successfully set to coding_stuff.
+
+Instruction 12 successfully set to door_jammed.
+
+Instruction 13 successfully set to room_too_hot.
+
+Instruction 14 successfully set to using_some_code.
+
+Instruction 15 successfully set to number.
+
+Instruction 16 successfully set to less_than_ten.
+
+Instruction 17 successfully set to but_if_we_have.
+
+Instruction 18 successfully set to greater_ten.
+
+Instruction 19 successfully set to number_eq_eq_ten.
+
+Instruction 20 successfully set to number_is_ten.
+
+Instruction 21 successfully set to useful_later.
+
+Instruction 22 successfully set to fan_on_wall.
+
+Instruction 23 successfully set to cool_down_room.
+
+Instruction 24 successfully set to control_panel.
+
+Instruction 25 successfully set to neill_notes.
+
+Instruction 26 successfully set to change_temp.
+
+Instruction 27 successfully set to that_worked.
+
+Instruction 28 successfully set to room_cooling.
+
+Instruction 29 successfully set to door_still_locked.
+
+Instruction 30 successfully set to work_out.
+
+Instruction 31 successfully set to code_is_five.
+
+Instruction 32 successfully set to binary.
+
+Instruction 33 successfully set to info_here.
+
+Instruction 34 successfully set to bin_notes.
+
+Instruction 35 successfully set to door_open.
+
+Instruction 36 successfully set to chicken_in_here.
+
+Instruction 37 successfully set to leave_it_alone.
+
+Instruction 38 successfully set to come_back_let_it_out.
+
+Instruction 39 successfully set to latch_loose.
+
+Instruction 40 successfully set to got_out.
+
+Instruction 41 successfully set to eggfault.
+
+Instruction 42 successfully set to door_still_locked.
+
+Instruction 43 successfully set to oh_my_word.
+
+Instruction 44 successfully set to hinge_sticks.
+
+Instruction 45 successfully set to x_part_hinge.
+
+Instruction 46 successfully set to swing_open.
+
+Instruction 47 successfully set to x_eq_five.
+
+Instruction 48 successfully set to two_weights.
+
+Instruction 49 successfully set to a_weight_b_weight.
+
+Instruction 50 successfully set to a_eq_b_eq.
+
+Instruction 51 successfully set to go_find.
+
+Instruction 52 successfully set to finally_get_out.
+
+Instruction 53 successfully set to a_weight.
+
+Instruction 54 successfully set to put_by_door.
+
+Instruction 55 successfully set to found_b.
+
+Instruction 56 successfully set to put_on_door_hinge.
+
+Instruction 57 successfully set to a_weight_on_hinge.
+
+Instruction 58 successfully set to b_weight_on_hinge.
+
+Instruction 59 successfully set to both_weights.
+
+Instruction 60 successfully set to x_is_eq.
+
+Instruction 61 successfully set to door_finally_open.
+
+passed
+
+Run Summary:    Type  Total    Ran Passed Failed Inactive
+              suites      1      1    n/a      0        0
+               tests      1      1      1      0        0
+             asserts     62     62     62      0      n/a
+
+Elapsed time =    0.000 seconds
+
+
+     CUnit - A unit testing framework for C - Version 2.1-2
+     http://cunit.sourceforge.net/
+
+
+Suite: Print Instruction to Screen Suite
+  Test: Test of print_instruction_to_screen() ...
+
+Room grid refresh counter successfully set to zero.
+
+Room grid skip checker successfully set to off.
+
+Image surface successfully initialised to zero.
+
+File directory succesfully set for filename.
+
+File extension succesfully set for filename.
+
+Correct amount of memory dynamically allocated for instruction path.
+
+File folder succesfully copied into filepath.
+
+Filename and folder succesfully set for filename.
+
+
+Instructions/arbitrary.bmp
+
+
+Filename and folder with extension succesfully set for filename.
+
+filename variable successfully freed.
+FAILED
+    1. testing_functions.c:435  - filename == NULL
+
+Run Summary:    Type  Total    Ran Passed Failed Inactive
+              suites      1      1    n/a      0        0
+               tests      1      1      0      1        0
+             asserts     10     10      9      1      n/a
+
+Elapsed time =    0.000 seconds
+
+
+     CUnit - A unit testing framework for C - Version 2.1-2
+     http://cunit.sourceforge.net/
+
+
+Suite: SDL Events Suite
+  Test: Test of SDL_Events() ...
+
+Invalid event successfully caught.
+
+Invalid event successfully caught.
+
+Invalid event successfully caught.
+
+Invalid event successfully caught.
+
+SDL_QUIT successfully recognised.
+
+Room grid finished indicator successfully set to on.
+
+SDL_QUIT successfully recognised.
+
+Room grid finished indicator successfully set to on.
+
+SDL_QUIT successfully recognised.
+
+Room grid finished indicator successfully set to on.
+
+SDL_QUIT successfully recognised.
+
+Room grid finished indicator successfully set to on.
+
+SDL_MOUSEBUTTON successfully recognised.
+
+Room grid skip checker indicator successfully set to on.
+
+SDL_MOUSEBUTTON successfully recognised.
+
+Room grid skip checker indicator successfully set to on.
+
+SDL_MOUSEBUTTON successfully recognised.
+
+Room grid skip checker indicator successfully set to on.
+
+SDL_MOUSEBUTTON successfully recognised.
+
+Room grid skip checker indicator successfully set to on.
+
+SDL_KEYDOWN successfully recognised.
+
+Invalid key pressed successfully caught.
+
+SDL_KEYDOWN successfully recognised.
+
+SDLK_ESCAPE successfully recognised.
+
+Room grid problem quitter indicator successfully set to on.
+
+SDL_KEYDOWN successfully recognised.
+
+SDLK_SPACE successfully recognised.
+
+Room grid skip checker indicator successfully set to on.
+
+SDL_KEYDOWN successfully recognised.
+
+Invalid key pressed successfully caught.
+
+Invalid event successfully caught.
+
+Invalid event successfully caught.
+
+Invalid event successfully caught.
+
+Invalid event successfully caught.
+
+passed
+
+Run Summary:    Type  Total    Ran Passed Failed Inactive
+              suites      1      1    n/a      0        0
+               tests      1      1      1      0        0
+             asserts     34     34     34      0      n/a
+
+Elapsed time =    0.000 seconds
+
+
+     CUnit - A unit testing framework for C - Version 2.1-2
+     http://cunit.sourceforge.net/
+
+
+Suite: Look for Action Suite
+  Test: Test of look_for_action() ...
+
+Room grid successfully set to zero.
+
+Room grid skip checker successfully set to off.
+
+Room grid problem quitter successfully set to off.
+
+Terminating clause for look for action correctly registered.
+
+Room grid successfully set to zero.
+
+Room grid skip checker successfully set to on.
+
+Room grid problem quitter successfully set to off.
+
+Terminating clause for look for action correctly registered.
+
+Room grid successfully set to zero.
+
+Room grid skip checker successfully set to off.
+
+Room grid problem quitter successfully set to on.
+
+Terminating clause for look for action correctly registered.
+
+Room grid successfully set to zero.
+
+Room grid skip checker successfully set to on.
+
+Room grid problem quitter successfully set to on.
+
+Terminating clause for look for action correctly registered.
+
+passed
+
+Run Summary:    Type  Total    Ran Passed Failed Inactive
+              suites      1      1    n/a      0        0
+               tests      1      1      1      0        0
+             asserts     16     16     16      0      n/a
+
+Elapsed time =    0.000 seconds
+
+
+     CUnit - A unit testing framework for C - Version 2.1-2
+     http://cunit.sourceforge.net/
+
+
+Suite: SDL Quit Checker Suite
+  Test: Test of SDL_Quitchecker() ...
+
+Room grid finished indicator successfully set to on.
+
+Room grid finished indicator successfully registered as on.
+
+Room grid finished indicator successfully set to off.
+
+Room grid finished indicator successfully registered as off.
+
+passed
+
+Run Summary:    Type  Total    Ran Passed Failed Inactive
+              suites      1      1    n/a      0        0
+               tests      1      1      1      0        0
+             asserts      4      4      4      0      n/a
+
+Elapsed time =    0.000 seconds
+
+
+     CUnit - A unit testing framework for C - Version 2.1-2
+     http://cunit.sourceforge.net/
+
+
+Suite: Draw Suite
+  Test: Test of draw() ...
+
+Room grid gamerunning successfully set to on.
+
+Hen chicken_cross_road successfully set to on.
+
+Hen chicken_cross_road successfully registered as on.
+
+Hen chicken_cross_road successfully set to off.
+
+Hen chicken_cross_road successfully registered as off.
+
+Room grid gamerunning successfully set to off.
+
+Hen chicken_cross_road successfully set to off.
+
+Room grid gamerunning successfully registered as off.
+
+passed
+
+Run Summary:    Type  Total    Ran Passed Failed Inactive
+              suites      1      1    n/a      0        0
+               tests      1      1      1      0        0
+             asserts      8      8      8      0      n/a
+
+Elapsed time =    0.000 seconds
+
+
+     CUnit - A unit testing framework for C - Version 2.1-2
+     http://cunit.sourceforge.net/
+
+
+Suite: Draw Room Suite
+  Test: Test of draw_room() ...
+
+Dynamic memory for room grid room array successfully allocated.
+
+Memory for room grid room array component successfully allocated.
+
+All rectangle components successfully set.
+
+All cases of different possible room components checked.
+
+passed
+
+Run Summary:    Type  Total    Ran Passed Failed Inactive
+              suites      1      1    n/a      0        0
+               tests      1      1      1      0        0
+             asserts   2122   2122   2122      0      n/a
+
+Elapsed time =    0.000 seconds
+
+
+     CUnit - A unit testing framework for C - Version 2.1-2
+     http://cunit.sourceforge.net/
+
+
+Suite: Rectangle Source Set Suite
+  Test: Test of rcsrc_set() ...
+
+Room grid source rectangle x coordinate successfully set to 34.
+
+Room grid source rectangle y coordinate successfully set to 138.
+
+Room grid source rectangle width successfully set to 32.
+
+Room grid source rectangle height successfully set to 32.
+
+Room grid source rectangle x coordinate successfully set to 3.
+
+Room grid source rectangle y coordinate successfully set to 174.
+
+Room grid source rectangle width successfully set to 31.
+
+Room grid source rectangle height successfully set to 31.
+
+Room grid source rectangle x coordinate successfully set to 71.
+
+Room grid source rectangle y coordinate successfully set to 138.
+
+Room grid source rectangle width successfully set to 32.
+
+Room grid source rectangle height successfully set to 32.
+
+Room grid source rectangle x coordinate successfully set to 0.
+
+Room grid source rectangle y coordinate successfully set to 138.
+
+Room grid source rectangle width successfully set to 32.
+
+Room grid source rectangle height successfully set to 32.
+
+passed
+
+Run Summary:    Type  Total    Ran Passed Failed Inactive
+              suites      1      1    n/a      0        0
+               tests      1      1      1      0        0
+             asserts     16     16     16      0      n/a
+
+Elapsed time =    0.000 seconds
+
+
+     CUnit - A unit testing framework for C - Version 2.1-2
+     http://cunit.sourceforge.net/
+
+
+Suite: Rectangle Object Set Suite
+  Test: Test of rcobj_set() ...
+
+Room grid object x coordinate successfully set to 264.
+
+Room grid object y coordinate successfully set to 63.
+
+Room grid object width successfully set to 64.
+
+Room grid object height successfully set to 64.
+
+Room grid object desination x coordinate successfully set to 0.
+
+Room grid object desination y coordinate successfully set to 0.
+
+Room grid object desination width successfully set to 64.
+
+Room grid object desination height successfully set to 64.
+
+Room grid object x coordinate successfully set to 0.
+
+Room grid object y coordinate successfully set to 62.
+
+Room grid object width successfully set to 64.
+
+Room grid object height successfully set to 64.
+
+Room grid object desination x coordinate successfully set to 737.
+
+Room grid object desination y coordinate successfully set to 318.
+
+Room grid object desination width successfully set to 64.
+
+Room grid object desination height successfully set to 64.
+
+passed
+
+Run Summary:    Type  Total    Ran Passed Failed Inactive
+              suites      1      1    n/a      0        0
+               tests      1      1      1      0        0
+             asserts     16     16     16      0      n/a
+
+Elapsed time =    0.000 seconds
+
+
+     CUnit - A unit testing framework for C - Version 2.1-2
+     http://cunit.sourceforge.net/
+
+
+Suite: Initialise Room Grid Components Suite
+  Test: Test of initialise_roomgrid_components() ...
+
+Game running successfully initialised to true.
+
+First puzzle seen successfully initialised to false.
+
+First puzzle solved successfully initialised to false.
+
+Second puzzle seen successfully initialised to false.
+
+Second puzzle solved successfully initialised to false.
+
+Third puzzle seen successfully initialised to false.
+
+Third puzzle solved successfully initialised to false.
+
+Fourth puzzle seen successfully initialised to false.
+
+Fourth puzzle solved successfully initialised to false.
+
+Fifth puzzle seen successfully initialised to false.
+
+Fifth puzzle solved successfully initialised to false.
+
+Sixth puzzle seen successfully initialised to false.
+
+Sixth puzzle solved successfully initialised to false.
+
+Player has a weight successfully set to false.
+
+Player has b weight successfully set to false.
+
+The a weight being on the hing successfully set to false.
+
+The b weight being on the hing successfully set to false.
+
+Room grid paused successfully set to off.
+
+Room grid left x coordinate successfully set to 0.
+
+Room grid bottom y coordinate successfully set to 0.
+
+Room grid top y coordinate successfully set to 0.
+
+Room grid direction successfully set to 0
+
+passed
+
+Run Summary:    Type  Total    Ran Passed Failed Inactive
+              suites      1      1    n/a      0        0
+               tests      1      1      1      0        0
+             asserts     22     22     22      0      n/a
+
+Elapsed time =    0.000 seconds
+
+
+     CUnit - A unit testing framework for C - Version 2.1-2
+     http://cunit.sourceforge.net/
+
+
+Suite: Initialise Chicken Suite
+  Test: Test of initialise_chicken() ...
+
+Chicken cross road indicator successfully set to false.
+
+Chicken lx coordinate successfully set to 0.
+
+Chicken rx coordinate successfully set to 0.
+
+Chicken by coordinate successfully set to 0.
+
+Chicken ty coordinate successfully set to 0.
+
+Chicken x centre coordinate successfully set to 0.
+
+Chicken y centre coordinate successfully set to 0.
+
+passed
+
+Run Summary:    Type  Total    Ran Passed Failed Inactive
+              suites      1      1    n/a      0        0
+               tests      1      1      1      0        0
+             asserts      7      7      7      0      n/a
+
+Elapsed time =    0.000 seconds
+
+
+     CUnit - A unit testing framework for C - Version 2.1-2
+     http://cunit.sourceforge.net/
+
+
+Suite: Position Sprite Suite
+  Test: Test of position_sprite() ...
+
+Sprite rectangle y coordinate successfully set.
+
+Sprite rectangle x coordinate successfully set.
+
+Sprite rectangle width successfully set.
+
+Sprite rectangle height successfully set.
+
+Sprite x coordinate successfully set.
+
+Sprite y coordinate successfully set.
+
+Sprite position width successfully set.
+
+Sprite position height coordinate successfully set.
+
+Sprite rectangle desination width coordinate successfully set.
+
+Sprite rectangle desination height coordinate successfully set.
+
+passed
+
+Run Summary:    Type  Total    Ran Passed Failed Inactive
+              suites      1      1    n/a      0        0
+               tests      1      1      1      0        0
+             asserts     10     10     10      0      n/a
+
+Elapsed time =    0.000 seconds
+
+
+     CUnit - A unit testing framework for C - Version 2.1-2
+     http://cunit.sourceforge.net/
+
+
+Suite: Position Chicken Suite
+  Test: Test of position_chicken() ...
+
+Chicken direction successfully set.
+
+Chicken rectangle y coordinate successfully set.
+
+Chicken rectangle x coordinate successfully set.
+
+Chicken rectangle width successfully set.
+
+Sprite rectangle y coordinate successfully set.
+
+Sprite rectangle y coordinate successfully set.
+
+Sprite rectangle y coordinate successfully set.
+
+Sprite rectangle y coordinate successfully set.
+
+Sprite rectangle y coordinate successfully set.
+
+passed
+
+Run Summary:    Type  Total    Ran Passed Failed Inactive
+              suites      1      1    n/a      0        0
+               tests      1      1      1      0        0
+             asserts      9      9      9      0      n/a
+
+Elapsed time =    0.000 seconds
+
+
+     CUnit - A unit testing framework for C - Version 2.1-2
+     http://cunit.sourceforge.net/
+
+
+Suite: Movement Suite
+  Test: Test of movement() ...
+
+Invalid event registered.
+
+Invalid event registered.
+
+Invalid event registered.
+
+Invalid event registered.
+
+Invalid event registered.
+
+Invalid event registered.
+
+Invalid event registered.
+
+Invalid event registered.
+
+SDL_QUIT successfully registered.
+
+Room successfully registered as quit.
+
+SDL_QUIT successfully registered.
+
+Room successfully registered as quit.
+
+SDL_QUIT successfully registered.
+
+Room successfully registered as quit.
+
+SDL_QUIT successfully registered.
+
+Room successfully registered as quit.
+
+SDL_QUIT successfully registered.
+
+Room successfully registered as quit.
+
+SDL_QUIT successfully registered.
+
+Room successfully registered as quit.
+
+SDL_QUIT successfully registered.
+
+Room successfully registered as quit.
+
+SDL_QUIT successfully registered.
+
+Room successfully registered as quit.
+
+SDL_KEYDOWN successfully registered.
+
+Invalid key successfully registered.
+
+SDL_KEYDOWN successfully registered.
+
+SDLK_q successfully registered.
+
+Room successfully registered as quit.
+
+SDL_KEYDOWN successfully registered.
+
+SDLK_LEFT successfully registered.
+
+Player directions successfully changed to left.
+
+SDL_KEYDOWN successfully registered.
+
+SDLK_RIGHT successfully registered.
+
+Player directions successfully changed to right.
+
+SDL_KEYDOWN successfully registered.
+
+SDLK_UP successfully registered.
+
+Player directions successfully changed to up.
+
+SDL_KEYDOWN successfully registered.
+
+SDLK_DOWN successfully registered.
+
+Player directions successfully changed to down.
+
+SDL_KEYDOWN successfully registered.
+
+Interact Probe successfully turned on.
+
+SDL_KEYDOWN successfully registered.
+
+Sound function successfully switched to.
+
+passed
+
+Run Summary:    Type  Total    Ran Passed Failed Inactive
+              suites      1      1    n/a      0        0
+               tests      1      1      1      0        0
+             asserts     45     45     45      0      n/a
+
+Elapsed time =    0.000 seconds
+
+
+     CUnit - A unit testing framework for C - Version 2.1-2
+     http://cunit.sourceforge.net/
+
+
+Suite: Sound Suite
+  Test: Test of sound_on_off() ...
+
+Sound registered to be paused.
+
+Sound successfully unpaused.
+
+Sound registered to be playing.
+
+Sound successfully paused.
+
+passed
+
+Run Summary:    Type  Total    Ran Passed Failed Inactive
+              suites      1      1    n/a      0        0
+               tests      1      1      1      0        0
+             asserts      4      4      4      0      n/a
+
+Elapsed time =    0.000 seconds
+
+
+     CUnit - A unit testing framework for C - Version 2.1-2
+     http://cunit.sourceforge.net/
+
+
+Suite: Edge Detection Suite
+  Test: Test of edge_detection() ...
+
+Left edge collision registered.
+
+Left edge collision successfully dealt with.
+
+Bottom edge collision registered.
+
+Bottom edge collision successfully dealt with.
+
+Left edge collision registered.
+
+Left edge collision successfully dealt with.
+
+Top edge collision registered.
+
+Top edge collision successfully dealt with.
+
+Right edge collision registered.
+
+Right edge collision successfully dealt with.
+
+Bottom edge collision registered.
+
+Bottom edge collision successfully dealt with.
+
+Left edge collision registered.
+
+Left edge collision successfully dealt with.
+
+Top edge collision registered.
+
+Top edge collision successfully dealt with.
+
+passed
+
+Run Summary:    Type  Total    Ran Passed Failed Inactive
+              suites      1      1    n/a      0        0
+               tests      1      1      1      0        0
+             asserts     16     16     16      0      n/a
+
+Elapsed time =    0.000 seconds
+
+
+     CUnit - A unit testing framework for C - Version 2.1-2
+     http://cunit.sourceforge.net/
+
+
+Suite: Possible Suite
+  Test: Test of possible() ...
+
+Dynamic memory for room grid room array successfully allocated.
+
+Memory for room grid room array component successfully allocated.
+
+Sprite left x coordinate in movement successfully set.
+
+Sprite top y coordinate in movement successfully set.
+
+Sprite bottom y coordinate in movement successfully set.
+
+Sprite right x coordinate in movement successfully set.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+First part of movement right successfully registered.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+First part of movement right successfully registered.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+First part of movement right successfully registered.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+First part of movement right successfully registered.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+First part of movement right successfully registered.
+
+First part of movement right successfully registered.
+
+First part of movement right successfully registered.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+First part of movement right successfully registered.
+
+First part of movement right successfully registered.
+
+First part of movement right successfully registered.
+
+First part of movement down successfully registered.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+First part of movement down successfully registered.
+
+First part of movement down successfully registered.
+
+First part of movement down successfully registered.
+
+First part of movement down successfully registered.
+
+First part of movement down successfully registered.
+
+First part of movement down successfully registered.
+
+First part of movement down successfully registered.
+
+First part of movement down successfully registered.
+
+First part of movement right successfully registered.
+
+First part of movement down successfully registered.
+
+First part of movement right successfully registered.
+
+First part of movement down successfully registered.
+
+First part of movement right successfully registered.
+
+First part of movement down successfully registered.
+
+First part of movement right successfully registered.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+First part of movement right successfully registered.
+
+First part of movement right successfully registered.
+
+First part of movement right successfully registered.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+First part of movement right successfully registered.
+
+First part of movement right successfully registered.
+
+First part of movement right successfully registered.
+
+First part of movement down successfully registered.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+First part of movement down successfully registered.
+
+First part of movement down successfully registered.
+
+First part of movement down successfully registered.
+
+First part of movement down successfully registered.
+
+First part of movement down successfully registered.
+
+First part of movement down successfully registered.
+
+First part of movement down successfully registered.
+
+First part of movement down successfully registered.
+
+First part of movement right successfully registered.
+
+First part of movement down successfully registered.
+
+First part of movement right successfully registered.
+
+First part of movement down successfully registered.
+
+First part of movement right successfully registered.
+
+First part of movement down successfully registered.
+
+First part of movement right successfully registered.
+
+First part of movement left successfully registered.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+First part of movement left successfully registered.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+First part of movement left successfully registered.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+First part of movement left successfully registered.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+First part of movement left successfully registered.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+First part of movement left successfully registered.
+
+First part of movement left successfully registered.
+
+First part of movement left successfully registered.
+
+First part of movement left successfully registered.
+
+First part of movement left successfully registered.
+
+First part of movement left successfully registered.
+
+First part of movement left successfully registered.
+
+First part of movement left successfully registered.
+
+First part of movement right successfully registered.
+
+First part of movement left successfully registered.
+
+First part of movement right successfully registered.
+
+First part of movement left successfully registered.
+
+First part of movement right successfully registered.
+
+First part of movement left successfully registered.
+
+First part of movement right successfully registered.
+
+First part of movement left successfully registered.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+First part of movement left successfully registered.
+
+First part of movement left successfully registered.
+
+First part of movement left successfully registered.
+
+First part of movement left successfully registered.
+
+First part of movement left successfully registered.
+
+First part of movement left successfully registered.
+
+First part of movement left successfully registered.
+
+First part of movement left successfully registered.
+
+First part of movement right successfully registered.
+
+First part of movement left successfully registered.
+
+First part of movement right successfully registered.
+
+First part of movement left successfully registered.
+
+First part of movement right successfully registered.
+
+First part of movement left successfully registered.
+
+First part of movement right successfully registered.
+
+First part of movement left successfully registered.
+
+First part of movement down successfully registered.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+First part of movement down successfully registered.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+First part of movement down successfully registered.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+First part of movement down successfully registered.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+First part of movement down successfully registered.
+
+First part of movement left successfully registered.
+
+First part of movement down successfully registered.
+
+First part of movement left successfully registered.
+
+First part of movement down successfully registered.
+
+First part of movement left successfully registered.
+
+First part of movement down successfully registered.
+
+First part of movement left successfully registered.
+
+First part of movement down successfully registered.
+
+First part of movement left successfully registered.
+
+First part of movement down successfully registered.
+
+First part of movement left successfully registered.
+
+First part of movement down successfully registered.
+
+First part of movement left successfully registered.
+
+First part of movement down successfully registered.
+
+First part of movement left successfully registered.
+
+First part of movement down successfully registered.
+
+First part of movement right successfully registered.
+
+First part of movement left successfully registered.
+
+First part of movement down successfully registered.
+
+First part of movement right successfully registered.
+
+First part of movement left successfully registered.
+
+First part of movement down successfully registered.
+
+First part of movement right successfully registered.
+
+First part of movement left successfully registered.
+
+First part of movement down successfully registered.
+
+First part of movement right successfully registered.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Upwards movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Upwards movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Upwards movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Upwards movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement right successfully registered.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement right successfully registered.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+First part of movement right successfully registered.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Upwards movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Upwards movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Upwards movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Upwards movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement right successfully registered.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement right successfully registered.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+First part of movement right successfully registered.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Upwards movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Upwards movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Upwards movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Upwards movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement right successfully registered.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement right successfully registered.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+First part of movement right successfully registered.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Upwards movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Upwards movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Upwards movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Upwards movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement right successfully registered.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement right successfully registered.
+
+First part of movement left successfully registered.
+
+Left movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+First part of movement right successfully registered.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Upwards movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Upwards movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Upwards movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Upwards movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement right successfully registered.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement right successfully registered.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+First part of movement right successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Upwards movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Upwards movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+Not being at top of screen registered for upwards movement.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Upwards movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+Not being at top of screen registered for upwards movement.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Upwards movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement right successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement right successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+First part of movement right successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Upwards movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Upwards movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+Not being at top of screen registered for upwards movement.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Upwards movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+Not being at top of screen registered for upwards movement.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Upwards movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement right successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement right successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+First part of movement right successfully registered.
+
+First part of movement down successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Upwards movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Upwards movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement down successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement down successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+First part of movement down successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Upwards movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement down successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement down successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+First part of movement down successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Upwards movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+First part of movement down successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement right successfully registered.
+
+First part of movement down successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement right successfully registered.
+
+First part of movement down successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+First part of movement right successfully registered.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Upwards movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Upwards movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Upwards movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Upwards movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement right successfully registered.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement right successfully registered.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+First part of movement right successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Upwards movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Upwards movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+Not being at top of screen registered for upwards movement.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Upwards movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+Not being at top of screen registered for upwards movement.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Upwards movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement right successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement right successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+First part of movement right successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Upwards movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Upwards movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+Not being at top of screen registered for upwards movement.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Upwards movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+Not being at top of screen registered for upwards movement.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Upwards movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement right successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement right successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+First part of movement right successfully registered.
+
+First part of movement down successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Upwards movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Upwards movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement down successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement down successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+First part of movement down successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Upwards movement successfully passed into move function.
+
+First part of movement down successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement down successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement down successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+First part of movement down successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Upwards movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+First part of movement down successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement right successfully registered.
+
+First part of movement down successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement right successfully registered.
+
+First part of movement down successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+First part of movement right successfully registered.
+
+First part of movement left successfully registered.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Upwards movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Upwards movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement left successfully registered.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement left successfully registered.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+First part of movement left successfully registered.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Upwards movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement left successfully registered.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement left successfully registered.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+First part of movement left successfully registered.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Upwards movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+First part of movement left successfully registered.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement right successfully registered.
+
+First part of movement left successfully registered.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement right successfully registered.
+
+First part of movement left successfully registered.
+
+First part of movement down successfully registered.
+
+Down movement successfully passed into move function.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+First part of movement right successfully registered.
+
+First part of movement left successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Upwards movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Upwards movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement left successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement left successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+First part of movement left successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Upwards movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement left successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement left successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+First part of movement left successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Upwards movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+First part of movement left successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement right successfully registered.
+
+First part of movement left successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement right successfully registered.
+
+First part of movement left successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+First part of movement right successfully registered.
+
+First part of movement left successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Upwards movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Upwards movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement left successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement left successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+First part of movement left successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Upwards movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement left successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement left successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+First part of movement left successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Upwards movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+First part of movement left successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement right successfully registered.
+
+First part of movement left successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement right successfully registered.
+
+First part of movement left successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+First part of movement right successfully registered.
+
+First part of movement left successfully registered.
+
+First part of movement down successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Upwards movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+First part of movement down successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+First part of movement down successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+First part of movement down successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+First part of movement right successfully registered.
+
+Right movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+First part of movement down successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Upwards movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+First part of movement down successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement left successfully registered.
+
+First part of movement down successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement left successfully registered.
+
+First part of movement down successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+First part of movement left successfully registered.
+
+First part of movement down successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Upwards movement successfully passed into move function.
+
+First part of movement left successfully registered.
+
+First part of movement down successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement left successfully registered.
+
+First part of movement down successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement left successfully registered.
+
+First part of movement down successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+First part of movement left successfully registered.
+
+First part of movement down successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+Upwards movement successfully passed into move function.
+
+First part of movement right successfully registered.
+
+First part of movement left successfully registered.
+
+First part of movement down successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement right successfully registered.
+
+First part of movement left successfully registered.
+
+First part of movement down successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement right successfully registered.
+
+First part of movement left successfully registered.
+
+First part of movement down successfully registered.
+
+Not being at top of screen registered for upwards movement.
+
+First part of movement up successfully registered.
+
+First part of movement right successfully registered.
+
+passed
+
+Run Summary:    Type  Total    Ran Passed Failed Inactive
+              suites      1      1    n/a      0        0
+               tests      1      1      1      0        0
+             asserts   1626   1626   1626      0      n/a
+
+Elapsed time =    0.010 seconds
+
+
+     CUnit - A unit testing framework for C - Version 2.1-2
+     http://cunit.sourceforge.net/
+
+
+Suite: Move Suite
+  Test: Test of move() ...
+
+The x coordinate is set to 224.
+
+Attempting to move left.
+
+Left movement successfully completed.
+
+Attempting to move right.
+
+Right movement successfully completed.
+
+Attempting to move up.
+
+Up movement successfully completed.
+
+Attempting to move down.
+
+Down movement successfully completed.
+
+Attempting to move in an undefined direction.
+
+Undefined movement successfully caught.
+
+The x coordinate is set to 96.
+
+Attempting to move left.
+
+Left movement successfully completed.
+
+Attempting to move right.
+
+Right movement successfully completed.
+
+Attempting to move up.
+
+Up movement successfully completed.
+
+Attempting to move down.
+
+Down movement successfully completed.
+
+Attempting to move in an undefined direction.
+
+Undefined movement successfully caught.
+
+The x coordinate is set to 160.
+
+Attempting to move left.
+
+Left movement successfully completed.
+
+Attempting to move right.
+
+Right movement successfully completed.
+
+Attempting to move up.
+
+Up movement successfully completed.
+
+Attempting to move down.
+
+Down movement successfully completed.
+
+Attempting to move in an undefined direction.
+
+Undefined movement successfully caught.
+
+The x coordinate is set to 32.
+
+Attempting to move left.
+
+Left movement successfully completed.
+
+Attempting to move right.
+
+Right movement successfully completed.
+
+Attempting to move up.
+
+Up movement successfully completed.
+
+Attempting to move down.
+
+Down movement successfully completed.
+
+Attempting to move in an undefined direction.
+
+Undefined movement successfully caught.
+
+The x coordinate is set to 100.
+
+Attempting to move left.
+
+Left movement successfully completed.
+
+Attempting to move right.
+
+Right movement successfully completed.
+
+Attempting to move up.
+
+Up movement successfully completed.
+
+Attempting to move down.
+
+Down movement successfully completed.
+
+Attempting to move in an undefined direction.
+
+Undefined movement successfully caught.
+
+passed
+
+Run Summary:    Type  Total    Ran Passed Failed Inactive
+              suites      1      1    n/a      0        0
+               tests      1      1      1      0        0
+             asserts     25     25     25      0      n/a
+
+Elapsed time =    0.000 seconds
+
+
+     CUnit - A unit testing framework for C - Version 2.1-2
+     http://cunit.sourceforge.net/
+
+
+Suite: Interact Probe Suite
+  Test: Test of interactProbe() ...
+
+Dynamic memory for room grid room array successfully allocated.
+
+Memory for room grid room array component successfully allocated.
+
+Action set to be on.
+
+Successfully probed for interactions to the left.
+
+Successfully probed for interactions to the right.
+
+Successfully probed for interactions above.
+
+Successfully probed for interactions below.
+
+Action set to be off, no probing should register below.
+
+passed
+
+Run Summary:    Type  Total    Ran Passed Failed Inactive
+              suites      1      1    n/a      0        0
+               tests      1      1      1      0        0
+             asserts     26     26     26      0      n/a
+
+Elapsed time =    0.000 seconds
+
+
+     CUnit - A unit testing framework for C - Version 2.1-2
+     http://cunit.sourceforge.net/
+
+
+Suite: Action Suite
+  Test: Test of action() ...
+
+Puzzle 3 successfully registered.
+
+Puzzle 3 never having been solved successfully registered.
+
+Puzzle 2 successfully registered.
+
+Puzzle 6 successfully registered.
+
+Puzzle 5 successfully registered.
+
+Puzzle 4 successfully registered.
+
+Puzzle 1 successfully registered.
+
+Puzzle 1 never having been seen has been registered.
+
+Puzzle 3 successfully registered.
+
+Puzzle 2 successfully registered.
+
+Puzzle 6 successfully registered.
+
+Puzzle 5 successfully registered.
+
+Puzzle 4 successfully registered.
+
+Puzzle 1 successfully registered.
+
+Puzzle 1 never having been seen has been registered.
+
+Puzzle 3 successfully registered.
+
+Puzzle 3 never having been solved successfully registered.
+
+Puzzle 2 successfully registered.
+
+Puzzle 6 successfully registered.
+
+Puzzle 5 successfully registered.
+
+Puzzle 4 successfully registered.
+
+Puzzle 1 successfully registered.
+
+Puzzle 1 never having been seen has been registered.
+
+Puzzle 3 successfully registered.
+
+Puzzle 2 successfully registered.
+
+Puzzle 6 successfully registered.
+
+Puzzle 5 successfully registered.
+
+Puzzle 4 successfully registered.
+
+Puzzle 1 successfully registered.
+
+Puzzle 1 never having been seen has been registered.
+
+Puzzle 3 successfully registered.
+
+Puzzle 3 never having been solved successfully registered.
+
+Puzzle 2 successfully registered.
+
+Puzzle 6 successfully registered.
+
+Puzzle 5 successfully registered.
+
+Puzzle 4 successfully registered.
+
+Puzzle 1 successfully registered.
+
+Puzzle 1 never having been solved has been registered.
+
+Puzzle 3 successfully registered.
+
+Puzzle 2 successfully registered.
+
+Puzzle 6 successfully registered.
+
+Puzzle 5 successfully registered.
+
+Puzzle 4 successfully registered.
+
+Puzzle 1 successfully registered.
+
+Puzzle 1 never having been solved has been registered.
+
+Puzzle 3 successfully registered.
+
+Puzzle 3 never having been solved successfully registered.
+
+Puzzle 2 successfully registered.
+
+Puzzle 6 successfully registered.
+
+Puzzle 5 successfully registered.
+
+Puzzle 4 successfully registered.
+
+Puzzle 1 successfully registered.
+
+Puzzle 3 successfully registered.
+
+Puzzle 2 successfully registered.
+
+Puzzle 6 successfully registered.
+
+Puzzle 5 successfully registered.
+
+Puzzle 4 successfully registered.
+
+Puzzle 1 successfully registered.
+
+passed
+
+Run Summary:    Type  Total    Ran Passed Failed Inactive
+              suites      1      1    n/a      0        0
+               tests      1      1      1      0        0
+             asserts     58     58     58      0      n/a
+
+Elapsed time =    0.000 seconds

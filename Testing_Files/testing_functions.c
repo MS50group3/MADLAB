@@ -1227,17 +1227,8 @@ void test_possible(void)
 
 void initialise_possible_components(roomGrid *room_grid)
 {
-    int i;
 
-    room_grid -> room_array = (int **)calloc((ROOM_Y) + 1, sizeof(int *));
-    CU_ASSERT(sizeof(room_grid -> room_array) == sizeof( (int **)calloc((ROOM_Y) + 1, sizeof(int *)) ) );
-    printf("\nDynamic memory for room grid room array successfully allocated.\n");
-
-    for (i = 0; i <= ROOM_Y; i++){
-        room_grid -> room_array[i] = (int *)calloc((ROOM_X) + 1, sizeof(int));
-        CU_ASSERT(sizeof(room_grid -> room_array[i]) == sizeof((int *)calloc((ROOM_X) + 1, sizeof(int))));
-    }
-    printf("\nMemory for room grid room array component successfully allocated.\n");
+    initialise_roomGrid_memory(room_grid);
 
     room_grid -> rc_sprite.x = 5;
     room_grid -> rc_sprite.y = 5;
@@ -1356,4 +1347,304 @@ void possible_case(roomGrid *room_grid, int direction)
 
                 break;
      }
+}
+
+void test_move(void)
+{
+    roomGrid roomStuff, *room_grid;
+    room_grid = &roomStuff;
+
+    printf("\n");
+
+    printf("\nThe x coordinate is set to 224.\n");
+    examine_move(room_grid, 224);
+
+    printf("\nThe x coordinate is set to 96.\n");
+    examine_move(room_grid, 96);
+
+    printf("\nThe x coordinate is set to 160.\n");
+    examine_move(room_grid, 160);
+
+    printf("\nThe x coordinate is set to 32.\n");
+    examine_move(room_grid, 32);
+
+    printf("\nThe x coordinate is set to 100.\n");
+    examine_move(room_grid, 100);
+
+    printf("\n");
+
+}
+
+void examine_move(roomGrid *room_grid, int sprite_x_coord)
+{
+    room_grid -> rc_sprite_pos.x = sprite_x_coord;
+
+    printf("\nAttempting to move left.\n");
+    move_case(room_grid, left);
+
+    printf("\nAttempting to move right.\n");
+    move_case(room_grid, right);
+
+    printf("\nAttempting to move up.\n");
+    move_case(room_grid, up);
+
+    printf("\nAttempting to move down.\n");
+    move_case(room_grid, down);
+
+    printf("\nAttempting to move in an undefined direction.\n");
+    move_case(room_grid, 6);
+}
+
+void move_case(roomGrid *room_grid, int direction)
+{
+    int temp_x = room_grid -> rc_sprite.x, temp_y = room_grid -> rc_sprite.y;
+
+    room_grid -> direction = direction;
+
+    switch(room_grid -> direction)
+    {       
+        case(left):     (room_grid -> rc_sprite_pos.x == 224) ? (room_grid -> rc_sprite_pos.x = 256): (room_grid -> rc_sprite_pos.x = 224);
+                        room_grid -> rc_sprite.x -= MOVEMENT_INCREMENT;
+                        assert_test(room_grid -> rc_sprite.x == temp_x - MOVEMENT_INCREMENT, "Left movement successfully completed.");
+                        break;
+
+        case(down):     (room_grid -> rc_sprite_pos.x == 96) ? (room_grid -> rc_sprite_pos.x = 128): (room_grid -> rc_sprite_pos.x = 96);
+                        room_grid -> rc_sprite.y += MOVEMENT_INCREMENT;
+                        assert_test(room_grid -> rc_sprite.y == temp_y + MOVEMENT_INCREMENT, "Down movement successfully completed.");                  
+                        break;
+
+        case(right):    (room_grid -> rc_sprite_pos.x == 160) ? (room_grid -> rc_sprite_pos.x = 192): (room_grid -> rc_sprite_pos.x = 160);
+                        room_grid -> rc_sprite.x += MOVEMENT_INCREMENT;
+                        assert_test(room_grid -> rc_sprite.x == temp_x + MOVEMENT_INCREMENT, "Right movement successfully completed.");
+                        break;
+
+        case(up):       (room_grid -> rc_sprite_pos.x == 32) ? (room_grid -> rc_sprite_pos.x = 64): (room_grid -> rc_sprite_pos.x = 32);
+                        room_grid -> rc_sprite.y -= MOVEMENT_INCREMENT;
+                        assert_test(room_grid -> rc_sprite.y == temp_y - MOVEMENT_INCREMENT, "Up movement successfully completed.");
+                        break;
+
+        default:        
+                        assert_test(direction != up && direction != down && direction != left && direction != right, "Undefined movement successfully caught.");
+                        break;
+    }
+}
+
+void test_interactProbe(void)
+{
+    roomGrid roomStuff, *room_grid;
+    room_grid = &roomStuff;
+
+    printf("\n");
+
+    initialise_roomGrid_memory(room_grid);
+
+    initialise_interactProbe_location(room_grid);
+
+    printf("\nAction set to be on.\n");
+    examine_interactProbe_case(room_grid, on);
+
+    printf("\nAction set to be off, no probing should register below.\n");
+    examine_interactProbe_case(room_grid, off);
+
+    printf("\n");
+
+}
+
+void initialise_roomGrid_memory(roomGrid *room_grid)
+{
+    int i;
+
+    room_grid -> room_array = (int **)calloc((ROOM_Y) + 1, sizeof(int *));
+    CU_ASSERT(sizeof(room_grid -> room_array) == sizeof( (int **)calloc((ROOM_Y) + 1, sizeof(int *)) ) );
+    printf("\nDynamic memory for room grid room array successfully allocated.\n");
+
+    for (i = 0; i <= ROOM_Y; i++){
+        room_grid -> room_array[i] = (int *)calloc((ROOM_X) + 1, sizeof(int));
+        CU_ASSERT(sizeof(room_grid -> room_array[i]) == sizeof((int *)calloc((ROOM_X) + 1, sizeof(int))));
+    }
+    printf("\nMemory for room grid room array component successfully allocated.\n");
+}
+
+void initialise_interactProbe_location(roomGrid *room_grid)
+{
+    room_grid -> y_sprite_centre = 1;
+    room_grid -> x_sprite_centre = 1;
+}
+
+void examine_interactProbe_case(roomGrid *room_grid, on_off action)
+{
+    interactProbe_case(room_grid, left, action);
+
+    interactProbe_case(room_grid, right, action);
+
+    interactProbe_case(room_grid, up, action);
+
+    interactProbe_case(room_grid, down, action);
+}
+
+void interactProbe_case(roomGrid *room_grid, int direction, on_off action)
+{
+    room_grid -> direction = direction;
+
+    switch (room_grid -> direction)
+    {       
+        case(left):     room_grid -> probe = room_grid -> room_array[room_grid -> y_sprite_centre][room_grid -> x_sprite_centre - 1];
+                        if (action){
+                            assert_test(room_grid -> direction == left && action, "Successfully probed for interactions to the left.");
+                        };
+                        break;
+
+        case(down):     room_grid -> probe = room_grid -> room_array[room_grid -> y_sprite_centre + 1][room_grid -> x_sprite_centre];
+                        if (action){
+                            assert_test(room_grid -> direction == down && action, "Successfully probed for interactions below.");
+                        };
+                        break;
+
+        case(right):    room_grid -> probe = room_grid -> room_array[room_grid -> y_sprite_centre][room_grid -> x_sprite_centre + 1];
+                        if (action){
+                            assert_test(room_grid -> direction == right && action, "Successfully probed for interactions to the right.");
+                        };
+                        break;
+
+        case(up):       if (room_grid -> rc_sprite.y != 0)
+                        {
+                            room_grid -> probe = room_grid -> room_array[room_grid -> y_sprite_centre - 1][room_grid -> x_sprite_centre];
+                            if (action){
+                                assert_test(room_grid -> direction == up && action, "Successfully probed for interactions above.");
+                            }
+                        };
+                        break;
+    }
+}
+
+void test_action(void)
+{
+    int i, j, k, l;
+    problem action_problem, *prob_point;
+    prob_point = &action_problem;
+
+    roomGrid roomStuff, *room_grid;
+    room_grid = &roomStuff;
+
+    progress puzzlesolved, *puzzle;
+    puzzle = &puzzlesolved;
+
+    printf("\n");
+
+    for(i = 0; i <= 1; ++i){
+        for(j = 0; j <= 1; ++j){
+            for(k = 0; k <= 1; ++k){
+                for(l = puz_3; l <= puz_1; ++l){
+                    action_case(prob_point, room_grid, puzzle, i, j, k, l);
+                }
+            }
+        }
+    }
+
+    printf("\n");
+}
+
+int action_case(problem *prob_point, roomGrid *room_grid, progress *puzzle, bool puzz_1_seen, bool puzz_1_solved, bool puzz_3_solved, int probe)
+{
+
+    puzzle -> puzzle_1_seen = puzz_1_seen;
+    puzzle -> puzzle_1_solved = puzz_1_solved;
+    puzzle -> puzzle_3_solved = puzz_3_solved;
+    room_grid -> probe = probe;
+
+    switch(room_grid -> probe)
+    {
+        case(puz_1):        assert_test(room_grid -> probe == puz_1, "Puzzle 1 successfully registered.");
+                            if ((puzzle -> puzzle_1_seen) == false){
+                                    assert_test((puzzle -> puzzle_1_seen) == false, "Puzzle 1 never having been seen has been registered.");
+                                return 1;
+                            }
+                            else if( (puzzle -> puzzle_1_solved) == false){     
+                                    assert_test((puzzle -> puzzle_1_solved) == false, "Puzzle 1 never having been solved has been registered.");
+                                return 0;
+                            }
+                            return 1;
+                            break;
+
+        case(puz_2):        assert_test(room_grid -> probe == puz_2, "Puzzle 2 successfully registered.");
+                            return 0;
+                            break; 
+
+        case(puz_3):        assert_test(room_grid -> probe == puz_3, "Puzzle 3 successfully registered.");
+                            if ((puzzle -> puzzle_3_solved) == false){
+                                assert_test(puzzle -> puzzle_3_solved == false, "Puzzle 3 never having been solved successfully registered.");
+                                return 0;
+                            }
+                            return 1;
+                            break;
+
+        case(puz_4):        assert_test(room_grid -> probe == puz_4, "Puzzle 4 successfully registered.");
+                            return 0;
+                            break; 
+
+        case(puz_5):        assert_test(room_grid -> probe == puz_5, "Puzzle 5 successfully registered.");
+                            return 0;
+                            break;
+
+        case(puz_6):        assert_test(room_grid -> probe == puz_6, "Puzzle 6 successfully registered.");
+                            return 0;
+                            break; 
+
+        default:            
+                            return 0;
+                            break;
+    }
+}
+
+void test_door_hinge_problem(void)
+{
+    int i, j, k;
+
+    progress puzzlesolved, *puzzle;
+    puzzle = &puzzlesolved;
+
+    for(i = 0; i <= 1; ++i){
+        for(j = 0; j <= 1; ++j){
+            for(k = 0; k <= 1; ++k){
+                door_hinge_problem_case(puzzle, i, j, k);
+            }
+        }
+    }
+
+}
+
+void door_hinge_problem_case(progress *puzzle, bool puzz_2_seen, bool player_a, bool player_b)
+{
+    puzzle -> puzzle_2_seen = puzz_2_seen;
+    puzzle -> player_has_a_weight = player_a;
+    puzzle -> player_has_b_weight = player_b;
+
+    if(puzzle -> puzzle_2_seen == false){
+        assert_test(puzzle -> puzzle_2_seen == false, "Puzzle 2 successfully registered as unseen.");
+
+        puzzle -> puzzle_2_seen = true;
+        assert_test(puzzle -> puzzle_2_seen == true, "Puzzle 2 successfully set as seen.");
+    }
+    
+    if(puzzle -> player_has_a_weight == true){
+        assert_test(puzzle -> player_has_a_weight == true, "Player successfully registered as having a weight.");
+
+        puzzle -> player_has_a_weight = false;
+        assert_test(puzzle -> player_has_a_weight == false, "Weight a taken from player.");
+        puzzle -> a_weight_on_hinge = true;
+        assert_test(puzzle -> a_weight_on_hinge == true, "Weight a put on hinge.");
+    }
+    
+    if(puzzle -> player_has_b_weight == true){
+        assert_test(puzzle -> player_has_b_weight == true, "Player successfully registered as having b weight.");
+
+        puzzle -> player_has_b_weight = false;
+        assert_test(puzzle -> player_has_b_weight == false, "Weight b taken from player.");
+        puzzle -> b_weight_on_hinge = true;
+        assert_test(puzzle -> b_weight_on_hinge == true, "Weight b put on hinge.");
+    }
+    
+    if(puzzle -> a_weight_on_hinge == true && puzzle -> b_weight_on_hinge == true){
+        assert_test(puzzle -> a_weight_on_hinge == true && puzzle -> b_weight_on_hinge == true, "Both weights successfully put on hinge.");
+    }
 }
