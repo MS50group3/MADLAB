@@ -891,8 +891,7 @@ void test_initialise_roomgrid_components(void)
     printf("\nRoom grid bottom y coordinate successfully set to 0.\n");
 
     room_grid -> top_y_coord = 0;
-    CU_ASSERT(room_grid -> top_y_coord == 0);
-    printf("\nRoom grid top y coordinate successfully set to 0.\n");
+    assert_test(room_grid -> top_y_coord == 0, "Room grid top y coordinate successfully set to 0.");
 
     room_grid -> direction = 0;
     assert_test(room_grid -> direction == 0, "Room grid direction successfully set to 0");
@@ -928,6 +927,88 @@ void test_initialise_chicken(void)
 
     hen -> y_chick_centre = 0;
     assert_test(hen -> chick_lx_coord == 0, "Chicken y centre coordinate successfully set to 0.");
+
+    printf("\n");
+}
+
+void test_position_sprite(void)
+{
+
+    roomGrid roomStuff, *room_grid;
+    room_grid = &roomStuff;
+
+    printf("\n");
+
+    room_grid -> rc_sprite.y = TILE_SIZE*16;
+    assert_test(room_grid -> rc_sprite.y == TILE_SIZE * 16, "Sprite rectangle y coordinate successfully set.");
+
+    room_grid -> rc_sprite.x = TILE_SIZE*5;
+    assert_test(room_grid -> rc_sprite.x == TILE_SIZE * 5, "Sprite rectangle x coordinate successfully set.");
+
+    room_grid -> rc_sprite.w = TILE_SIZE;
+    assert_test(room_grid -> rc_sprite.w == TILE_SIZE, "Sprite rectangle width successfully set.");
+
+    room_grid -> rc_sprite.h = TILE_SIZE;
+    assert_test(room_grid -> rc_sprite.h == TILE_SIZE, "Sprite rectangle height successfully set.");
+
+    room_grid -> rc_sprite_pos.x = 0;
+    assert_test(room_grid -> rc_sprite_pos.x == 0, "Sprite x coordinate successfully set.");
+
+    room_grid -> rc_sprite_pos.y = 0;
+    assert_test(room_grid -> rc_sprite_pos.y == 0, "Sprite y coordinate successfully set.");
+
+    room_grid -> rc_sprite_pos.w = TILE_SIZE;
+    assert_test(room_grid -> rc_sprite_pos.w == TILE_SIZE, "Sprite position width successfully set.");
+
+    room_grid -> rc_sprite_pos.h = TILE_SIZE; 
+    assert_test(room_grid -> rc_sprite_pos.h == TILE_SIZE, "Sprite position height coordinate successfully set.");
+
+    room_grid -> rc_dest.w = TILE_SIZE;
+    assert_test(room_grid -> rc_dest.w == TILE_SIZE, "Sprite rectangle desination width coordinate successfully set.");
+
+    room_grid -> rc_dest.h = TILE_SIZE;
+    assert_test(room_grid -> rc_dest.h == TILE_SIZE, "Sprite rectangle desination height coordinate successfully set.");
+
+    printf("\n");
+}
+
+void test_position_chicken(void)
+{
+    roomGrid roomStuff, *room_grid;
+    room_grid = &roomStuff;
+
+    Chicken Fowl, *hen;
+    hen = &Fowl;
+
+    printf("\n");
+
+    hen -> chick_facing = room_grid -> direction;
+    assert_test(hen -> chick_facing == room_grid -> direction, "Chicken direction successfully set.");
+
+    hen -> srcChicken.y = 0;
+    assert_test(hen -> srcChicken.y == 0, "Chicken rectangle y coordinate successfully set.");
+
+    hen -> srcChicken.x = 0;
+    assert_test(hen -> srcChicken.x == 0, "Chicken rectangle x coordinate successfully set.");
+
+    hen -> srcChicken.w = TILE_SIZE;
+    assert_test(hen -> srcChicken.w == TILE_SIZE, "Chicken rectangle width successfully set.");
+
+    hen -> srcChicken.h = TILE_SIZE;
+    assert_test(hen -> srcChicken.h == TILE_SIZE, "Sprite rectangle y coordinate successfully set.");
+
+    hen -> dstChicken.y = 320;
+    assert_test(hen -> dstChicken.y == 320, "Sprite rectangle y coordinate successfully set.");
+
+    hen -> dstChicken.x = 320;
+    assert_test(hen -> dstChicken.x == 320, "Sprite rectangle y coordinate successfully set.");
+
+    hen -> dstChicken.w = TILE_SIZE;
+    assert_test(hen -> dstChicken.w == TILE_SIZE, "Sprite rectangle y coordinate successfully set.");
+
+    hen -> dstChicken.h = TILE_SIZE;
+    assert_test(hen -> dstChicken.h == TILE_SIZE, "Sprite rectangle y coordinate successfully set.");
+
 
     printf("\n");
 }

@@ -214,3 +214,7 @@ void rcobj_set_case(int x_coord, int y_coord, int width, int height, int dest_x,
 void test_initialise_roomgrid_components(void);
 
 void test_initialise_chicken(void);
+
+void test_position_sprite(void);
+
+void test_position_chicken(void);

@@ -30,5 +30,9 @@ int main(int aroom_gridc, char *argv[])
 
     set_up_test("Initialise Chicken Suite", "Test of initialise_chicken()", test_initialise_chicken);
 
+    set_up_test("Position Sprite Suite", "Test of position_sprite()", test_position_sprite);
+
+    set_up_test("Position Chicken Suite", "Test of position_chicken()", test_position_chicken);
+
     return(0);
 }
