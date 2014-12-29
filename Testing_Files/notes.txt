@@ -8,3 +8,7 @@ Why is there no action if the array isn't zero or one.
 In movement:
 
 No default for switch.
+
+In initialise_problem:
+
+Could put a clause saying the number of instructions has to make sense.

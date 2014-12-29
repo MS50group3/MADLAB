@@ -1648,3 +1648,222 @@ void door_hinge_problem_case(progress *puzzle, bool puzz_2_seen, bool player_a, 
         assert_test(puzzle -> a_weight_on_hinge == true && puzzle -> b_weight_on_hinge == true, "Both weights successfully put on hinge.");
     }
 }
+
+void test_find_weight_a(void)
+{
+    progress puzzlesolved, *puzzle;
+    puzzle = &puzzlesolved;
+
+    printf("\n\nPuzzle 4 set as unseen.\n");
+    find_weight_a_case(puzzle, false);
+
+    printf("\nPuzzle 4 set as seen, no messages should register below.\n\n");
+    find_weight_a_case(puzzle, true);
+}
+
+void find_weight_a_case(progress *puzzle, bool puzzle_4_seen)
+{
+    puzzle -> puzzle_4_seen = puzzle_4_seen;
+
+    if(puzzle -> puzzle_4_seen == false){
+        assert_test(puzzle -> puzzle_4_seen == false, "Puzzle 4 successfully registered as unseen.");
+        
+        puzzle -> player_has_a_weight = true;
+        assert_test(puzzle -> player_has_a_weight == true, "Weight a given to player.");
+        puzzle -> puzzle_4_seen = true;
+        assert_test(puzzle -> puzzle_4_seen == true, "Puzzle 4 successfully set to seen.");
+    }
+}
+
+void test_find_weight_b(void)
+{
+    progress puzzlesolved, *puzzle;
+    puzzle = &puzzlesolved;
+
+    printf("\n\nPuzzle 6 set as unseen.\n");
+    find_weight_b_case(puzzle, false);
+
+    printf("\nPuzzle 6 set as seen, no messages should register below.\n\n");
+    find_weight_b_case(puzzle, true);
+}
+
+void find_weight_b_case(progress *puzzle, bool puzzle_4_seen)
+{
+    puzzle -> puzzle_6_seen = puzzle_4_seen;
+
+    if(puzzle -> puzzle_6_seen == false){
+        assert_test(puzzle -> puzzle_6_seen == false, "Puzzle 6 successfully registered as unseen.");
+        
+        puzzle -> player_has_b_weight = true;
+        assert_test(puzzle -> player_has_b_weight == true, "Weight b given to player.");
+        puzzle -> puzzle_6_seen = true;
+        assert_test(puzzle -> puzzle_6_seen == true, "Puzzle 6 successfully set to seen.");
+    }
+}
+
+void test_hen_sequence(void)
+{
+    int i;
+
+    Chicken Fowl, *hen;
+    hen = &Fowl;
+
+    printf("\n");
+
+    for(i = 0; i < 4; ++i){
+        hen_sequence_iteration(hen);
+    }
+
+    printf("\n");
+}
+
+void hen_sequence_iteration(Chicken *hen)
+{
+    static int interaction_counter = 0;
+    int temp = interaction_counter;
+
+    printf("\nInteraction counter currently at: %d.\n", interaction_counter);
+
+    if(interaction_counter == 0){
+        assert_test(interaction_counter == 0, "Interaction counter successfully identified as 0.");
+
+        ++interaction_counter;
+        assert_test(interaction_counter == temp + 1, "Interaction counter incremented by one.");
+    }
+    else if(interaction_counter == 1){
+        assert_test(interaction_counter == 1, "Interaction counter successfully identified as 1.");
+
+        ++interaction_counter;
+        assert_test(interaction_counter == temp + 1, "Interaction counter incremented by one.");
+    }
+    else if(interaction_counter == 2 && !(hen -> chicken_cross_road)){
+        assert_test(interaction_counter == 2 && !(hen -> chicken_cross_road), "Interaction counter successfully identified as 2 and hen not been released.");
+
+        ++interaction_counter;
+        assert_test(interaction_counter == temp + 1, "Interaction counter incremented by one.");
+
+        hen -> chicken_cross_road = true;
+        assert_test(hen -> chicken_cross_road == true, "Hen counted as released, 2 registered but no messages should display below.");
+        --interaction_counter;
+
+    }
+}
+
+void test_initialise_problem(void)
+{
+    problem action_problem, *prob_point;
+    prob_point = &action_problem;
+
+    printf("\n");
+
+    initialise_problem_case(prob_point, "arbitrary", 1, 10, 1, 15);
+
+    printf("\n");
+}
+
+void initialise_problem_case(problem *prob_point, char *correct_answer, int first_inst_start, int first_instr_end,
+                             int num_chars_ans, int second_inst_end)
+{
+    prob_point -> correct_answer = correct_answer;
+    CU_ASSERT_STRING_EQUAL(prob_point -> correct_answer, "arbitrary") 
+    printf("\nCorect answer correctly initialised.\n");
+
+    prob_point -> first_instructions_start = first_inst_start;
+    assert_test(prob_point -> first_instructions_start == 1, "Starting number for first set of instructions correctly set.");
+
+    prob_point -> first_instructions_end = first_instr_end;
+    assert_test(prob_point -> first_instructions_end == 10, "Finishing number for first set of instructions correctly set.");
+
+    prob_point -> second_instructions_end = second_inst_end;
+    assert_test(prob_point -> second_instructions_end == 15, "Finishing number for second set of instructions correctly set.");
+
+    prob_point -> num_chars_in_ans = num_chars_ans;
+    assert_test(prob_point -> num_chars_in_ans == 1, "Number of characters in answer correctly initialised.");
+}
+
+void test_permit_chicken(void)
+{
+    Chicken Fowl, *hen;
+    hen = &Fowl;
+
+    printf("\n");
+
+    examine_chicken_case(hen, TILE_SIZE);
+
+    examine_chicken_case(hen, 10);
+
+    printf("\n");
+}
+
+void examine_chicken_case(Chicken *hen, int Chicken_x)
+{
+    printf("\nChicken direction set to left.\n");
+    permit_chicken_case(hen, left, Chicken_x);
+
+    printf("\nChicken direction set to right.\n");
+    permit_chicken_case(hen, right, Chicken_x);
+
+    printf("\nChicken direction set to up.\n");
+    permit_chicken_case(hen, up, Chicken_x);
+
+    printf("\nChicken direction set to down.\n");
+    permit_chicken_case(hen, down, Chicken_x);
+}
+
+void permit_chicken_case(Chicken *hen, int direction, int Chicken_x)
+{
+    int temp_x, temp_y;
+
+    hen -> chick_facing = direction;
+    hen -> dstChicken.x = Chicken_x;
+
+    temp_x = hen -> dstChicken.x;
+    temp_y = hen -> dstChicken.y;
+
+    switch (hen -> chick_facing)
+    {       
+        case(left):     assert_test(hen -> chick_facing == left, "Chicken direction recognised as left.");
+                        if(!((hen -> dstChicken.x) % TILE_SIZE)){
+                            assert_test(!((hen -> dstChicken.x) % TILE_SIZE), "The chicken has been registered to be at an irregular x location.");
+                        } 
+                        else{
+                            (hen -> dstChicken.x -= MOVEMENT_INCREMENT);
+                            assert_test(hen -> dstChicken.x == temp_x - MOVEMENT_INCREMENT, "The chicken has been moved left.");
+                        }
+                        break;
+
+        case(down):     assert_test(hen -> chick_facing == down, "Chicken direction recognised as down.");
+                        if(!((hen -> dstChicken.y) % TILE_SIZE)){
+                            assert_test(!((hen -> dstChicken.y) % TILE_SIZE), "The chicken has been registered to be at an irregular y location.");
+                        }
+                        else{
+                            (hen -> dstChicken.y += MOVEMENT_INCREMENT);
+                            assert_test(hen -> dstChicken.y == temp_y + MOVEMENT_INCREMENT, "The chicken has been moved down.");
+                        }
+                        break;
+
+        case(right):    assert_test(hen -> chick_facing == right, "Chicken direction recognised as right.");
+                        if(!((hen -> dstChicken.x) % TILE_SIZE)){
+                            assert_test(!((hen -> dstChicken.x) % TILE_SIZE), "The chicken has been registered to be at an irregular x location.");
+                        }
+                        else{
+                            (hen -> dstChicken.x += MOVEMENT_INCREMENT);
+                            assert_test(hen -> dstChicken.x == temp_x + MOVEMENT_INCREMENT, "The chicken has been moved right.");
+                        }
+                        break;
+
+        case(up):       assert_test(hen -> chick_facing == up, "Chicken direction recognised as up.");
+                        if(!((hen -> dstChicken.y) % TILE_SIZE)){
+                            assert_test(!((hen -> dstChicken.y) % TILE_SIZE), "The chicken has been registered to be at an irregular y location.");
+                            if (hen -> dstChicken.y != 0){
+
+                            }
+                        }
+                        else{
+                            (hen -> dstChicken.y -= MOVEMENT_INCREMENT);
+                            assert_test(hen -> dstChicken.y == temp_y - MOVEMENT_INCREMENT, "The chicken has been moved up.");
+                        }
+                        break;        
+
+    }
+}

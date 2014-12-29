@@ -264,3 +264,26 @@ int action_case(problem *prob_point, roomGrid *room_grid, progress *puzzle, bool
 void test_door_hinge_problem(void);
 
 void door_hinge_problem_case(progress *puzzle, bool puzz_2_seen, bool player_a, bool player_b);
+
+void test_find_weight_a(void);
+
+void find_weight_a_case(progress *puzzle, bool puzzle_4_seen);
+
+void test_find_weight_b(void);
+
+void find_weight_b_case(progress *puzzle, bool puzzle_4_seen);
+
+void test_hen_sequence(void);
+
+void hen_sequence_iteration(Chicken *hen);
+
+void test_initialise_problem(void);
+
+void initialise_problem_case(problem *prob_point, char *correct_answer, int first_inst_start, int first_instr_end,
+                             int num_chars_ans, int second_inst_end);
+
+void test_permit_chicken(void);
+
+void permit_chicken_case(Chicken *hen, int direction, int Chicken_x);
+
+void examine_chicken_case(Chicken *hen, int Chicken_x);

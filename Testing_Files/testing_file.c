@@ -50,5 +50,15 @@ int main(int aroom_gridc, char *argv[])
 
     set_up_test("Door Hinge Problem Suite", "Test of door_hinge_problem()", test_door_hinge_problem);
 
+    set_up_test("Find a Weight Suite", "Test of find_weight_a()", test_find_weight_a);
+
+    set_up_test("Find b Weight Suite", "Test of find_weight_b()", test_find_weight_b);
+
+    set_up_test("Hen Sequence Suite", "Test of hen_sequence()", test_hen_sequence);
+
+    set_up_test("Initialise Problem Suite", "Test of initialise_problem()", test_initialise_problem);
+
+    set_up_test("Permit Chicken Suite", "Test of permit_chicken()", test_permit_chicken);
+
     return(0);
 }
