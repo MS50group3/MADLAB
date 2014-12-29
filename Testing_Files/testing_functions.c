@@ -38,6 +38,18 @@ void set_up_test(char *suite_name, char *test_name, CU_TestFunc function)
    close_CUnit();
 }
 
+void assert_test(int test, char *message)
+{
+    CU_ASSERT(test);
+    if(test){
+        printf("\n%s\n", message);
+    }
+    else{
+        printf("\nWARNING FAILED: %s\n", message);
+    }
+
+}
+
 void test_makeRoom(void)
 {
     roomGrid roomStuff, *room_grid;
@@ -740,5 +752,182 @@ void rcsrc_set_case(int x_coord, int y_coord, int width, int height, roomGrid *r
 
 void test_rcobj_set(void)
 {
+    roomGrid roomStuff, *room_grid;
+    room_grid = &roomStuff;
+
+    printf("\n");
+
+    rcobj_set_case(264, 63, 64, 64, 0, 0, room_grid);
+
+    rcobj_set_case(0, 62, 64, 64, 737, 318, room_grid);
+
+    printf("\n");
+}
+
+void rcobj_set_case(int x_coord, int y_coord, int width, int height, int dest_x, int dest_y, roomGrid *room_grid)
+{
+    room_grid -> rc_obj.x = x_coord;                     //the x-coordinate of the object on the tile sheet
+    CU_ASSERT(room_grid -> rc_obj.x == x_coord);
+    printf("\nRoom grid object x coordinate successfully set to %d.\n", x_coord);
+
+    room_grid -> rc_obj.y = y_coord;                     //the y-coordiante of the object on the tile sheet
+    CU_ASSERT(room_grid -> rc_obj.y == y_coord);
+    printf("\nRoom grid object y coordinate successfully set to %d.\n", y_coord);
+
+    room_grid -> rc_obj.w = width;                       //the height and width for objects are 64 normally, but really can be anything
+    CU_ASSERT(room_grid -> rc_obj.w == width);
+    printf("\nRoom grid object width successfully set to %d.\n", width);
+
+    room_grid -> rc_obj.h = height;
+    CU_ASSERT(room_grid -> rc_obj.h == height);
+    printf("\nRoom grid object height successfully set to %d.\n", height);
+
+    room_grid -> rc_obj_dest.x = dest_x;                 //the x-coordinate of the object on the game map; takes some trial and error to figure out
+    CU_ASSERT(room_grid -> rc_obj_dest.x == dest_x);
+    printf("\nRoom grid object desination x coordinate successfully set to %d.\n", dest_x);
+
+    room_grid -> rc_obj_dest.y = dest_y;                 //the y-coordinate of the object on the game map;
+    CU_ASSERT(room_grid -> rc_obj_dest.y == dest_y);
+    printf("\nRoom grid object desination y coordinate successfully set to %d.\n", dest_y);
+
+    room_grid -> rc_obj_dest.w = room_grid -> rc_obj.w;  //these are set to be the same so another value does not have to be passed
+    CU_ASSERT(room_grid -> rc_obj_dest.w == room_grid -> rc_obj.w);
+    printf("\nRoom grid object desination width successfully set to %d.\n", room_grid -> rc_obj.w);
+
+    room_grid -> rc_obj_dest.h = room_grid -> rc_obj.h;
+    CU_ASSERT(room_grid -> rc_obj_dest.h == room_grid -> rc_obj.h);
+    printf("\nRoom grid object desination height successfully set to %d.\n", room_grid -> rc_obj.h);
+
+}
+
+void test_initialise_roomgrid_components(void)
+{
+    roomGrid roomStuff, *room_grid;
+    room_grid = &roomStuff;
+
+    progress puzzlesolved, *puzzle;
+    puzzle = &puzzlesolved;
+
+    printf("\n");
+
+    room_grid -> gamerunning = true;
+    CU_ASSERT(room_grid -> gamerunning == true);
+    printf("\nGame running successfully initialised to true.\n");
+
+    puzzle -> puzzle_1_seen   = false;
+    CU_ASSERT(puzzle -> puzzle_1_seen  == false);
+    printf("\nFirst puzzle seen successfully initialised to false.\n");
+
+    puzzle -> puzzle_1_solved = false;
+    CU_ASSERT(puzzle -> puzzle_1_solved == false);
+    printf("\nFirst puzzle solved successfully initialised to false.\n");
+
+    puzzle -> puzzle_2_seen   = false;
+    CU_ASSERT(puzzle -> puzzle_2_seen  == false);
+    printf("\nSecond puzzle seen successfully initialised to false.\n");
+
+    puzzle -> puzzle_2_solved = false;
+    CU_ASSERT(puzzle -> puzzle_2_solved == false);
+    printf("\nSecond puzzle solved successfully initialised to false.\n");
+
+    puzzle -> puzzle_3_seen   = false;
+    CU_ASSERT(puzzle -> puzzle_3_seen  == false);
+    printf("\nThird puzzle seen successfully initialised to false.\n");
+
+    puzzle -> puzzle_3_solved = false;
+    CU_ASSERT(puzzle -> puzzle_3_solved == false);
+    printf("\nThird puzzle solved successfully initialised to false.\n");
+
+    puzzle -> puzzle_4_seen   = false;
+    CU_ASSERT(puzzle -> puzzle_4_seen  == false);
+    printf("\nFourth puzzle seen successfully initialised to false.\n");
+
+    puzzle -> puzzle_4_solved = false;
+    CU_ASSERT(puzzle -> puzzle_4_solved == false);
+    printf("\nFourth puzzle solved successfully initialised to false.\n");
+
+    puzzle -> puzzle_5_seen   = false;
+    CU_ASSERT(puzzle -> puzzle_5_seen  == false);
+    printf("\nFifth puzzle seen successfully initialised to false.\n");
+
+    puzzle -> puzzle_5_solved = false;
+    CU_ASSERT(puzzle -> puzzle_5_solved == false);
+    printf("\nFifth puzzle solved successfully initialised to false.\n");
+
+    puzzle -> puzzle_6_seen   = false;
+    CU_ASSERT(puzzle -> puzzle_6_seen  == false);
+    printf("\nSixth puzzle seen successfully initialised to false.\n");
+
+    puzzle -> puzzle_6_solved = false;
+    CU_ASSERT(puzzle -> puzzle_6_solved == false);
+    printf("\nSixth puzzle solved successfully initialised to false.\n");
+
+    puzzle -> player_has_a_weight = false;
+    CU_ASSERT(puzzle -> player_has_a_weight == false);
+    printf("\nPlayer has a weight successfully set to false.\n");
+
+    puzzle -> player_has_b_weight = false;
+    CU_ASSERT(puzzle -> player_has_b_weight == false);
+    printf("\nPlayer has b weight successfully set to false.\n");
+
+    puzzle -> a_weight_on_hinge = false;
+    CU_ASSERT(puzzle -> a_weight_on_hinge == false);
+    printf("\nThe a weight being on the hing successfully set to false.\n");
+
+    puzzle -> b_weight_on_hinge = false;
+    CU_ASSERT(puzzle -> b_weight_on_hinge == false);
+    printf("\nThe b weight being on the hing successfully set to false.\n");
+
+    room_grid -> paused = 0;
+    CU_ASSERT(room_grid -> paused == 0);
+    printf("\nRoom grid paused successfully set to off.\n");
+
+    room_grid -> left_x_coord = 0;
+    CU_ASSERT(room_grid -> left_x_coord == 0);
+    printf("\nRoom grid left x coordinate successfully set to 0.\n");
+
+    room_grid -> bottom_y_coord = 0;
+    CU_ASSERT(room_grid -> bottom_y_coord == 0);
+    printf("\nRoom grid bottom y coordinate successfully set to 0.\n");
+
+    room_grid -> top_y_coord = 0;
+    CU_ASSERT(room_grid -> top_y_coord == 0);
+    printf("\nRoom grid top y coordinate successfully set to 0.\n");
+
+    room_grid -> direction = 0;
+    assert_test(room_grid -> direction == 0, "Room grid direction successfully set to 0");
+
+    printf("\n");
+
+}
+
+void test_initialise_chicken(void)
+{
+    Chicken Fowl, *hen;
+    hen = &Fowl;
+
+    printf("\n");
+
+    hen -> chicken_cross_road = false;
+    assert_test(hen -> chicken_cross_road == false, "Chicken cross road indicator successfully set to false.");
     
+    hen -> chick_lx_coord = 0;
+    assert_test(hen -> chick_lx_coord == 0, "Chicken lx coordinate successfully set to 0.");
+
+    hen -> chick_rx_coord = 0;
+    assert_test(hen -> chick_lx_coord == 0, "Chicken rx coordinate successfully set to 0.");
+
+    hen -> chick_by_coord = 0;
+    assert_test(hen -> chick_lx_coord == 0, "Chicken by coordinate successfully set to 0.");
+
+    hen -> chick_ty_coord = 0;
+    assert_test(hen -> chick_lx_coord == 0, "Chicken ty coordinate successfully set to 0.");
+
+    hen -> x_chick_centre = 0;
+    assert_test(hen -> chick_lx_coord == 0, "Chicken x centre coordinate successfully set to 0.");
+
+    hen -> y_chick_centre = 0;
+    assert_test(hen -> chick_lx_coord == 0, "Chicken y centre coordinate successfully set to 0.");
+
+    printf("\n");
 }

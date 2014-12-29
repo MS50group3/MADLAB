@@ -26,5 +26,9 @@ int main(int aroom_gridc, char *argv[])
 
     set_up_test("Rectangle Object Set Suite", "Test of rcobj_set()", test_rcobj_set);
 
+    set_up_test("Initialise Room Grid Components Suite", "Test of initialise_roomgrid_components()", test_initialise_roomgrid_components);
+
+    set_up_test("Initialise Chicken Suite", "Test of initialise_chicken()", test_initialise_chicken);
+
     return(0);
 }

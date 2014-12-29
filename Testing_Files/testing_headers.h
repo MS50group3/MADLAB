@@ -169,6 +169,8 @@ int close_CUnit(void);
 
 void set_up_test(char *suite_name, char *test_name, CU_TestFunc function);
 
+void assert_test(int test, char *message);
+
 void test_makeRoom(void);
 
 void initialise_working_room_components(roomGrid *room_grid, FILE *map_file);
@@ -206,3 +208,9 @@ void test_rcsrc_set(void);
 void rcsrc_set_case(int x_coord, int y_coord, int width, int height, roomGrid *room_grid);
 
 void test_rcobj_set(void);
+
+void rcobj_set_case(int x_coord, int y_coord, int width, int height, int dest_x, int dest_y, roomGrid *room_grid);
+
+void test_initialise_roomgrid_components(void);
+
+void test_initialise_chicken(void);
