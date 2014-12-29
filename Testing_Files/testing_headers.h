@@ -204,3 +204,5 @@ void test_draw_room(void);
 void test_rcsrc_set(void);
 
 void rcsrc_set_case(int x_coord, int y_coord, int width, int height, roomGrid *room_grid);
+
+void test_rcobj_set(void);

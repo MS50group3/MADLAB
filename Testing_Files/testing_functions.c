@@ -737,3 +737,8 @@ void rcsrc_set_case(int x_coord, int y_coord, int width, int height, roomGrid *r
     printf("\nRoom grid source rectangle height successfully set to %d.\n", height);
 
 }
+
+void test_rcobj_set(void)
+{
+    
+}
