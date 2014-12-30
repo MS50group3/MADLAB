@@ -50,6 +50,17 @@ void assert_test(int test, char *message)
 
 }
 
+void string_equal_test(char *string_one, char *string_two, char *message)
+{
+    CU_ASSERT_STRING_EQUAL(string_one, string_two);
+    if( strcmp(string_one, string_two) == 0 ){
+        printf("\n%s\n", message);
+    }
+    else{
+        printf("\nWARNING FAILED: %s\n", message);
+    }
+}
+
 void test_makeRoom(void)
 {
     roomGrid roomStuff, *room_grid;
@@ -57,24 +68,25 @@ void test_makeRoom(void)
 
     FILE *map_file = NULL;
 
+    printf("\n");
+
     test_makeRoom_case(NULL, map_file);
 
     initialise_working_room_components(room_grid, map_file);
 
     test_makeRoom_case(room_grid -> room_array, map_file);
 
+    printf("\n");
 
 }
 
 void initialise_working_room_components(roomGrid *room_grid, FILE *map_file)
 {
     room_grid -> room_array = 0;
-    CU_ASSERT(room_grid -> room_array == 0);
-    printf("\nRoom grid room array successfully integrated to zero.\n");
+    assert_test(room_grid -> room_array == 0, "Room grid room array successfully initialised to zero.");
 
     room_grid -> room_array = (int **)calloc((ROOM_Y) + 1, sizeof(int *));
-    CU_ASSERT(sizeof(room_grid -> room_array) == sizeof( (int **)calloc((ROOM_Y) + 1, sizeof(int *)) ) );
-    printf("\nDynamic memory for room grid room array successfully allocated.\n\n");
+    assert_test(sizeof(room_grid -> room_array) == sizeof( (int **)calloc((ROOM_Y) + 1, sizeof(int *)) ) , "Dynamic memory for room grid room array successfully allocated.");
 
     map_file = fopen("room.txt", "r");
 
@@ -83,7 +95,7 @@ void initialise_working_room_components(roomGrid *room_grid, FILE *map_file)
         exit(1);
     }
 
-    printf("File was opened.\n");
+    printf("\nFile was opened.\n");
 }
 
 void test_makeRoom_case(int **room_array_pointer, FILE *map_file)
@@ -91,13 +103,11 @@ void test_makeRoom_case(int **room_array_pointer, FILE *map_file)
     int i, j;
 
     if (room_array_pointer == NULL){
-        CU_ASSERT(room_array_pointer == NULL);
-        printf("\n\nNo memory for room grid allocation correctly identified.\n");
+        assert_test(room_array_pointer == NULL, "No memory for room grid allocation correctly identified.");
         return;
     }
 
-    CU_ASSERT(room_array_pointer != NULL);
-    printf("\nMemory available for room grid allocation correctly identified.\n");
+    assert_test(room_array_pointer != NULL, "Memory available for room grid allocation correctly identified.");
 
     for (i = 0; i <= ROOM_Y; i++){
 
@@ -105,11 +115,10 @@ void test_makeRoom_case(int **room_array_pointer, FILE *map_file)
         CU_ASSERT(sizeof(room_array_pointer[i]) == sizeof((int *)calloc((ROOM_X) + 1, sizeof(int))));
 
         if (room_array_pointer[i] ==  NULL){
-            CU_ASSERT(room_array_pointer[i] ==  NULL)
-            printf("\nNo memory for room grid room array component successfully identified.\n");
+            assert_test(room_array_pointer[i] ==  NULL, "No memory for room grid room array component successfully identified.");
         }
     }
-    printf("\nMemory for room grid room array components successfully allocated.\n\n");
+    printf("\nMemory for room grid room array components successfully allocated.\n");
 
     if(map_file != NULL){
         for (i = 0; i < ROOM_Y; i++){
@@ -131,19 +140,21 @@ void test_print_instruction(void)
     roomGrid roomStuff, *room_grid;
     room_grid = &roomStuff;
 
+    printf("\n");
+
     room_grid -> finished = unfinished;
-    CU_ASSERT(room_grid -> finished == unfinished);
-    printf("\n\nRoom grid finished index correctly initialised to off.\n");
+    assert_test(room_grid -> finished == unfinished, "Room grid finished index correctly initialised to off.");
 
     room_grid -> problem_quitter = off;
-    CU_ASSERT(room_grid -> problem_quitter == off);
-    printf("\nRoom grid problem indicator index correctly initialised to off.\n");
+    assert_test(room_grid -> problem_quitter == off, "Room grid problem indicator index correctly initialised to off.");
 
     test_print_instruction_case(off);
 
     printf("\nProblem quitter set to on.\n");
 
     test_print_instruction_case(on);
+
+    printf("\n");
 }
 
 void test_print_instruction_case(on_off problem_quitter)
@@ -159,12 +170,10 @@ void test_print_instruction_case(on_off problem_quitter)
         }
     }
     if(problem_quitter == off){
-        CU_ASSERT(problem_quitter == off);
-        printf("\nInstructions correctly sent through for printing\n");
+        assert_test(problem_quitter == off, "Instructions correctly sent through for printing.");
     }
     else{
-        CU_ASSERT(problem_quitter == on);
-        printf("\nInstructions correctly not sent through for printing\n\n");
+        assert_test(problem_quitter == on, "Instructions correctly not sent through for printing.");
     }
 }
 
@@ -382,8 +391,9 @@ void get_instructions_case(char *instructions_list, char *filename)
 {
     static int instruction_counter = 0;
 
-    CU_ASSERT_STRING_EQUAL(instructions_list, filename);
-    printf("\nInstruction %d successfully set to %s.\n", instruction_counter++, filename);
+    printf("\nCurrently considering instruction %d: %s.\n", instruction_counter++, filename);
+    string_equal_test(instructions_list, filename, "Instruction successfully allocated.");
+
 }
 
 void test_print_instruction_to_screen(void)
@@ -393,60 +403,83 @@ void test_print_instruction_to_screen(void)
     roomGrid roomStuff, *room_grid;
     room_grid = &roomStuff;
 
+    printf("\n");
+
     room_grid->refresh_counter = 0;
-    CU_ASSERT(room_grid->refresh_counter == 0);
-    printf("\n\nRoom grid refresh counter successfully set to zero.\n");
+    assert_test(room_grid->refresh_counter == 0, "Room grid refresh counter successfully set to zero.");
 
     room_grid->skip_checker = off;
-    CU_ASSERT(room_grid->skip_checker == off);
-    printf("\nRoom grid skip checker successfully set to off.\n");
+    assert_test(room_grid->skip_checker == off, "Room grid skip checker successfully set to off.");
 
     SDL_Surface* image_surf = NULL;
-    CU_ASSERT(image_surf == NULL);
-    printf("\nImage surface successfully initialised to zero.\n");
+    assert_test(image_surf == NULL, "Image surface successfully initialised to zero.");
 
-    // The following few lines are used to create a filename to get the .bmp to print to screen.
     char prefix[LENGTH_PREFIX] = "Instructions/";
-    CU_ASSERT_STRING_EQUAL(prefix, "Instructions/");
-    printf("\nFile directory succesfully set for filename.\n");
+    string_equal_test(prefix, "Instructions/", "File directory succesfully set for filename.");
 
     char extension[LENGTH_EXTENSION] = ".bmp";
-    CU_ASSERT_STRING_EQUAL(extension, ".bmp");
-    printf("\nFile extension succesfully set for filename.\n");
+    string_equal_test(extension, ".bmp", "File extension succesfully set for filename.");
 
     char *filename = malloc(strlen(prefix) + strlen(instruction) + strlen(extension) + 1);
-    CU_ASSERT(sizeof(filename) == sizeof((malloc(strlen(prefix) + strlen(instruction) + strlen(extension) + 1))));
-    printf("\nCorrect amount of memory dynamically allocated for instruction path.\n");
+    assert_test(sizeof(filename) == sizeof((malloc(strlen(prefix) + strlen(instruction) + strlen(extension) + 1))), "Correct amount of memory dynamically allocated for instruction path.");
 
     strcpy(filename, prefix);
-    CU_ASSERT_STRING_EQUAL(filename, "Instructions/");
-    printf("\nFile folder succesfully copied into filepath.\n");
+    string_equal_test(filename, "Instructions/", "File folder succesfully copied into filepath.");
 
     strcat(filename, instruction);
-    CU_ASSERT_STRING_EQUAL(filename, "Instructions/arbitrary");
-    printf("\nFilename and folder succesfully set for filename.\n");
+    string_equal_test(filename, "Instructions/arbitrary", "Filename and folder succesfully set for filename.");
 
     strcat(filename, extension);
-    printf("\n\n%s\n\n", filename);
-    CU_ASSERT_STRING_EQUAL(filename, "Instructions/arbitrary.bmp");
-    printf("\nFilename and folder with extension succesfully set for filename.\n");
+    string_equal_test(filename, "Instructions/arbitrary.bmp", "Filename and folder with extension succesfully set for filename.");
 
     free(filename);
-    CU_ASSERT(filename == NULL);
-    printf("\nfilename variable successfully freed.\n");
+    filename = NULL;
+    assert_test(filename == NULL, "Filename variable successfully freed.");
+
+    printf("\n");
 }
 
 void test_SDL_events(void)
 {
-    int i, j;
+    int event, key;
 
     printf("\n");
-    for(i = 0; i <= 4; ++i){
-        for(j = 0; j <= 3; ++j){
-            SDL_event_case(i, j);
+
+    for(key = 0; key <= 4; ++key){
+        for(event = 0; event <= 3; ++event){
+            initialise_message(key, event);
+            SDL_event_case(key, event);
+            printf("\n");
         }
     }
-    printf("\n");
+
+}
+
+void initialise_message(int event, int key)
+{
+    if(event == quit){
+        printf("\nEvent has been set to quit.\n");
+    }
+    else if(event == mousebutton){
+        printf("\nEvent has been set to mousebutton.\n");
+    }
+    else if(event == keydown){
+        printf("\nEvent has been set to keydown.\n");
+    }
+    else if(event != quit && event != mousebutton && event != keydown){
+        printf("\nEvent has been set to undefined.\n");
+    }
+
+    if(key == escape_key){
+        printf("\nKey has been set to escape_key.\n");
+    }
+    else if(key == space_key){
+        printf("\nKey has been set to space_key.\n");
+    }
+    else if(key != escape_key && key != space_key){
+        printf("\nKey has been set to undefined.\n");
+    }
+
 }
 
 void SDL_event_case(int event, int key)
@@ -456,57 +489,46 @@ void SDL_event_case(int event, int key)
 
     switch (event){
 
-        case 1:
-            CU_ASSERT(event == 1);
-            printf("\nSDL_QUIT successfully recognised.\n");
+        case quit:
+            assert_test(event == quit, "SDL_QUIT successfully recognised.");
 
             room_grid -> finished = finished;
-            CU_ASSERT(room_grid -> finished == finished);
-            printf("\nRoom grid finished indicator successfully set to on.\n");
+            assert_test(room_grid -> finished == finished, "Room grid finished indicator successfully set to on.");
 
             break;
-        case 2:
-            CU_ASSERT(event == 2);
-            printf("\nSDL_MOUSEBUTTON successfully recognised.\n");
+        case mousebutton:
+            assert_test(event == mousebutton, "SDL_MOUSEBUTTON successfully recognised.");
 
             room_grid -> skip_checker = on;
-            CU_ASSERT(room_grid -> skip_checker == on);
-            printf("\nRoom grid skip checker indicator successfully set to on.\n");
+            assert_test(room_grid -> skip_checker == on, "Room grid skip checker indicator successfully set to on.");
             break;
-        case 3:
-            CU_ASSERT(event == 3);
-            printf("\nSDL_KEYDOWN successfully recognised.\n");
+        case keydown:
+            assert_test(event == keydown, "SDL_KEYDOWN successfully recognised.");
 
             switch (key)
             {
-                case 1:
-                    CU_ASSERT(key == 1);
-                    printf("\nSDLK_ESCAPE successfully recognised.\n");
+                case escape_key:
+                    assert_test(key == escape_key, "SDLK_ESCAPE successfully recognised.");
 
                     room_grid -> problem_quitter = on;
-                    CU_ASSERT(room_grid -> problem_quitter == on);
-                    printf("\nRoom grid problem quitter indicator successfully set to on.\n");
+                    assert_test(room_grid -> problem_quitter == on, "Room grid problem quitter indicator successfully set to on.");
 
                     break;
-                case 2:
-                    CU_ASSERT(key == 2);
-                    printf("\nSDLK_SPACE successfully recognised.\n");
+                case space_key:
+                    assert_test(key == space_key, "SDLK_SPACE successfully recognised.");
 
                     room_grid -> skip_checker = on;
-                    CU_ASSERT(room_grid -> skip_checker == on);
-                    printf("\nRoom grid skip checker indicator successfully set to on.\n");
+                    assert_test(room_grid -> skip_checker == on, "Room grid skip checker indicator successfully set to on.");
                     break;
 
                 default:
-                    CU_ASSERT(key != 1 && key != 2);
-                    printf("\nInvalid key pressed successfully caught.\n");
+                    assert_test(key != escape_key && key != space_key, "Invalid key pressed successfully caught.");
                     break;
             }
             break;
 
         default:
-            CU_ASSERT( (event != 1 && event != 2 && event != 3) );
-            printf("\nInvalid event successfully caught.\n");
+            assert_test((event != quit && event != mousebutton && event != keydown), "Invalid event successfully caught.");
         break;
     }
 
@@ -533,8 +555,7 @@ void test_look_for_action(void)
 void test_look_for_action_case(roomGrid *room_grid, on_off skip_checker, on_off problem_quitter)
 {
     room_grid -> refresh_counter = 0;
-    CU_ASSERT(room_grid -> refresh_counter == 0);
-    printf("\nRoom grid successfully set to zero.\n");
+    assert_test(room_grid -> refresh_counter == 0, "Room grid successfully set to zero.");
 
     room_grid -> skip_checker = skip_checker;
     CU_ASSERT(room_grid -> skip_checker == skip_checker);
@@ -560,9 +581,9 @@ void test_look_for_action_case(roomGrid *room_grid, on_off skip_checker, on_off 
 
     }while(room_grid -> refresh_counter < NUM_REFRESHES && !room_grid -> skip_checker && !room_grid -> problem_quitter);
 
-    CU_ASSERT(room_grid -> refresh_counter >= NUM_REFRESHES || room_grid -> skip_checker || room_grid -> problem_quitter);
-    printf("\nTerminating clause for look for action correctly registered.\n");
+    assert_test( room_grid -> refresh_counter >= NUM_REFRESHES || room_grid -> skip_checker || room_grid -> problem_quitter, "Terminating clause for look for action correctly registered.");
 
+    printf("\n");
 }
 
 void test_SDL_Quitchecker(void)
@@ -591,13 +612,13 @@ void SDL_Quitchecker_case(roomGrid *room_grid, fin_unfin fin)
     }
 
     if (room_grid -> finished){
-        CU_ASSERT(room_grid -> finished == finished);
-        printf("\nRoom grid finished indicator successfully registered as on.\n");
+        assert_test(room_grid -> finished == finished, "Room grid finished indicator successfully registered as on.");
     }
     else{
-        CU_ASSERT(room_grid -> finished != finished);
-        printf("\nRoom grid finished indicator successfully registered as off.\n");
+        assert_test(room_grid -> finished != finished, "Room grid finished indicator successfully registered as off.");
     }
+
+    printf("\n");
 }
 
 void test_draw(void)
@@ -613,42 +634,35 @@ void test_draw(void)
     printf("\n");
 
     room_grid -> gamerunning = on;
-    CU_ASSERT(room_grid -> gamerunning == on);
-    printf("\nRoom grid gamerunning successfully set to on.\n");
+    assert_test(room_grid -> gamerunning == on, "Room grid gamerunning successfully set to on.");
 
     hen -> chicken_cross_road = on;
-    CU_ASSERT(hen -> chicken_cross_road == on);
-    printf("\nHen chicken_cross_road successfully set to on.\n");
+    assert_test(hen -> chicken_cross_road == on, "Hen chicken_cross_road successfully set to on.");
 
     while (room_grid -> gamerunning)
     {
-        if(hen -> chicken_cross_road)
-        {
-            CU_ASSERT(hen -> chicken_cross_road == on);
-            printf("\nHen chicken_cross_road successfully registered as on.\n");
+
+        if(hen -> chicken_cross_road){
+            assert_test(hen -> chicken_cross_road == on, "Hen chicken_cross_road successfully registered as on.");
         }
         else{
-            CU_ASSERT(hen -> chicken_cross_road == off);
-            printf("\nHen chicken_cross_road successfully registered as off.\n");
+            assert_test(hen -> chicken_cross_road == off, "Hen chicken_cross_road successfully registered as off.");
         }
 
-    if(first_pass != 0){
-        room_grid -> gamerunning = off;
-        CU_ASSERT(room_grid -> gamerunning == off);
-        printf("\nRoom grid gamerunning successfully set to off.\n");
-    }
-    
-    hen -> chicken_cross_road = off;
-    CU_ASSERT(hen -> chicken_cross_road == off);
-    printf("\nHen chicken_cross_road successfully set to off.\n");
+        if(first_pass != 0){
+            room_grid -> gamerunning = off;
+            assert_test(room_grid -> gamerunning == off, "Room grid gamerunning successfully set to off.");
+        }
+        
+        hen -> chicken_cross_road = off;
+        assert_test(hen -> chicken_cross_road == off, "Hen chicken_cross_road successfully set to off.");
 
-    ++first_pass;
+        ++first_pass;
 
     }
 
     room_grid -> gamerunning = off;
-    CU_ASSERT(room_grid -> gamerunning == off);
-    printf("\nRoom grid gamerunning successfully registered as off.\n");
+    assert_test(room_grid -> gamerunning == off, "Room grid gamerunning successfully registered as off.");
 
     printf("\n");
 
@@ -663,15 +677,7 @@ void test_draw_room(void)
 
     printf("\n");
 
-    room_grid -> room_array = (int **)calloc((ROOM_Y) + 1, sizeof(int *));
-    CU_ASSERT(sizeof(room_grid -> room_array) == sizeof( (int **)calloc((ROOM_Y) + 1, sizeof(int *)) ) );
-    printf("\nDynamic memory for room grid room array successfully allocated.\n");
-
-    for (i = 0; i <= ROOM_Y; i++){
-        room_grid -> room_array[i] = (int *)calloc((ROOM_X) + 1, sizeof(int));
-        CU_ASSERT(sizeof(room_grid -> room_array[i]) == sizeof((int *)calloc((ROOM_X) + 1, sizeof(int))));
-    }
-    printf("\nMemory for room grid room array component successfully allocated.\n");
+    initialise_roomGrid_memory(room_grid);
 
     for (i = 0; i <= ROOM_Y; ++i){
         for (j = 0; j < ROOM_X; ++j){
@@ -705,9 +711,9 @@ void test_draw_room(void)
         }
     }
 
-    printf("\nAll rectangle components successfully set.\n");
+    printf("\nIf no errors above, all rectangle components successfully set.\n");
 
-    printf("\nAll cases of different possible room components checked.\n");
+    printf("\nIf no errors above, all cases of different possible room components checked.\n");
 
     printf("\n");
 }
@@ -732,21 +738,23 @@ void test_rcsrc_set(void)
 
 void rcsrc_set_case(int x_coord, int y_coord, int width, int height, roomGrid *room_grid)
 {
+    printf("\nConsidering source rectangle x coordinate %d.\n", x_coord);
     room_grid -> rc_src.x = x_coord;
-    CU_ASSERT(room_grid -> rc_src.x == x_coord);
-    printf("\nRoom grid source rectangle x coordinate successfully set to %d.\n", x_coord);
+    assert_test(room_grid -> rc_src.x == x_coord, "Room grid source rectangle x coordinate successfully set.");
 
+    printf("\nConsidering source rectangle y coordinate %d.\n", y_coord);
     room_grid -> rc_src.y = y_coord;
-    CU_ASSERT(room_grid -> rc_src.y == y_coord);
-    printf("\nRoom grid source rectangle y coordinate successfully set to %d.\n", y_coord);
+    assert_test(room_grid -> rc_src.y == y_coord, "Room grid source rectangle y coordinate successfully set.");
 
+    printf("\nConsidering source rectangle width %d.\n", width);
     room_grid -> rc_src.w = width;
-    CU_ASSERT(room_grid -> rc_src.w == width);
-    printf("\nRoom grid source rectangle width successfully set to %d.\n", width);
+    assert_test(room_grid -> rc_src.w == width, "Room grid source rectangle width successfully set.");
 
+    printf("\nConsidering source rectangle height %d.\n", height);
     room_grid -> rc_src.h = height;
-    CU_ASSERT(room_grid -> rc_src.h == height);
-    printf("\nRoom grid source rectangle height successfully set to %d.\n", height);
+    assert_test(room_grid -> rc_src.h == height, "Room grid source rectangle height successfully set.");
+
+    printf("\n");
 
 }
 
@@ -766,37 +774,39 @@ void test_rcobj_set(void)
 
 void rcobj_set_case(int x_coord, int y_coord, int width, int height, int dest_x, int dest_y, roomGrid *room_grid)
 {
-    room_grid -> rc_obj.x = x_coord;                     //the x-coordinate of the object on the tile sheet
-    CU_ASSERT(room_grid -> rc_obj.x == x_coord);
+    room_grid -> rc_obj.x = x_coord;
+    assert_test(room_grid -> rc_obj.x == x_coord, "SUCCESS.");
     printf("\nRoom grid object x coordinate successfully set to %d.\n", x_coord);
 
-    room_grid -> rc_obj.y = y_coord;                     //the y-coordiante of the object on the tile sheet
-    CU_ASSERT(room_grid -> rc_obj.y == y_coord);
+    room_grid -> rc_obj.y = y_coord;
+    assert_test(room_grid -> rc_obj.y == y_coord, "SUCCESS.");
     printf("\nRoom grid object y coordinate successfully set to %d.\n", y_coord);
 
-    room_grid -> rc_obj.w = width;                       //the height and width for objects are 64 normally, but really can be anything
-    CU_ASSERT(room_grid -> rc_obj.w == width);
+    room_grid -> rc_obj.w = width;
+    assert_test(room_grid -> rc_obj.w == width, "SUCCESS.");
     printf("\nRoom grid object width successfully set to %d.\n", width);
 
     room_grid -> rc_obj.h = height;
-    CU_ASSERT(room_grid -> rc_obj.h == height);
+    assert_test(room_grid -> rc_obj.h == height, "SUCCESS.");
     printf("\nRoom grid object height successfully set to %d.\n", height);
 
-    room_grid -> rc_obj_dest.x = dest_x;                 //the x-coordinate of the object on the game map; takes some trial and error to figure out
-    CU_ASSERT(room_grid -> rc_obj_dest.x == dest_x);
+    room_grid -> rc_obj_dest.x = dest_x;
+    assert_test(room_grid -> rc_obj_dest.x == dest_x, "SUCCESS.");
     printf("\nRoom grid object desination x coordinate successfully set to %d.\n", dest_x);
 
-    room_grid -> rc_obj_dest.y = dest_y;                 //the y-coordinate of the object on the game map;
-    CU_ASSERT(room_grid -> rc_obj_dest.y == dest_y);
+    room_grid -> rc_obj_dest.y = dest_y;
+    assert_test(room_grid -> rc_obj_dest.y == dest_y, "SUCCESS.");
     printf("\nRoom grid object desination y coordinate successfully set to %d.\n", dest_y);
 
-    room_grid -> rc_obj_dest.w = room_grid -> rc_obj.w;  //these are set to be the same so another value does not have to be passed
-    CU_ASSERT(room_grid -> rc_obj_dest.w == room_grid -> rc_obj.w);
+    room_grid -> rc_obj_dest.w = room_grid -> rc_obj.w;
+    assert_test(room_grid -> rc_obj_dest.w == room_grid -> rc_obj.w, "SUCCESS.");
     printf("\nRoom grid object desination width successfully set to %d.\n", room_grid -> rc_obj.w);
 
     room_grid -> rc_obj_dest.h = room_grid -> rc_obj.h;
-    CU_ASSERT(room_grid -> rc_obj_dest.h == room_grid -> rc_obj.h);
+    assert_test(room_grid -> rc_obj_dest.h == room_grid -> rc_obj.h, "SUCCESS.");
     printf("\nRoom grid object desination height successfully set to %d.\n", room_grid -> rc_obj.h);
+
+    printf("\n\n");
 
 }
 
@@ -811,84 +821,64 @@ void test_initialise_roomgrid_components(void)
     printf("\n");
 
     room_grid -> gamerunning = true;
-    CU_ASSERT(room_grid -> gamerunning == true);
-    printf("\nGame running successfully initialised to true.\n");
+    assert_test(room_grid -> gamerunning == true, "Game running successfully initialised to true.");
 
     puzzle -> puzzle_1_seen   = false;
-    CU_ASSERT(puzzle -> puzzle_1_seen  == false);
-    printf("\nFirst puzzle seen successfully initialised to false.\n");
+    assert_test(puzzle -> puzzle_1_seen  == false, "First puzzle seen successfully initialised to false.");
 
     puzzle -> puzzle_1_solved = false;
-    CU_ASSERT(puzzle -> puzzle_1_solved == false);
-    printf("\nFirst puzzle solved successfully initialised to false.\n");
+    assert_test(puzzle -> puzzle_1_solved == false, "First puzzle solved successfully initialised to false.");
 
     puzzle -> puzzle_2_seen   = false;
-    CU_ASSERT(puzzle -> puzzle_2_seen  == false);
-    printf("\nSecond puzzle seen successfully initialised to false.\n");
+    assert_test(puzzle -> puzzle_2_seen  == false, "Second puzzle seen successfully initialised to false.");
 
     puzzle -> puzzle_2_solved = false;
-    CU_ASSERT(puzzle -> puzzle_2_solved == false);
-    printf("\nSecond puzzle solved successfully initialised to false.\n");
+    assert_test(puzzle -> puzzle_2_solved == false, "Second puzzle solved successfully initialised to false.");
 
     puzzle -> puzzle_3_seen   = false;
-    CU_ASSERT(puzzle -> puzzle_3_seen  == false);
-    printf("\nThird puzzle seen successfully initialised to false.\n");
+    assert_test(puzzle -> puzzle_3_seen  == false, "Third puzzle seen successfully initialised to false.");
 
     puzzle -> puzzle_3_solved = false;
-    CU_ASSERT(puzzle -> puzzle_3_solved == false);
-    printf("\nThird puzzle solved successfully initialised to false.\n");
+    assert_test(puzzle -> puzzle_3_solved == false, "Third puzzle solved successfully initialised to false.");
 
     puzzle -> puzzle_4_seen   = false;
-    CU_ASSERT(puzzle -> puzzle_4_seen  == false);
-    printf("\nFourth puzzle seen successfully initialised to false.\n");
+    assert_test(puzzle -> puzzle_4_seen  == false, "Fourth puzzle seen successfully initialised to false.");
 
     puzzle -> puzzle_4_solved = false;
-    CU_ASSERT(puzzle -> puzzle_4_solved == false);
-    printf("\nFourth puzzle solved successfully initialised to false.\n");
+    assert_test(puzzle -> puzzle_4_solved == false, "Fourth puzzle solved successfully initialised to false.");
 
     puzzle -> puzzle_5_seen   = false;
-    CU_ASSERT(puzzle -> puzzle_5_seen  == false);
-    printf("\nFifth puzzle seen successfully initialised to false.\n");
+    assert_test(puzzle -> puzzle_5_seen  == false, "Fifth puzzle seen successfully initialised to false.");
 
     puzzle -> puzzle_5_solved = false;
-    CU_ASSERT(puzzle -> puzzle_5_solved == false);
-    printf("\nFifth puzzle solved successfully initialised to false.\n");
+    assert_test(puzzle -> puzzle_5_solved == false, "Fifth puzzle solved successfully initialised to false.");
 
     puzzle -> puzzle_6_seen   = false;
-    CU_ASSERT(puzzle -> puzzle_6_seen  == false);
-    printf("\nSixth puzzle seen successfully initialised to false.\n");
+    assert_test(puzzle -> puzzle_6_seen  == false, "Sixth puzzle seen successfully initialised to false.");
 
     puzzle -> puzzle_6_solved = false;
-    CU_ASSERT(puzzle -> puzzle_6_solved == false);
-    printf("\nSixth puzzle solved successfully initialised to false.\n");
+    assert_test(puzzle -> puzzle_6_solved == false, "Sixth puzzle solved successfully initialised to false.");
 
     puzzle -> player_has_a_weight = false;
-    CU_ASSERT(puzzle -> player_has_a_weight == false);
-    printf("\nPlayer has a weight successfully set to false.\n");
+    assert_test(puzzle -> player_has_a_weight == false, "Player has a weight successfully set to false.");
 
     puzzle -> player_has_b_weight = false;
-    CU_ASSERT(puzzle -> player_has_b_weight == false);
-    printf("\nPlayer has b weight successfully set to false.\n");
+    assert_test(puzzle -> player_has_b_weight == false, "Player has b weight successfully set to false.");
 
     puzzle -> a_weight_on_hinge = false;
-    CU_ASSERT(puzzle -> a_weight_on_hinge == false);
-    printf("\nThe a weight being on the hing successfully set to false.\n");
+    assert_test(puzzle -> a_weight_on_hinge == false, "The a weight being on the hing successfully set to false.");
 
     puzzle -> b_weight_on_hinge = false;
-    CU_ASSERT(puzzle -> b_weight_on_hinge == false);
-    printf("\nThe b weight being on the hing successfully set to false.\n");
+    assert_test(puzzle -> b_weight_on_hinge == false, "The b weight being on the hing successfully set to false.");
 
     room_grid -> paused = 0;
-    CU_ASSERT(room_grid -> paused == 0);
-    printf("\nRoom grid paused successfully set to off.\n");
+    assert_test(room_grid -> paused == 0, "Room grid paused successfully set to off.");
 
     room_grid -> left_x_coord = 0;
-    CU_ASSERT(room_grid -> left_x_coord == 0);
-    printf("\nRoom grid left x coordinate successfully set to 0.\n");
+    assert_test(room_grid -> left_x_coord == 0, "Room grid left x coordinate successfully set to 0.");
 
     room_grid -> bottom_y_coord = 0;
-    CU_ASSERT(room_grid -> bottom_y_coord == 0);
-    printf("\nRoom grid bottom y coordinate successfully set to 0.\n");
+    assert_test(room_grid -> bottom_y_coord == 0, "Room grid bottom y coordinate successfully set to 0.");
 
     room_grid -> top_y_coord = 0;
     assert_test(room_grid -> top_y_coord == 0, "Room grid top y coordinate successfully set to 0.");
@@ -2498,4 +2488,166 @@ void draw_edited_map_case(int input_add, int edit_previous, int input_remove, in
     edit.previous = input.add;
     assert_test(edit.previous == input.add, "Level editor set to not running and successfully exited.");
 
+}
+
+void test_configure_mouse(void)
+{
+    int excess, tx, *tile_x, ty, *tile_y, temp; 
+    input input;
+    cursor cursor; 
+    SDL_Rect cs, cd, ts, *cursor_src, *cursor_dst, *tile_src;
+
+    cursor_src = &cs;
+    cursor_dst = &cd;
+    tile_src = &ts;
+    tile_x = &tx;
+    tile_y = &ty;
+
+    printf("\n");
+
+    excess = input.mouse_x % TILE_SIZE;
+    assert_test(excess == input.mouse_x % TILE_SIZE, "Difference in x coordinate from tile centre successfully set.");
+
+    temp = input.mouse_x;
+    input.mouse_x = input.mouse_x - excess;
+    assert_test(input.mouse_x == temp - excess, "Mouse central x coordinate successfully set.");
+    
+    excess = input.mouse_y % TILE_SIZE;
+    assert_test(excess == input.mouse_y % TILE_SIZE, "Difference in y coordinate from tile centre successfully set.");
+
+    temp = input.mouse_y;
+    input.mouse_y = input.mouse_y - excess;
+    assert_test(input.mouse_y == temp - excess, "Mouse central y coordinate successfully set.");
+    
+    *tile_x = input.mouse_x / TILE_SIZE;
+    assert_test(*tile_x == input.mouse_x / TILE_SIZE, "Current tile x coordinate in array set.");
+
+    *tile_y = input.mouse_y / TILE_SIZE;
+    assert_test(*tile_y == input.mouse_y / TILE_SIZE, "Current tile y coordinate in array set.");
+    
+    cursor.x = input.mouse_x;
+    assert_test(cursor.x == input.mouse_x, "Current x coordinate matched to current tile array x coordinate.");
+
+    cursor.y = input.mouse_y;
+    assert_test(cursor.y == input.mouse_y, "Current y coordinate matched to current tile array y coordinate.");
+    
+    cursor_src->y = 0;
+    assert_test(cursor_src->y == 0, "Cursor src rectangle y coordinate initialised to zero.");
+
+    cursor_src->x = 0;
+    assert_test(cursor_src->x == 0, "Cursor src rectangle x coordinate initialised to zero.");
+
+    cursor_src->w = TILE_SIZE;
+    assert_test(cursor_src->w == TILE_SIZE, "Cursor src width set to tile size.");
+
+    cursor_src->h = TILE_SIZE;
+    assert_test(cursor_src->h == TILE_SIZE, "Cursor src height set to tile size.");
+    
+    cursor_dst->y = cursor.y;
+    assert_test(cursor_dst->y == cursor.y, "Cursor dst rectangle y coordinate initialise to zero.");
+
+    cursor_dst->x = cursor.x;
+    assert_test(cursor_dst->x == cursor.x, "Cursor dst rectangle x coordinate initialise to zero.");
+
+    cursor_dst->w = TILE_SIZE;
+    assert_test(cursor_dst->w == TILE_SIZE, "Cursor dst width set to tile size.");
+
+    cursor_dst->h = TILE_SIZE;
+    assert_test(cursor_dst->h == TILE_SIZE, "Cursor dst height set to tile size.");
+    
+    tile_src->y = 0;
+    assert_test(tile_src->y == 0, "Tile src rectangle y coordinate initialised to zero.");
+    
+    tile_src->x=0;
+    assert_test(tile_src->x == 0, "Tile src rectangle x coordinate initialised to zero.");
+    
+    tile_src->w=TILE_SIZE;
+    assert_test(tile_src->w == TILE_SIZE, "Tile src rectangle width set to tile size.");
+    
+    tile_src->h=TILE_SIZE;
+    assert_test(tile_src->h == TILE_SIZE, "Tile src rectangle height set to tile size.");
+
+    printf("\n");
+}
+
+void test_initialise_level_editor_map(void)
+{
+    int i, j, map_array[ROOM_Y][ROOM_X];
+
+    for (i = 0; i < ROOM_Y; ++i) {
+        for (j = 0; j < ROOM_X; ++j) {
+            map_array[i][j] = 0;
+            CU_ASSERT(map_array[i][j] == 0)
+        }
+    }
+
+    printf("\n\nNo errors indicates map successfully initialised to zero.\n\n");
+}
+
+void test_highlight_area(void)
+{
+    printf("\n");
+
+    highlight_area_case(new_game);
+
+    highlight_area_case(load_game);
+
+    highlight_area_case(options);
+
+    highlight_area_case(editor);
+
+    highlight_area_case(in_option_screen);
+
+    printf("\n");
+}
+
+void highlight_area_case(menu_options option)
+{
+    SDL_Rect tile_src, tile_drc;
+    menu_options current_selection = option;
+
+    if(current_selection == new_game){
+        assert_test(current_selection == new_game, "New game successfully registered.");
+
+        tile_src = (SDL_Rect) {333,442,143,31};
+        assert_test(sizeof(tile_src) == sizeof((SDL_Rect) {333,442,143,31}), "Source rectangle for new game successfully set.");
+        
+        tile_drc = (SDL_Rect) {333,472,143,31};
+        assert_test(sizeof(tile_drc) == sizeof((SDL_Rect) {333,472,143,31}), "Destination rectangle for new game successfully set.");
+    }
+    else if(current_selection == load_game){
+        assert_test(current_selection == load_game, "Load game successfully registered.");
+
+        tile_src = (SDL_Rect) {336,473,143,31};
+        assert_test(sizeof(tile_src) == sizeof((SDL_Rect) {336,473,143,31}), "Source rectangle for load game successfully set.");
+
+        tile_drc = (SDL_Rect) {336,504,143,31};
+        assert_test(sizeof(tile_src) == sizeof((SDL_Rect) {336,504,143,31}), "Destination rectangle for load game successfully set.");
+    }
+    else if(current_selection == options){
+        assert_test(current_selection == options, "Options successfully registered.");
+
+        tile_src = (SDL_Rect) {344,499,119,32};
+        assert_test(sizeof(tile_src) == sizeof((SDL_Rect) {344,499,119,32}), "Source rectangle for options successfully set.");
+
+        tile_drc = (SDL_Rect) {344,532,119,32};
+        assert_test(sizeof(tile_src) == sizeof((SDL_Rect) {344,532,119,32}), "Destination rectangle for options successfully set.");
+
+    }
+    else if(current_selection == editor){
+        assert_test(current_selection == editor, "Editor successfully registered.");
+
+        tile_src = (SDL_Rect) {331,526,140,30};
+        assert_test(sizeof(tile_src) == sizeof((SDL_Rect) {331,526,140,30}), "Source rectangle for editor successfully set.");
+
+        tile_drc = (SDL_Rect) {331,560,140,30};
+        assert_test(sizeof(tile_src) == sizeof((SDL_Rect) {331,560,140,30}), "Destination rectangle for editor successfully set.");
+    }
+
+    if(current_selection == new_game || current_selection == load_game || current_selection == options || current_selection == editor){
+        assert_test(current_selection == new_game || current_selection == load_game || current_selection == options || current_selection == editor, "Registered to be at some point on the main menu.");
+    }
+    else if(current_selection == in_option_screen){ 
+        assert_test(current_selection == in_option_screen, "In option screen registered.");       
+    }
 }

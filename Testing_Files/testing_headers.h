@@ -161,6 +161,16 @@ struct problem{
 };
 typedef struct problem problem;
 
+////////////////////////////                TESTING SPECIFIC
+
+enum event {quit = 1, mousebutton = 2, keydown = 3};
+typedef enum event event;
+
+enum key {escape_key = 1, space_key = 2};
+typedef enum key key;
+
+//////////////////////////// 
+
 //                                          FUNCTION PROTOTYPES
 
 int initialise_CUnit(CU_pSuite *pSuite, char *suite_name);
@@ -170,6 +180,8 @@ int close_CUnit(void);
 void set_up_test(char *suite_name, char *test_name, CU_TestFunc function);
 
 void assert_test(int test, char *message);
+
+void string_equal_test(char *string_one, char *string_two, char *message);
 
 void test_makeRoom(void);
 
@@ -188,6 +200,8 @@ void get_instructions_case(char *instructions_list, char *filename);
 void test_print_instruction_to_screen(void);
 
 void test_SDL_events(void);
+
+void initialise_message(int event, int key);
 
 void SDL_event_case(int event, int key);
 
@@ -333,3 +347,11 @@ void test_level_editor(void);
 void test_draw_edited_map(void);
 
 void draw_edited_map_case(int input_add, int edit_previous, int input_remove, int map_array[ROOM_Y][ROOM_X], Edit edit, input input);
+
+void test_configure_mouse(void);
+
+void test_initialise_level_editor_map(void);
+
+void test_highlight_area(void);
+
+void highlight_area_case(menu_options option);

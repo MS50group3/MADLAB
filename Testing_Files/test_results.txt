@@ -9,7 +9,7 @@ Suite: Make Room Suite
 
 No memory for room grid allocation correctly identified.
 
-Room grid room array successfully integrated to zero.
+Room grid room array successfully initialised to zero.
 
 Dynamic memory for room grid room array successfully allocated.
 
@@ -40,11 +40,11 @@ Room grid finished index correctly initialised to off.
 
 Room grid problem indicator index correctly initialised to off.
 
-Instructions correctly sent through for printing
+Instructions correctly sent through for printing.
 
 Problem quitter set to on.
 
-Instructions correctly not sent through for printing
+Instructions correctly not sent through for printing.
 
 passed
 
@@ -63,129 +63,253 @@ Elapsed time =    0.000 seconds
 Suite: Get Instructions Suite
   Test: Test of get_instructions() ...
 
-Instruction 0 successfully set to MadLab.
+Currently considering instruction 0: MadLab.
 
-Instruction 1 successfully set to Where_am_I.
+Instruction successfully allocated.
 
-Instruction 2 successfully set to looks_like.
+Currently considering instruction 1: Where_am_I.
 
-Instruction 3 successfully set to door_locked.
+Instruction successfully allocated.
 
-Instruction 4 successfully set to shenanigans.
+Currently considering instruction 2: looks_like.
 
-Instruction 5 successfully set to neill_shenanigans.
+Instruction successfully allocated.
 
-Instruction 6 successfully set to maybe_if_I.
+Currently considering instruction 3: door_locked.
 
-Instruction 7 successfully set to press_spacebar.
+Instruction successfully allocated.
 
-Instruction 8 successfully set to find_neill.
+Currently considering instruction 4: shenanigans.
 
-Instruction 9 successfully set to lets_go.
+Instruction successfully allocated.
 
-Instruction 10 successfully set to neill_note.
+Currently considering instruction 5: neill_shenanigans.
 
-Instruction 11 successfully set to coding_stuff.
+Instruction successfully allocated.
 
-Instruction 12 successfully set to door_jammed.
+Currently considering instruction 6: maybe_if_I.
 
-Instruction 13 successfully set to room_too_hot.
+Instruction successfully allocated.
 
-Instruction 14 successfully set to using_some_code.
+Currently considering instruction 7: press_spacebar.
 
-Instruction 15 successfully set to number.
+Instruction successfully allocated.
 
-Instruction 16 successfully set to less_than_ten.
+Currently considering instruction 8: find_neill.
 
-Instruction 17 successfully set to but_if_we_have.
+Instruction successfully allocated.
 
-Instruction 18 successfully set to greater_ten.
+Currently considering instruction 9: lets_go.
 
-Instruction 19 successfully set to number_eq_eq_ten.
+Instruction successfully allocated.
 
-Instruction 20 successfully set to number_is_ten.
+Currently considering instruction 10: neill_note.
 
-Instruction 21 successfully set to useful_later.
+Instruction successfully allocated.
 
-Instruction 22 successfully set to fan_on_wall.
+Currently considering instruction 11: coding_stuff.
 
-Instruction 23 successfully set to cool_down_room.
+Instruction successfully allocated.
 
-Instruction 24 successfully set to control_panel.
+Currently considering instruction 12: door_jammed.
 
-Instruction 25 successfully set to neill_notes.
+Instruction successfully allocated.
 
-Instruction 26 successfully set to change_temp.
+Currently considering instruction 13: room_too_hot.
 
-Instruction 27 successfully set to that_worked.
+Instruction successfully allocated.
 
-Instruction 28 successfully set to room_cooling.
+Currently considering instruction 14: using_some_code.
 
-Instruction 29 successfully set to door_still_locked.
+Instruction successfully allocated.
 
-Instruction 30 successfully set to work_out.
+Currently considering instruction 15: number.
 
-Instruction 31 successfully set to code_is_five.
+Instruction successfully allocated.
 
-Instruction 32 successfully set to binary.
+Currently considering instruction 16: less_than_ten.
 
-Instruction 33 successfully set to info_here.
+Instruction successfully allocated.
 
-Instruction 34 successfully set to bin_notes.
+Currently considering instruction 17: but_if_we_have.
 
-Instruction 35 successfully set to door_open.
+Instruction successfully allocated.
 
-Instruction 36 successfully set to chicken_in_here.
+Currently considering instruction 18: greater_ten.
 
-Instruction 37 successfully set to leave_it_alone.
+Instruction successfully allocated.
 
-Instruction 38 successfully set to come_back_let_it_out.
+Currently considering instruction 19: number_eq_eq_ten.
 
-Instruction 39 successfully set to latch_loose.
+Instruction successfully allocated.
 
-Instruction 40 successfully set to got_out.
+Currently considering instruction 20: number_is_ten.
 
-Instruction 41 successfully set to eggfault.
+Instruction successfully allocated.
 
-Instruction 42 successfully set to door_still_locked.
+Currently considering instruction 21: useful_later.
 
-Instruction 43 successfully set to oh_my_word.
+Instruction successfully allocated.
 
-Instruction 44 successfully set to hinge_sticks.
+Currently considering instruction 22: fan_on_wall.
 
-Instruction 45 successfully set to x_part_hinge.
+Instruction successfully allocated.
 
-Instruction 46 successfully set to swing_open.
+Currently considering instruction 23: cool_down_room.
 
-Instruction 47 successfully set to x_eq_five.
+Instruction successfully allocated.
 
-Instruction 48 successfully set to two_weights.
+Currently considering instruction 24: control_panel.
 
-Instruction 49 successfully set to a_weight_b_weight.
+Instruction successfully allocated.
 
-Instruction 50 successfully set to a_eq_b_eq.
+Currently considering instruction 25: neill_notes.
 
-Instruction 51 successfully set to go_find.
+Instruction successfully allocated.
 
-Instruction 52 successfully set to finally_get_out.
+Currently considering instruction 26: change_temp.
 
-Instruction 53 successfully set to a_weight.
+Instruction successfully allocated.
 
-Instruction 54 successfully set to put_by_door.
+Currently considering instruction 27: that_worked.
 
-Instruction 55 successfully set to found_b.
+Instruction successfully allocated.
 
-Instruction 56 successfully set to put_on_door_hinge.
+Currently considering instruction 28: room_cooling.
 
-Instruction 57 successfully set to a_weight_on_hinge.
+Instruction successfully allocated.
 
-Instruction 58 successfully set to b_weight_on_hinge.
+Currently considering instruction 29: door_still_locked.
 
-Instruction 59 successfully set to both_weights.
+Instruction successfully allocated.
 
-Instruction 60 successfully set to x_is_eq.
+Currently considering instruction 30: work_out.
 
-Instruction 61 successfully set to door_finally_open.
+Instruction successfully allocated.
+
+Currently considering instruction 31: code_is_five.
+
+Instruction successfully allocated.
+
+Currently considering instruction 32: binary.
+
+Instruction successfully allocated.
+
+Currently considering instruction 33: info_here.
+
+Instruction successfully allocated.
+
+Currently considering instruction 34: bin_notes.
+
+Instruction successfully allocated.
+
+Currently considering instruction 35: door_open.
+
+Instruction successfully allocated.
+
+Currently considering instruction 36: chicken_in_here.
+
+Instruction successfully allocated.
+
+Currently considering instruction 37: leave_it_alone.
+
+Instruction successfully allocated.
+
+Currently considering instruction 38: come_back_let_it_out.
+
+Instruction successfully allocated.
+
+Currently considering instruction 39: latch_loose.
+
+Instruction successfully allocated.
+
+Currently considering instruction 40: got_out.
+
+Instruction successfully allocated.
+
+Currently considering instruction 41: eggfault.
+
+Instruction successfully allocated.
+
+Currently considering instruction 42: door_still_locked.
+
+Instruction successfully allocated.
+
+Currently considering instruction 43: oh_my_word.
+
+Instruction successfully allocated.
+
+Currently considering instruction 44: hinge_sticks.
+
+Instruction successfully allocated.
+
+Currently considering instruction 45: x_part_hinge.
+
+Instruction successfully allocated.
+
+Currently considering instruction 46: swing_open.
+
+Instruction successfully allocated.
+
+Currently considering instruction 47: x_eq_five.
+
+Instruction successfully allocated.
+
+Currently considering instruction 48: two_weights.
+
+Instruction successfully allocated.
+
+Currently considering instruction 49: a_weight_b_weight.
+
+Instruction successfully allocated.
+
+Currently considering instruction 50: a_eq_b_eq.
+
+Instruction successfully allocated.
+
+Currently considering instruction 51: go_find.
+
+Instruction successfully allocated.
+
+Currently considering instruction 52: finally_get_out.
+
+Instruction successfully allocated.
+
+Currently considering instruction 53: a_weight.
+
+Instruction successfully allocated.
+
+Currently considering instruction 54: put_by_door.
+
+Instruction successfully allocated.
+
+Currently considering instruction 55: found_b.
+
+Instruction successfully allocated.
+
+Currently considering instruction 56: put_on_door_hinge.
+
+Instruction successfully allocated.
+
+Currently considering instruction 57: a_weight_on_hinge.
+
+Instruction successfully allocated.
+
+Currently considering instruction 58: b_weight_on_hinge.
+
+Instruction successfully allocated.
+
+Currently considering instruction 59: both_weights.
+
+Instruction successfully allocated.
+
+Currently considering instruction 60: x_is_eq.
+
+Instruction successfully allocated.
+
+Currently considering instruction 61: door_finally_open.
+
+Instruction successfully allocated.
 
 passed
 
@@ -194,7 +318,7 @@ Run Summary:    Type  Total    Ran Passed Failed Inactive
                tests      1      1      1      0        0
              asserts     62     62     62      0      n/a
 
-Elapsed time =    0.000 seconds
+Elapsed time =    0.001 seconds
 
 
      CUnit - A unit testing framework for C - Version 2.1-2
@@ -220,20 +344,16 @@ File folder succesfully copied into filepath.
 
 Filename and folder succesfully set for filename.
 
-
-Instructions/arbitrary.bmp
-
-
 Filename and folder with extension succesfully set for filename.
 
-filename variable successfully freed.
-FAILED
-    1. testing_functions.c:435  - filename == NULL
+Filename variable successfully freed.
+
+passed
 
 Run Summary:    Type  Total    Ran Passed Failed Inactive
               suites      1      1    n/a      0        0
-               tests      1      1      0      1        0
-             asserts     10     10      9      1      n/a
+               tests      1      1      1      0        0
+             asserts     10     10     10      0      n/a
 
 Elapsed time =    0.000 seconds
 
@@ -245,49 +365,118 @@ Elapsed time =    0.000 seconds
 Suite: SDL Events Suite
   Test: Test of SDL_Events() ...
 
-Invalid event successfully caught.
+Event has been set to undefined.
+
+Key has been set to undefined.
 
 Invalid event successfully caught.
 
-Invalid event successfully caught.
+
+Event has been set to undefined.
+
+Key has been set to escape_key.
 
 Invalid event successfully caught.
+
+
+Event has been set to undefined.
+
+Key has been set to space_key.
+
+Invalid event successfully caught.
+
+
+Event has been set to undefined.
+
+Key has been set to undefined.
+
+Invalid event successfully caught.
+
+
+Event has been set to quit.
+
+Key has been set to undefined.
 
 SDL_QUIT successfully recognised.
 
 Room grid finished indicator successfully set to on.
 
-SDL_QUIT successfully recognised.
 
-Room grid finished indicator successfully set to on.
+Event has been set to quit.
 
-SDL_QUIT successfully recognised.
-
-Room grid finished indicator successfully set to on.
+Key has been set to escape_key.
 
 SDL_QUIT successfully recognised.
 
 Room grid finished indicator successfully set to on.
 
+
+Event has been set to quit.
+
+Key has been set to space_key.
+
+SDL_QUIT successfully recognised.
+
+Room grid finished indicator successfully set to on.
+
+
+Event has been set to quit.
+
+Key has been set to undefined.
+
+SDL_QUIT successfully recognised.
+
+Room grid finished indicator successfully set to on.
+
+
+Event has been set to mousebutton.
+
+Key has been set to undefined.
+
 SDL_MOUSEBUTTON successfully recognised.
 
 Room grid skip checker indicator successfully set to on.
 
-SDL_MOUSEBUTTON successfully recognised.
 
-Room grid skip checker indicator successfully set to on.
+Event has been set to mousebutton.
 
-SDL_MOUSEBUTTON successfully recognised.
-
-Room grid skip checker indicator successfully set to on.
+Key has been set to escape_key.
 
 SDL_MOUSEBUTTON successfully recognised.
 
 Room grid skip checker indicator successfully set to on.
+
+
+Event has been set to mousebutton.
+
+Key has been set to space_key.
+
+SDL_MOUSEBUTTON successfully recognised.
+
+Room grid skip checker indicator successfully set to on.
+
+
+Event has been set to mousebutton.
+
+Key has been set to undefined.
+
+SDL_MOUSEBUTTON successfully recognised.
+
+Room grid skip checker indicator successfully set to on.
+
+
+Event has been set to keydown.
+
+Key has been set to undefined.
 
 SDL_KEYDOWN successfully recognised.
 
 Invalid key pressed successfully caught.
+
+
+Event has been set to keydown.
+
+Key has been set to escape_key.
 
 SDL_KEYDOWN successfully recognised.
 
@@ -295,21 +484,51 @@ SDLK_ESCAPE successfully recognised.
 
 Room grid problem quitter indicator successfully set to on.
 
+
+Event has been set to keydown.
+
+Key has been set to space_key.
+
 SDL_KEYDOWN successfully recognised.
 
 SDLK_SPACE successfully recognised.
 
 Room grid skip checker indicator successfully set to on.
 
+
+Event has been set to keydown.
+
+Key has been set to undefined.
+
 SDL_KEYDOWN successfully recognised.
 
 Invalid key pressed successfully caught.
 
-Invalid event successfully caught.
+
+Event has been set to undefined.
+
+Key has been set to undefined.
 
 Invalid event successfully caught.
 
+
+Event has been set to undefined.
+
+Key has been set to escape_key.
+
 Invalid event successfully caught.
+
+
+Event has been set to undefined.
+
+Key has been set to space_key.
+
+Invalid event successfully caught.
+
+
+Event has been set to undefined.
+
+Key has been set to undefined.
 
 Invalid event successfully caught.
 
@@ -320,7 +539,7 @@ Run Summary:    Type  Total    Ran Passed Failed Inactive
                tests      1      1      1      0        0
              asserts     34     34     34      0      n/a
 
-Elapsed time =    0.000 seconds
+Elapsed time =    0.001 seconds
 
 
      CUnit - A unit testing framework for C - Version 2.1-2
@@ -338,6 +557,7 @@ Room grid problem quitter successfully set to off.
 
 Terminating clause for look for action correctly registered.
 
+
 Room grid successfully set to zero.
 
 Room grid skip checker successfully set to on.
@@ -345,6 +565,7 @@ Room grid skip checker successfully set to on.
 Room grid problem quitter successfully set to off.
 
 Terminating clause for look for action correctly registered.
+
 
 Room grid successfully set to zero.
 
@@ -354,6 +575,7 @@ Room grid problem quitter successfully set to on.
 
 Terminating clause for look for action correctly registered.
 
+
 Room grid successfully set to zero.
 
 Room grid skip checker successfully set to on.
@@ -361,6 +583,7 @@ Room grid skip checker successfully set to on.
 Room grid problem quitter successfully set to on.
 
 Terminating clause for look for action correctly registered.
+
 
 passed
 
@@ -383,9 +606,11 @@ Room grid finished indicator successfully set to on.
 
 Room grid finished indicator successfully registered as on.
 
+
 Room grid finished indicator successfully set to off.
 
 Room grid finished indicator successfully registered as off.
+
 
 passed
 
@@ -441,9 +666,9 @@ Dynamic memory for room grid room array successfully allocated.
 
 Memory for room grid room array component successfully allocated.
 
-All rectangle components successfully set.
+If no errors above, all rectangle components successfully set.
 
-All cases of different possible room components checked.
+If no errors above, all cases of different possible room components checked.
 
 passed
 
@@ -462,37 +687,73 @@ Elapsed time =    0.000 seconds
 Suite: Rectangle Source Set Suite
   Test: Test of rcsrc_set() ...
 
-Room grid source rectangle x coordinate successfully set to 34.
+Considering source rectangle x coordinate 34.
 
-Room grid source rectangle y coordinate successfully set to 138.
+Room grid source rectangle x coordinate successfully set.
 
-Room grid source rectangle width successfully set to 32.
+Considering source rectangle y coordinate 138.
 
-Room grid source rectangle height successfully set to 32.
+Room grid source rectangle y coordinate successfully set.
 
-Room grid source rectangle x coordinate successfully set to 3.
+Considering source rectangle width 32.
 
-Room grid source rectangle y coordinate successfully set to 174.
+Room grid source rectangle width successfully set.
 
-Room grid source rectangle width successfully set to 31.
+Considering source rectangle height 32.
 
-Room grid source rectangle height successfully set to 31.
+Room grid source rectangle height successfully set.
 
-Room grid source rectangle x coordinate successfully set to 71.
 
-Room grid source rectangle y coordinate successfully set to 138.
+Considering source rectangle x coordinate 3.
 
-Room grid source rectangle width successfully set to 32.
+Room grid source rectangle x coordinate successfully set.
 
-Room grid source rectangle height successfully set to 32.
+Considering source rectangle y coordinate 174.
 
-Room grid source rectangle x coordinate successfully set to 0.
+Room grid source rectangle y coordinate successfully set.
 
-Room grid source rectangle y coordinate successfully set to 138.
+Considering source rectangle width 31.
 
-Room grid source rectangle width successfully set to 32.
+Room grid source rectangle width successfully set.
 
-Room grid source rectangle height successfully set to 32.
+Considering source rectangle height 31.
+
+Room grid source rectangle height successfully set.
+
+
+Considering source rectangle x coordinate 71.
+
+Room grid source rectangle x coordinate successfully set.
+
+Considering source rectangle y coordinate 138.
+
+Room grid source rectangle y coordinate successfully set.
+
+Considering source rectangle width 32.
+
+Room grid source rectangle width successfully set.
+
+Considering source rectangle height 32.
+
+Room grid source rectangle height successfully set.
+
+
+Considering source rectangle x coordinate 0.
+
+Room grid source rectangle x coordinate successfully set.
+
+Considering source rectangle y coordinate 138.
+
+Room grid source rectangle y coordinate successfully set.
+
+Considering source rectangle width 32.
+
+Room grid source rectangle width successfully set.
+
+Considering source rectangle height 32.
+
+Room grid source rectangle height successfully set.
+
 
 passed
 
@@ -511,37 +772,73 @@ Elapsed time =    0.000 seconds
 Suite: Rectangle Object Set Suite
   Test: Test of rcobj_set() ...
 
+SUCCESS.
+
 Room grid object x coordinate successfully set to 264.
+
+SUCCESS.
 
 Room grid object y coordinate successfully set to 63.
 
+SUCCESS.
+
 Room grid object width successfully set to 64.
 
+SUCCESS.
+
 Room grid object height successfully set to 64.
+
+SUCCESS.
 
 Room grid object desination x coordinate successfully set to 0.
 
+SUCCESS.
+
 Room grid object desination y coordinate successfully set to 0.
+
+SUCCESS.
 
 Room grid object desination width successfully set to 64.
 
+SUCCESS.
+
 Room grid object desination height successfully set to 64.
+
+
+
+SUCCESS.
 
 Room grid object x coordinate successfully set to 0.
 
+SUCCESS.
+
 Room grid object y coordinate successfully set to 62.
+
+SUCCESS.
 
 Room grid object width successfully set to 64.
 
+SUCCESS.
+
 Room grid object height successfully set to 64.
+
+SUCCESS.
 
 Room grid object desination x coordinate successfully set to 737.
 
+SUCCESS.
+
 Room grid object desination y coordinate successfully set to 318.
+
+SUCCESS.
 
 Room grid object desination width successfully set to 64.
 
+SUCCESS.
+
 Room grid object desination height successfully set to 64.
+
+
 
 passed
 
@@ -4124,7 +4421,7 @@ Run Summary:    Type  Total    Ran Passed Failed Inactive
                tests      1      1      1      0        0
              asserts   1626   1626   1626      0      n/a
 
-Elapsed time =    0.010 seconds
+Elapsed time =    0.008 seconds
 
 
      CUnit - A unit testing framework for C - Version 2.1-2
@@ -4416,5 +4713,1143 @@ Run Summary:    Type  Total    Ran Passed Failed Inactive
               suites      1      1    n/a      0        0
                tests      1      1      1      0        0
              asserts     58     58     58      0      n/a
+
+Elapsed time =    0.000 seconds
+
+
+     CUnit - A unit testing framework for C - Version 2.1-2
+     http://cunit.sourceforge.net/
+
+
+Suite: Door Hinge Problem Suite
+  Test: Test of door_hinge_problem() ...
+Puzzle 2 successfully registered as unseen.
+
+Puzzle 2 successfully set as seen.
+
+Puzzle 2 successfully registered as unseen.
+
+Puzzle 2 successfully set as seen.
+
+Player successfully registered as having b weight.
+
+Weight b taken from player.
+
+Weight b put on hinge.
+
+Puzzle 2 successfully registered as unseen.
+
+Puzzle 2 successfully set as seen.
+
+Player successfully registered as having a weight.
+
+Weight a taken from player.
+
+Weight a put on hinge.
+
+Both weights successfully put on hinge.
+
+Puzzle 2 successfully registered as unseen.
+
+Puzzle 2 successfully set as seen.
+
+Player successfully registered as having a weight.
+
+Weight a taken from player.
+
+Weight a put on hinge.
+
+Player successfully registered as having b weight.
+
+Weight b taken from player.
+
+Weight b put on hinge.
+
+Both weights successfully put on hinge.
+
+Both weights successfully put on hinge.
+
+Player successfully registered as having b weight.
+
+Weight b taken from player.
+
+Weight b put on hinge.
+
+Both weights successfully put on hinge.
+
+Player successfully registered as having a weight.
+
+Weight a taken from player.
+
+Weight a put on hinge.
+
+Both weights successfully put on hinge.
+
+Player successfully registered as having a weight.
+
+Weight a taken from player.
+
+Weight a put on hinge.
+
+Player successfully registered as having b weight.
+
+Weight b taken from player.
+
+Weight b put on hinge.
+
+Both weights successfully put on hinge.
+passed
+
+Run Summary:    Type  Total    Ran Passed Failed Inactive
+              suites      1      1    n/a      0        0
+               tests      1      1      1      0        0
+             asserts     38     38     38      0      n/a
+
+Elapsed time =    0.000 seconds
+
+
+     CUnit - A unit testing framework for C - Version 2.1-2
+     http://cunit.sourceforge.net/
+
+
+Suite: Find a Weight Suite
+  Test: Test of find_weight_a() ...
+
+Puzzle 4 set as unseen.
+
+Puzzle 4 successfully registered as unseen.
+
+Weight a given to player.
+
+Puzzle 4 successfully set to seen.
+
+Puzzle 4 set as seen, no messages should register below.
+
+passed
+
+Run Summary:    Type  Total    Ran Passed Failed Inactive
+              suites      1      1    n/a      0        0
+               tests      1      1      1      0        0
+             asserts      3      3      3      0      n/a
+
+Elapsed time =    0.000 seconds
+
+
+     CUnit - A unit testing framework for C - Version 2.1-2
+     http://cunit.sourceforge.net/
+
+
+Suite: Find b Weight Suite
+  Test: Test of find_weight_b() ...
+
+Puzzle 6 set as unseen.
+
+Puzzle 6 successfully registered as unseen.
+
+Weight b given to player.
+
+Puzzle 6 successfully set to seen.
+
+Puzzle 6 set as seen, no messages should register below.
+
+passed
+
+Run Summary:    Type  Total    Ran Passed Failed Inactive
+              suites      1      1    n/a      0        0
+               tests      1      1      1      0        0
+             asserts      3      3      3      0      n/a
+
+Elapsed time =    0.000 seconds
+
+
+     CUnit - A unit testing framework for C - Version 2.1-2
+     http://cunit.sourceforge.net/
+
+
+Suite: Hen Sequence Suite
+  Test: Test of hen_sequence() ...
+
+Interaction counter currently at: 0.
+
+Interaction counter successfully identified as 0.
+
+Interaction counter incremented by one.
+
+Interaction counter currently at: 1.
+
+Interaction counter successfully identified as 1.
+
+Interaction counter incremented by one.
+
+Interaction counter currently at: 2.
+
+Interaction counter successfully identified as 2 and hen not been released.
+
+Interaction counter incremented by one.
+
+Hen counted as released, 2 registered but no messages should display below.
+
+Interaction counter currently at: 2.
+
+passed
+
+Run Summary:    Type  Total    Ran Passed Failed Inactive
+              suites      1      1    n/a      0        0
+               tests      1      1      1      0        0
+             asserts      7      7      7      0      n/a
+
+Elapsed time =    0.000 seconds
+
+
+     CUnit - A unit testing framework for C - Version 2.1-2
+     http://cunit.sourceforge.net/
+
+
+Suite: Initialise Problem Suite
+  Test: Test of initialise_problem() ...
+
+Corect answer correctly initialised.
+
+Starting number for first set of instructions correctly set.
+
+Finishing number for first set of instructions correctly set.
+
+Finishing number for second set of instructions correctly set.
+
+Number of characters in answer correctly initialised.
+
+passed
+
+Run Summary:    Type  Total    Ran Passed Failed Inactive
+              suites      1      1    n/a      0        0
+               tests      1      1      1      0        0
+             asserts      5      5      5      0      n/a
+
+Elapsed time =    0.000 seconds
+
+
+     CUnit - A unit testing framework for C - Version 2.1-2
+     http://cunit.sourceforge.net/
+
+
+Suite: Permit Chicken Suite
+  Test: Test of permit_chicken() ...
+
+Chicken direction set to left.
+
+Chicken direction recognised as left.
+
+The chicken has been registered to be at an irregular x location.
+
+Chicken direction set to right.
+
+Chicken direction recognised as right.
+
+The chicken has been registered to be at an irregular x location.
+
+Chicken direction set to up.
+
+Chicken direction recognised as up.
+
+The chicken has been moved up.
+
+Chicken direction set to down.
+
+Chicken direction recognised as down.
+
+The chicken has been moved down.
+
+Chicken direction set to left.
+
+Chicken direction recognised as left.
+
+The chicken has been moved left.
+
+Chicken direction set to right.
+
+Chicken direction recognised as right.
+
+The chicken has been moved right.
+
+Chicken direction set to up.
+
+Chicken direction recognised as up.
+
+The chicken has been moved up.
+
+Chicken direction set to down.
+
+Chicken direction recognised as down.
+
+The chicken has been moved down.
+
+passed
+
+Run Summary:    Type  Total    Ran Passed Failed Inactive
+              suites      1      1    n/a      0        0
+               tests      1      1      1      0        0
+             asserts     16     16     16      0      n/a
+
+Elapsed time =    0.000 seconds
+
+
+     CUnit - A unit testing framework for C - Version 2.1-2
+     http://cunit.sourceforge.net/
+
+
+Suite: Chicken Help Suite
+  Test: Test of chicken_help() ...
+
+The chicken has been successfully orientated.
+
+passed
+
+Run Summary:    Type  Total    Ran Passed Failed Inactive
+              suites      1      1    n/a      0        0
+               tests      1      1      1      0        0
+             asserts      1      1      1      0      n/a
+
+Elapsed time =    0.000 seconds
+
+
+     CUnit - A unit testing framework for C - Version 2.1-2
+     http://cunit.sourceforge.net/
+
+
+Suite: Chicken Direction Suite
+  Test: Test of chicken_direction() ...
+
+The chicken direction has been successfully registered as left.
+
+The chicken has successfully been moved left.
+
+The chicken direction has been successfully registered as right.
+
+The chicken has successfully been moved right.
+
+The chicken direction has been successfully registered as up.
+
+The chicken has successfully been moved up.
+
+The chicken direction has been successfully registered as down.
+
+The chicken has successfully been moved down.
+
+passed
+
+Run Summary:    Type  Total    Ran Passed Failed Inactive
+              suites      1      1    n/a      0        0
+               tests      1      1      1      0        0
+             asserts      8      8      8      0      n/a
+
+Elapsed time =    0.000 seconds
+
+
+     CUnit - A unit testing framework for C - Version 2.1-2
+     http://cunit.sourceforge.net/
+
+
+Suite: Chicken Edge Detection Suite
+  Test: Test of chicken_edge_detection() ...
+
+The left edge has successfully been identified.
+
+The chicken has been repositioned to be at the left edge.
+
+The chicken direction has been changed to be facing right.
+
+The top edge has successfully been identified.
+
+The chicken has been repositioned to be at the top edge.
+
+The chicken direction has been changed to be facing down.
+
+The left edge has successfully been identified.
+
+The chicken has been repositioned to be at the left edge.
+
+The chicken direction has been changed to be facing right.
+
+The bottom edge has successfully been identified.
+
+The chicken has been repositioned to be at the bottom edge.
+
+The chicken direction has been changed to be facing up.
+
+The right edge has successfully been identified.
+
+The chicken has been repositioned to be at the right edge.
+
+The chicken direction has been changed to be facing left.
+
+The top edge has successfully been identified.
+
+The chicken has been repositioned to be at the top edge.
+
+The chicken direction has been changed to be facing down.
+
+The right edge has successfully been identified.
+
+The chicken has been repositioned to be at the right edge.
+
+The chicken direction has been changed to be facing left.
+
+The bottom edge has successfully been identified.
+
+The chicken has been repositioned to be at the bottom edge.
+
+The chicken direction has been changed to be facing up.
+
+passed
+
+Run Summary:    Type  Total    Ran Passed Failed Inactive
+              suites      1      1    n/a      0        0
+               tests      1      1      1      0        0
+             asserts     24     24     24      0      n/a
+
+Elapsed time =    0.000 seconds
+
+
+     CUnit - A unit testing framework for C - Version 2.1-2
+     http://cunit.sourceforge.net/
+
+
+Suite: Eggfault Suite
+  Test: Test of eggfault() ...
+
+The chicken centre x coordinate has been successfully set.
+
+The chicken centre y coordinate has been successfully set.
+
+The sprite centre x coordinate has been successfully set.
+
+The sprite centre y coordinate has been successfully set.
+
+The chicken and sprite have been detected to be at the same place.
+
+The game has been successfully closed.
+
+The chicken centre x coordinate has been successfully set.
+
+The chicken centre y coordinate has been successfully set.
+
+The sprite centre x coordinate has been successfully set.
+
+The sprite centre y coordinate has been successfully set.
+
+The chicken and sprite have been detected to be at the same place.
+
+The game has been successfully closed.
+
+passed
+
+Run Summary:    Type  Total    Ran Passed Failed Inactive
+              suites      1      1    n/a      0        0
+               tests      1      1      1      0        0
+             asserts     12     12     12      0      n/a
+
+Elapsed time =    0.000 seconds
+
+
+     CUnit - A unit testing framework for C - Version 2.1-2
+     http://cunit.sourceforge.net/
+
+
+Suite: Change Chicken Direction Suite
+  Test: Test of changeChickenDirection() ...
+
+The chicken direction has been successfully registered to be left.
+
+The new chicken direction has been successfully registered to be up.
+
+The chicken direction has been successfully registered as not left.
+
+The chicken has been rotated ninety degrees.
+
+The chicken direction has been successfully registered as not left.
+
+The chicken has been rotated ninety degrees.
+
+The chicken direction has been successfully registered as not left.
+
+The chicken has been rotated ninety degrees.
+
+passed
+
+Run Summary:    Type  Total    Ran Passed Failed Inactive
+              suites      1      1    n/a      0        0
+               tests      1      1      1      0        0
+             asserts      8      8      8      0      n/a
+
+Elapsed time =    0.000 seconds
+
+
+     CUnit - A unit testing framework for C - Version 2.1-2
+     http://cunit.sourceforge.net/
+
+
+Suite: Problem Generator Suite
+  Test: Test of problem_generator() ...
+
+The room grid has been set to have been paused.
+
+Problem being unsolved has been registered.
+
+User not having skipped the scene has been registered
+
+User skipping cutscene set to on.
+
+Cutscene skipping has been registered.
+
+User solving puzzle has been registered.
+
+Problem quitter not on, remaining cutscene played.
+
+passed
+
+Run Summary:    Type  Total    Ran Passed Failed Inactive
+              suites      1      1    n/a      0        0
+               tests      1      1      1      0        0
+             asserts      7      7      7      0      n/a
+
+Elapsed time =    0.000 seconds
+
+
+     CUnit - A unit testing framework for C - Version 2.1-2
+     http://cunit.sourceforge.net/
+
+
+Suite: Free Room Array Suite
+  Test: Test of free_room_array() ...
+
+Dynamic memory for room grid room array successfully allocated.
+
+Memory for room grid room array component successfully allocated.
+
+Room array successfully freed.
+
+passed
+
+Run Summary:    Type  Total    Ran Passed Failed Inactive
+              suites      1      1    n/a      0        0
+               tests      1      1      1      0        0
+             asserts     43     43     43      0      n/a
+
+Elapsed time =    0.000 seconds
+
+
+     CUnit - A unit testing framework for C - Version 2.1-2
+     http://cunit.sourceforge.net/
+
+
+Suite: Input Screen Suite
+  Test: Test of input_screen() ...
+
+No characters registered as typed.
+
+Number of characters in answer set to max.
+
+Input loop successfully exited.
+
+The correct answer successfully registered.
+
+passed
+
+Run Summary:    Type  Total    Ran Passed Failed Inactive
+              suites      1      1    n/a      0        0
+               tests      1      1      1      0        0
+             asserts      4      4      4      0      n/a
+
+Elapsed time =    0.000 seconds
+
+
+     CUnit - A unit testing framework for C - Version 2.1-2
+     http://cunit.sourceforge.net/
+
+
+Suite: Creat Answer for Checking Suite
+  Test: Test of create_answer_for_checking() ...
+
+The answer string has been set to the input string.
+
+passed
+
+Run Summary:    Type  Total    Ran Passed Failed Inactive
+              suites      1      1    n/a      0        0
+               tests      1      1      1      0        0
+             asserts     10     10     10      0      n/a
+
+Elapsed time =    0.000 seconds
+
+
+     CUnit - A unit testing framework for C - Version 2.1-2
+     http://cunit.sourceforge.net/
+
+
+Suite: Initialise Input String Suite
+  Test: Test of initialise_input_string() ...
+
+The input string has been successfully initialised.
+
+passed
+
+Run Summary:    Type  Total    Ran Passed Failed Inactive
+              suites      1      1    n/a      0        0
+               tests      1      1      1      0        0
+             asserts     20     20     20      0      n/a
+
+Elapsed time =    0.000 seconds
+
+
+     CUnit - A unit testing framework for C - Version 2.1-2
+     http://cunit.sourceforge.net/
+
+
+Suite: Initialise drcrect Suite
+  Test: Test of initialise_drcrect() ...
+
+The drcrect x coordinate has been successfully set.
+
+The drcrect y coordinate has been successfully set.
+
+The drcrect width has been successfully set.
+
+The drcrect height has been successfully set.
+
+passed
+
+Run Summary:    Type  Total    Ran Passed Failed Inactive
+              suites      1      1    n/a      0        0
+               tests      1      1      1      0        0
+             asserts      4      4      4      0      n/a
+
+Elapsed time =    0.000 seconds
+
+
+     CUnit - A unit testing framework for C - Version 2.1-2
+     http://cunit.sourceforge.net/
+
+
+Suite: Check User Variable Input Suite
+  Test: Test of check_user_variable_input() ...
+
+Character set to a.
+
+Valid regular character registered.
+
+Regular character assigned to string.
+
+Input index successfully incremented.
+
+Input registered as finished.
+
+Character set to b.
+
+Valid regular character registered.
+
+Regular character assigned to string.
+
+Input index successfully incremented.
+
+Input registered as finished.
+
+Character set to c.
+
+Valid regular character registered.
+
+Regular character assigned to string.
+
+Input index successfully incremented.
+
+Input registered as finished.
+
+Character set to d.
+
+Valid regular character registered.
+
+Regular character assigned to string.
+
+Input index successfully incremented.
+
+Input registered as finished.
+
+Character set to e.
+
+Valid regular character registered.
+
+Regular character assigned to string.
+
+Input index successfully incremented.
+
+Input registered as finished.
+
+Character set to f.
+
+Valid regular character registered.
+
+Regular character assigned to string.
+
+Input index successfully incremented.
+
+Input registered as finished.
+
+Character set to g.
+
+Valid regular character registered.
+
+Regular character assigned to string.
+
+Input index successfully incremented.
+
+Input registered as finished.
+
+Character set to h.
+
+Valid regular character registered.
+
+Regular character assigned to string.
+
+Input index successfully incremented.
+
+Input registered as finished.
+
+Character set to i.
+
+Valid regular character registered.
+
+Regular character assigned to string.
+
+Input index successfully incremented.
+
+Input registered as finished.
+
+Character set to j.
+
+Valid regular character registered.
+
+Regular character assigned to string.
+
+Input index successfully incremented.
+
+Input registered as finished.
+
+Character set to k.
+
+Valid regular character registered.
+
+Regular character assigned to string.
+
+Input index successfully incremented.
+
+Input registered as finished.
+
+Character set to l.
+
+Valid regular character registered.
+
+Regular character assigned to string.
+
+Input index successfully incremented.
+
+Input registered as finished.
+
+Character set to m.
+
+Valid regular character registered.
+
+Regular character assigned to string.
+
+Input index successfully incremented.
+
+Input registered as finished.
+
+Character set to n.
+
+Valid regular character registered.
+
+Regular character assigned to string.
+
+Input index successfully incremented.
+
+Input registered as finished.
+
+Character set to o.
+
+Valid regular character registered.
+
+Regular character assigned to string.
+
+Input index successfully incremented.
+
+Input registered as finished.
+
+Character set to p.
+
+Valid regular character registered.
+
+Regular character assigned to string.
+
+Input index successfully incremented.
+
+Input registered as finished.
+
+Character set to q.
+
+Valid regular character registered.
+
+Regular character assigned to string.
+
+Input index successfully incremented.
+
+Input registered as finished.
+
+Character set to r.
+
+Valid regular character registered.
+
+Regular character assigned to string.
+
+Input index successfully incremented.
+
+Input registered as finished.
+
+Character set to s.
+
+Valid regular character registered.
+
+Regular character assigned to string.
+
+Input index successfully incremented.
+
+Input registered as finished.
+
+Character set to t.
+
+Valid regular character registered.
+
+Regular character assigned to string.
+
+Input index successfully incremented.
+
+Input registered as finished.
+
+Character set to u.
+
+Valid regular character registered.
+
+Regular character assigned to string.
+
+Input index successfully incremented.
+
+Input registered as finished.
+
+Character set to v.
+
+Valid regular character registered.
+
+Regular character assigned to string.
+
+Input index successfully incremented.
+
+Input registered as finished.
+
+Character set to w.
+
+Valid regular character registered.
+
+Regular character assigned to string.
+
+Input index successfully incremented.
+
+Input registered as finished.
+
+Character set to x.
+
+Valid regular character registered.
+
+Regular character assigned to string.
+
+Input index successfully incremented.
+
+Input registered as finished.
+
+Character set to y.
+
+Valid regular character registered.
+
+Regular character assigned to string.
+
+Input index successfully incremented.
+
+Input registered as finished.
+
+Character set to z.
+
+Valid regular character registered.
+
+Regular character assigned to string.
+
+Input index successfully incremented.
+
+Input registered as finished.
+
+Valid regular character registered.
+
+Regular character assigned to string.
+
+Input index successfully incremented.
+
+Input registered as finished.
+
+Valid regular character registered.
+
+Character to be translated to < registered.
+
+< symbol assigned to string.
+
+Input index successfully incremented.
+
+Input registered as finished.
+
+Valid regular character registered.
+
+Character to be translated to > registered.
+
+> symbol assigned to string.
+
+Input index successfully incremented.
+
+Input registered as finished.
+
+Escape symbol registered.
+
+Problem quitter registered to be on.
+
+Input registered as finished.
+
+Enter symbol registered.
+
+Input string registered as completed.
+
+Input registered as finished.
+
+Backspace registered.
+
+Character index stepped back by one and previous entry erased.
+
+Input registered as finished.
+
+passed
+
+Run Summary:    Type  Total    Ran Passed Failed Inactive
+              suites      1      1    n/a      0        0
+               tests      1      1      1      0        0
+             asserts    127    127    127      0      n/a
+
+Elapsed time =    0.001 seconds
+
+
+     CUnit - A unit testing framework for C - Version 2.1-2
+     http://cunit.sourceforge.net/
+
+
+Suite: Run Menu Screen Suite
+  Test: Test of run_menu_screen() ...
+
+First pass registered, loading menu registered as unseen.
+
+First pass successfully incremented.
+
+Loading menu having been seen registered.
+
+passed
+
+Run Summary:    Type  Total    Ran Passed Failed Inactive
+              suites      1      1    n/a      0        0
+               tests      1      1      1      0        0
+             asserts      3      3      3      0      n/a
+
+Elapsed time =    0.000 seconds
+
+
+     CUnit - A unit testing framework for C - Version 2.1-2
+     http://cunit.sourceforge.net/
+
+
+Suite: Level Editor Suite
+  Test: Test of level_editor() ...
+
+Input add initialised to zero.
+
+Input remove initialised to zero.
+
+Edit previous initialised to zero.
+
+Edit source initialised to zero.
+
+Excess initialised to zero.
+
+Tile_x initialised to zero.
+
+Tile_y initialised to zero.
+
+Level editor recognised successfully as running.
+
+Level editor set to not running and successfully exited.
+
+passed
+
+Run Summary:    Type  Total    Ran Passed Failed Inactive
+              suites      1      1    n/a      0        0
+               tests      1      1      1      0        0
+             asserts      9      9      9      0      n/a
+
+Elapsed time =    0.000 seconds
+
+
+     CUnit - A unit testing framework for C - Version 2.1-2
+     http://cunit.sourceforge.net/
+
+
+Suite: Draw Edited Map Suite
+  Test: Test of draw_edited_map() ...
+
+If no FAILS: All components of map successfully changed.
+
+Level editor set to not running and successfully exited.
+
+passed
+
+Run Summary:    Type  Total    Ran Passed Failed Inactive
+              suites      1      1    n/a      0        0
+               tests      1      1      1      0        0
+             asserts   2501   2501   2501      0      n/a
+
+Elapsed time =    0.000 seconds
+
+
+     CUnit - A unit testing framework for C - Version 2.1-2
+     http://cunit.sourceforge.net/
+
+
+Suite: Configure Mouse Suite
+  Test: Test of configure_mouse() ...
+
+Difference in x coordinate from tile centre successfully set.
+
+Mouse central x coordinate successfully set.
+
+Difference in y coordinate from tile centre successfully set.
+
+Mouse central y coordinate successfully set.
+
+Current tile x coordinate in array set.
+
+Current tile y coordinate in array set.
+
+Current x coordinate matched to current tile array x coordinate.
+
+Current y coordinate matched to current tile array y coordinate.
+
+Cursor src rectangle y coordinate initialised to zero.
+
+Cursor src rectangle x coordinate initialised to zero.
+
+Cursor src width set to tile size.
+
+Cursor src height set to tile size.
+
+Cursor dst rectangle y coordinate initialise to zero.
+
+Cursor dst rectangle x coordinate initialise to zero.
+
+Cursor dst width set to tile size.
+
+Cursor dst height set to tile size.
+
+Tile src rectangle y coordinate initialised to zero.
+
+Tile src rectangle x coordinate initialised to zero.
+
+Tile src rectangle width set to tile size.
+
+Tile src rectangle height set to tile size.
+
+passed
+
+Run Summary:    Type  Total    Ran Passed Failed Inactive
+              suites      1      1    n/a      0        0
+               tests      1      1      1      0        0
+             asserts     20     20     20      0      n/a
+
+Elapsed time =    0.000 seconds
+
+
+     CUnit - A unit testing framework for C - Version 2.1-2
+     http://cunit.sourceforge.net/
+
+
+Suite: Initialise Level Editor Map Suite
+  Test: Test of initialise_level_editor_map() ...
+
+No errors indicates map successfully initialised to zero.
+
+passed
+
+Run Summary:    Type  Total    Ran Passed Failed Inactive
+              suites      1      1    n/a      0        0
+               tests      1      1      1      0        0
+             asserts    500    500    500      0      n/a
+
+Elapsed time =    0.000 seconds
+
+
+     CUnit - A unit testing framework for C - Version 2.1-2
+     http://cunit.sourceforge.net/
+
+
+Suite: Highlight Area Suite
+  Test: Test of highlight_area() ...
+
+New game successfully registered.
+
+Source rectangle for new game successfully set.
+
+Destination rectangle for new game successfully set.
+
+Registered to be at some point on the main menu.
+
+Load game successfully registered.
+
+Source rectangle for load game successfully set.
+
+Destination rectangle for load game successfully set.
+
+Registered to be at some point on the main menu.
+
+Options successfully registered.
+
+Source rectangle for options successfully set.
+
+Destination rectangle for options successfully set.
+
+Registered to be at some point on the main menu.
+
+Editor successfully registered.
+
+Source rectangle for editor successfully set.
+
+Destination rectangle for editor successfully set.
+
+Registered to be at some point on the main menu.
+
+In option screen registered.
+
+passed
+
+Run Summary:    Type  Total    Ran Passed Failed Inactive
+              suites      1      1    n/a      0        0
+               tests      1      1      1      0        0
+             asserts     17     17     17      0      n/a
 
 Elapsed time =    0.000 seconds

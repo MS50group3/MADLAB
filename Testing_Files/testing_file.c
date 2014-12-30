@@ -90,5 +90,11 @@ int main(int aroom_gridc, char *argv[])
 
     set_up_test("Draw Edited Map Suite", "Test of draw_edited_map()", test_draw_edited_map);
 
+    set_up_test("Configure Mouse Suite", "Test of configure_mouse()", test_configure_mouse);
+
+    set_up_test("Initialise Level Editor Map Suite", "Test of initialise_level_editor_map()", test_initialise_level_editor_map);
+
+    set_up_test("Highlight Area Suite", "Test of highlight_area()", test_highlight_area);
+
     return(0);
 }
