@@ -1867,3 +1867,318 @@ void permit_chicken_case(Chicken *hen, int direction, int Chicken_x)
 
     }
 }
+
+void test_chicken_help(void)
+{
+    Chicken Fowl, *hen;
+    hen = &Fowl;
+
+    printf("\n");
+
+    hen -> chick_facing = rand() % 4;
+    assert_test(hen -> chick_facing >= 0 && hen -> chick_facing <=3  , "The chicken has been successfully orientated.");
+
+    printf("\n");
+}
+
+void test_chicken_direction(void)
+{
+    Chicken Fowl, *hen;
+    hen = &Fowl;
+
+    printf("\n");
+
+    examine_chicken_direction_case(hen, 364);
+
+    printf("\n");
+}
+
+void examine_chicken_direction_case(Chicken *hen, int Chicken_x)
+{
+    chicken_direction_case(hen, left, Chicken_x);
+
+    chicken_direction_case(hen, right, Chicken_x);
+
+    chicken_direction_case(hen, up, Chicken_x);
+
+    chicken_direction_case(hen, down, Chicken_x);
+}
+
+void chicken_direction_case(Chicken *hen, compass direction, int Chicken_x)
+{
+    int temp_x, temp_y;
+
+    hen -> chick_facing = direction;
+    hen -> srcChicken.x = Chicken_x;
+
+    temp_x = hen -> srcChicken.x;
+    temp_y = hen -> srcChicken.y;
+
+    switch (hen -> chick_facing)
+    {       
+        case(left):     assert_test(hen -> chick_facing = left, "The chicken direction has been successfully registered as left.");
+                        (hen -> srcChicken.x == 364) ? (hen -> srcChicken.x = 396): (hen -> srcChicken.x = 364);
+                        hen -> dstChicken.x -= MOVEMENT_INCREMENT;
+                        assert_test(hen -> dstChicken.x = temp_x - MOVEMENT_INCREMENT, "The chicken has successfully been moved left.");
+                        break;
+
+        case(down):     assert_test(hen -> chick_facing == down, "The chicken direction has been successfully registered as down.");
+                        (hen -> srcChicken.x == 364) ? (hen -> srcChicken.x = 396): (hen -> srcChicken.x = 364);
+                        hen -> dstChicken.y += MOVEMENT_INCREMENT;
+                        assert_test(hen -> dstChicken.y = temp_y + MOVEMENT_INCREMENT, "The chicken has successfully been moved down.");
+                        break;
+
+        case(right):    assert_test(hen -> chick_facing == right, "The chicken direction has been successfully registered as right.");
+                        (hen -> srcChicken.x == 300) ? (hen -> srcChicken.x = 332): (hen -> srcChicken.x = 300);
+                        hen -> dstChicken.x += MOVEMENT_INCREMENT;
+                        assert_test(hen -> dstChicken.x = temp_x + MOVEMENT_INCREMENT, "The chicken has successfully been moved right.");
+                        break;
+
+        case(up):       assert_test(hen -> chick_facing == up, "The chicken direction has been successfully registered as up.");
+                        (hen -> srcChicken.x == 300) ? (hen -> srcChicken.x = 332): (hen -> srcChicken.x = 300);
+                        hen -> dstChicken.y -= MOVEMENT_INCREMENT;
+                        assert_test(hen -> dstChicken.y = temp_y - MOVEMENT_INCREMENT, "The chicken has successfully been moved up.");
+                        break;    
+    }
+}
+
+void test_chicken_edge_detection(void)
+{
+    Chicken Fowl, *hen;
+    hen = &Fowl;
+
+    printf("\n");
+
+    chicken_edge_detection_case(hen, 0, 0);
+
+    chicken_edge_detection_case(hen, 0, SCREEN_WIDTH - TILE_SIZE + 1);
+
+    chicken_edge_detection_case(hen, SCREEN_WIDTH - TILE_SIZE + 1, 0);
+
+    chicken_edge_detection_case(hen, SCREEN_WIDTH - TILE_SIZE + 1, SCREEN_WIDTH - TILE_SIZE + 1);
+
+    printf("\n");
+}
+
+void chicken_edge_detection_case(Chicken *hen, int Chicken_x, int Chicken_y)
+{
+    hen -> dstChicken.x = Chicken_x;
+    hen -> dstChicken.y = Chicken_y;
+
+    //Left edge.
+    if (hen -> dstChicken.x <= 0){
+        assert_test(hen -> dstChicken.x <= 0, "The left edge has successfully been identified.");
+        
+        hen -> dstChicken.x = 0;
+        assert_test(hen -> dstChicken.x == 0, "The chicken has been repositioned to be at the left edge.");
+        
+        hen -> chick_facing = right;
+        assert_test(hen -> chick_facing == right, "The chicken direction has been changed to be facing right.");
+    }
+    //Right edge
+    if (hen -> dstChicken.x >= SCREEN_WIDTH - TILE_SIZE){
+        assert_test(hen -> dstChicken.x >= SCREEN_WIDTH - TILE_SIZE, "The right edge has successfully been identified.");
+        
+        hen -> dstChicken.x = SCREEN_WIDTH - TILE_SIZE;
+        assert_test(hen -> dstChicken.x == SCREEN_WIDTH - TILE_SIZE, "The chicken has been repositioned to be at the right edge.");
+        
+        hen -> chick_facing = left;
+        assert_test(hen -> chick_facing == left, "The chicken direction has been changed to be facing left.");
+    }
+    //Top edge
+    if (hen -> dstChicken.y <= 0){
+        assert_test(hen -> dstChicken.y <= 0, "The top edge has successfully been identified.");
+        
+        hen -> dstChicken.y = 0;
+        assert_test(hen -> dstChicken.y == 0, "The chicken has been repositioned to be at the top edge.");
+        
+        hen -> chick_facing = down;
+        assert_test(hen -> chick_facing == down, "The chicken direction has been changed to be facing down.");
+    }
+    //Bottom edge
+    if (hen -> dstChicken.y >= SCREEN_HEIGHT - TILE_SIZE){
+        assert_test(hen -> dstChicken.y >= SCREEN_HEIGHT - TILE_SIZE, "The bottom edge has successfully been identified."); 
+        
+        hen -> dstChicken.y = SCREEN_HEIGHT - TILE_SIZE;
+        assert_test(hen -> dstChicken.y == SCREEN_HEIGHT - TILE_SIZE, "The chicken has been repositioned to be at the bottom edge.");
+        
+        hen -> chick_facing = up;
+        assert_test(hen -> chick_facing == up, "The chicken direction has been changed to be facing up.");
+    } 
+}
+
+void test_eggfault(void)
+{
+    Chicken Fowl, *hen;
+    hen = &Fowl;
+
+    roomGrid roomStuff, *room_grid;
+    room_grid = &roomStuff;
+
+    printf("\n");
+
+    eggfault_case(hen, room_grid, 0, 0, 0, 0);
+
+    eggfault_case(hen, room_grid, 0, 0, 1, 1);
+
+    printf("\n");
+}
+
+void eggfault_case(Chicken *hen, roomGrid *room_grid, int sprite_x, int sprite_y, int hen_x, int hen_y)
+{
+    hen -> dstChicken.x = hen_x;
+    hen -> dstChicken.y = hen_y;
+    room_grid -> rc_sprite.x = sprite_x;
+    room_grid -> rc_sprite.y = sprite_y;
+    room_grid -> gamerunning = true;
+
+    hen -> x_chick_centre = (hen -> dstChicken.x + (TILE_SIZE / 2)) / TILE_SIZE;
+    assert_test(hen -> x_chick_centre == (hen -> dstChicken.x + (TILE_SIZE / 2)) / TILE_SIZE, "The chicken centre x coordinate has been successfully set.");
+
+    hen -> y_chick_centre = (hen -> dstChicken.y + (TILE_SIZE / 2)) / TILE_SIZE;
+    assert_test(hen -> y_chick_centre == (hen -> dstChicken.y + (TILE_SIZE / 2)) / TILE_SIZE, "The chicken centre y coordinate has been successfully set.");
+
+    room_grid -> x_sprite_centre = (room_grid -> rc_sprite.x + (TILE_SIZE / 2)) / TILE_SIZE;
+    assert_test(room_grid -> x_sprite_centre == (room_grid -> rc_sprite.x + (TILE_SIZE / 2)) / TILE_SIZE, "The sprite centre x coordinate has been successfully set.");
+
+    room_grid -> y_sprite_centre = (room_grid -> rc_sprite.y + (TILE_SIZE / 2)) / TILE_SIZE;
+    assert_test(room_grid -> y_sprite_centre == (room_grid -> rc_sprite.y + (TILE_SIZE / 2)) / TILE_SIZE, "The sprite centre y coordinate has been successfully set.");
+
+
+    if (((room_grid -> room_array[hen -> x_chick_centre]) == (room_grid -> room_array[room_grid -> x_sprite_centre]))
+        && (room_grid -> room_array[hen -> y_chick_centre] == room_grid -> room_array[room_grid -> y_sprite_centre])){
+        assert_test(((room_grid -> room_array[hen -> x_chick_centre]) == (room_grid -> room_array[room_grid -> x_sprite_centre]))
+                    && (room_grid -> room_array[hen -> y_chick_centre] == room_grid -> room_array[room_grid -> y_sprite_centre]), "The chicken and sprite have been detected to be at the same place.");
+
+        room_grid -> gamerunning = false;
+        assert_test(room_grid -> gamerunning == false, "The game has been successfully closed.");
+    }
+}
+
+void test_changeChickenDirection(void)
+{
+    Chicken Fowl, *hen;
+    hen = &Fowl;
+
+    printf("\n");
+
+    changeChickenDirection_case(hen, left);
+    changeChickenDirection_case(hen, right);
+    changeChickenDirection_case(hen, up);
+    changeChickenDirection_case(hen, down);
+
+    printf("\n");
+}
+
+void changeChickenDirection_case(Chicken *hen, compass direction)
+{
+    int temp_chick_direction = direction;
+    hen -> chick_facing = direction;
+
+    if (hen -> chick_facing == left){
+        assert_test(hen -> chick_facing == left, "The chicken direction has been successfully registered to be left.");
+
+        hen -> chick_facing = up;
+        assert_test(hen -> chick_facing == up, "The new chicken direction has been successfully registered to be up.");
+    }
+    else{
+        assert_test(hen -> chick_facing != left, "The chicken direction has been successfully registered as not left.");
+
+        hen -> chick_facing++;
+        assert_test(hen -> chick_facing == temp_chick_direction + 1, "The chicken has been rotated ninety degrees.");
+    }
+}
+
+void test_problem_generator(void)
+{
+    roomGrid roomStuff, *room_grid;
+    room_grid = &roomStuff;
+
+    bool current_puzzle_solved = false;
+
+    room_grid -> problem_quitter = off;
+
+    printf("\n");
+
+    room_grid -> finished = 0;
+    assert_test(room_grid -> finished == 0, "The room grid has been set to have been paused.");
+
+    while(current_puzzle_solved == false && room_grid -> problem_quitter == off){
+        assert_test(current_puzzle_solved == false, "Problem being unsolved has been registered.");
+        assert_test(room_grid -> problem_quitter == off, "User not having skipped the scene has been registered");
+        
+        current_puzzle_solved = true;
+        assert_test(current_puzzle_solved == true, "User skipping cutscene set to on.");
+    }
+
+    assert_test(current_puzzle_solved == true, "Cutscene skipping has been registered.");
+    assert_test(current_puzzle_solved == on, "User solving puzzle has been registered.");
+
+    if(room_grid -> problem_quitter == off){
+        assert_test(room_grid -> problem_quitter == off, "Problem quitter not on, remaining cutscene played.");
+    }
+
+    printf("\n");
+}
+
+void test_free_room_array(void)
+{
+    roomGrid roomStuff, *room_grid;
+    room_grid = &roomStuff;
+
+    printf("\n");
+
+    initialise_roomGrid_memory(room_grid);
+
+    for (int i = 0; i < ROOM_Y; i++){
+        free(room_grid -> room_array[i]);
+        room_grid -> room_array[i] = NULL;
+        CU_ASSERT(room_grid -> room_array[i] == NULL);
+    }
+
+    free(room_grid -> room_array);
+    room_grid -> room_array = NULL;
+    assert_test(room_grid -> room_array == NULL, "Room array successfully freed.");
+
+    printf("\n");
+}
+
+void test_input_screen(void)
+{
+    roomGrid roomStuff, *room_grid;
+    room_grid = &roomStuff;
+
+    int input_index = 0, finish_checker = unfinished, chars_in_ans = 10;
+    bool current_puzzle_solved = false;
+
+    char *correct_answer = "arbitrary";
+    char *possible_answer = "arbitrary";
+
+    printf("\n");
+
+    do{
+
+        assert_test(input_index == 0, "No characters registered as typed.");
+
+        if(input_index == chars_in_ans + 1){
+          assert_test(input_index == chars_in_ans + 1, "Maximum entered characters registered.");
+
+          finish_checker = finished;
+          assert_test(finish_checker == finished, "Finish checker set as finished.");
+        }
+
+        input_index = chars_in_ans + 1;
+        assert_test(input_index == chars_in_ans + 1, "Number of characters in answer set to max.");
+
+    }while(input_index < MAX_INPUT_CHARS && !finish_checker && room_grid -> problem_quitter == off);
+
+    assert_test(!(input_index < MAX_INPUT_CHARS && !finish_checker && room_grid -> problem_quitter == off), "Input loop successfully exited.");
+
+    if( strcmp(possible_answer, correct_answer) == 0){
+        current_puzzle_solved = true;
+        assert_test(current_puzzle_solved == true, "The correct answer successfully registered.");
+    }
+
+    printf("\n");
+
+}

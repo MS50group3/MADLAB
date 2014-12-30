@@ -60,5 +60,23 @@ int main(int aroom_gridc, char *argv[])
 
     set_up_test("Permit Chicken Suite", "Test of permit_chicken()", test_permit_chicken);
 
+    set_up_test("Chicken Help Suite", "Test of chicken_help()", test_chicken_help);
+
+    set_up_test("Chicken Direction Suite", "Test of chicken_direction()", test_chicken_direction);
+
+    set_up_test("Chicken Edge Detection Suite", "Test of chicken_edge_detection()", test_chicken_edge_detection);
+
+    set_up_test("Eggfault Suite", "Test of eggfault()", test_eggfault);
+
+    set_up_test("Change Chicken Direction Suite", "Test of changeChickenDirection()", test_changeChickenDirection);
+
+    set_up_test("Problem Generator Suite", "Test of problem_generator()", test_problem_generator);
+
+    set_up_test("Free Room Array Suite", "Test of free_room_array()", test_free_room_array);
+
+    set_up_test("Input Screen Suite", "Test of input_screen()", test_input_screen);
+
+    set_up_test("Creat Answer for Checking Suite", "Test of create_answer_for_checking()", test_create_answer_for_checking);
+
     return(0);
 }

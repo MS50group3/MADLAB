@@ -287,3 +287,29 @@ void test_permit_chicken(void);
 void permit_chicken_case(Chicken *hen, int direction, int Chicken_x);
 
 void examine_chicken_case(Chicken *hen, int Chicken_x);
+
+void test_chicken_help(void);
+
+void test_chicken_direction(void);
+
+void examine_chicken_direction_case(Chicken *hen, int Chicken_x);
+
+void chicken_direction_case(Chicken *hen, compass direction, int Chicken_x);
+
+void test_chicken_edge_detection(void);
+
+void chicken_edge_detection_case(Chicken *hen, int Chicken_x, int Chicken_y);
+
+void test_eggfault(void);
+
+void eggfault_case(Chicken *hen, roomGrid *room_grid, int sprite_x, int sprite_y, int hen_x, int hen_y);
+
+void test_changeChickenDirection(void);
+
+void changeChickenDirection_case(Chicken *hen, compass direction);
+
+void test_problem_generator(void);
+
+void test_free_room_array(void);
+
+void test_input_screen(void);
