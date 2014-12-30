@@ -323,3 +323,13 @@ void test_initialise_drcrect(void);
 void test_check_user_variable_input(void);
 
 void user_check_variable_input_case(roomGrid *room_grid, char c, int event);
+
+void test_run_menu_screen(void);
+
+void run_menu_screen_case(void);
+
+void test_level_editor(void);
+
+void test_draw_edited_map(void);
+
+void draw_edited_map_case(int input_add, int edit_previous, int input_remove, int map_array[ROOM_Y][ROOM_X], Edit edit, input input);

@@ -84,5 +84,11 @@ int main(int aroom_gridc, char *argv[])
 
     set_up_test("Check User Variable Input Suite", "Test of check_user_variable_input()", test_check_user_variable_input);
 
+    set_up_test("Run Menu Screen Suite", "Test of run_menu_screen()", test_run_menu_screen);
+
+    set_up_test("Level Editor Suite", "Test of level_editor()", test_level_editor);
+
+    set_up_test("Draw Edited Map Suite", "Test of draw_edited_map()", test_draw_edited_map);
+
     return(0);
 }

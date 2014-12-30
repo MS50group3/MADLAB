@@ -2339,3 +2339,163 @@ void user_check_variable_input_case(roomGrid *room_grid, char c, int event)
     input_string[MAX_INPUT_CHARS] = '\0';
  
 }
+
+void test_run_menu_screen(void)
+{
+    printf("\n");
+
+    run_menu_screen_case();
+
+    run_menu_screen_case();
+
+    printf("\n");
+}
+
+void run_menu_screen_case(void)
+{
+    static int first_pass = 0;
+
+    int temp = first_pass;
+
+    if(first_pass == 0){
+        assert_test(first_pass == 0, "First pass registered, loading menu registered as unseen.");
+
+        ++first_pass;
+        assert_test(first_pass == temp + 1, "First pass successfully incremented.");
+        return;
+    }
+
+    assert_test(first_pass != 0, "Loading menu having been seen registered.");
+}
+
+void test_level_editor(void)
+{
+    Edit edit;
+    bool running = true;
+    input input;
+
+    printf("\n");
+    
+    input.add = 0;
+    assert_test(input.add == 0, "Input add initialised to zero.");
+
+    input.remove = 0;
+    assert_test(input.remove == 0, "Input remove initialised to zero.");
+    
+    edit.previous  = 0;
+    assert_test(edit.previous == 0, "Edit previous initialised to zero.");
+
+    edit.src_value = 0;
+    assert_test(edit.src_value == 0, "Edit source initialised to zero.");
+    
+    int excess = 0, tile_x = 0, tile_y = 0;
+    assert_test(excess == 0, "Excess initialised to zero.");
+    assert_test(tile_x == 0, "Tile_x initialised to zero.");
+    assert_test(tile_y == 0, "Tile_y initialised to zero.");
+    
+    // Run the meat of the program.
+    while(running){
+
+        assert_test(running, "Level editor recognised successfully as running.");
+        
+        running = false;
+        
+    }
+
+    assert_test(!running, "Level editor set to not running and successfully exited.");
+
+    printf("\n");
+    
+}
+
+void test_draw_edited_map(void)
+{
+    int map_array[ROOM_Y][ROOM_X], i, j;
+    Edit edit;
+    input input;
+
+    edit.src_value = 1;
+
+    for(i = 0; i < ROOM_Y; ++i){
+        for(j = 0; j < ROOM_X; ++j){
+            map_array[i][j] = rand() % 3;
+        }
+    }
+
+    printf("\n");
+
+    draw_edited_map_case(1, 1, 1, map_array, edit, input);
+
+    printf("\n");
+}
+
+void draw_edited_map_case(int input_add, int edit_previous, int input_remove, int map_array[ROOM_Y][ROOM_X], Edit edit, input input)
+{
+    int tile_y = 0, tile_x = 0, temp;
+    SDL_Rect tile_dst;
+
+    if (input.add == edit.previous && edit.previous == 1){
+        assert_test(input.add == edit.previous && edit.previous == 1, "Selected square registered as previously edited.");
+
+            map_array[tile_y][tile_x] = edit.src_value;
+            assert_test(map_array[tile_y][tile_x] == edit.src_value, "Square set as the edit source value.");
+        }
+
+        else if(input.add == 1){
+            assert_test(input.add == 1, "Tile successfully registered as selected."); 
+
+            temp = map_array[tile_y][tile_x];
+
+            map_array[tile_y][tile_x]++;
+            assert_test(map_array[tile_y][tile_x] = temp + 1, "Number on tile successfully incremented by one.");
+
+            map_array[tile_y][tile_x] = map_array[tile_y][tile_x] % 3;
+            assert_test(map_array[tile_y][tile_x] < 3, "Number on tile successfully modulesed to usable number.");
+
+            edit.src_value = map_array[tile_y][tile_x];
+            assert_test(edit.src_value == map_array[tile_y][tile_x], "The edit source value has been successfully set.");
+        } 
+    
+    if (input.remove == 1){
+        assert_test(input.remove == 1, "Successfully registered as put in deletion mode.");
+
+        map_array[tile_y][tile_x] = BLANK;
+        assert_test(map_array[tile_y][tile_x] == BLANK, "Tile deleted.");
+    }
+    
+    for (int i = 0; i < ROOM_Y; ++i){
+
+        for (int j = 0; j < ROOM_X; ++j){   
+
+            tile_dst.x = j*TILE_SIZE;
+            CU_ASSERT(tile_dst.x == j*TILE_SIZE);
+
+            tile_dst.y = i*TILE_SIZE;
+            CU_ASSERT(tile_dst.y == i*TILE_SIZE);
+
+            tile_dst.w = TILE_SIZE;
+            CU_ASSERT(tile_dst.w == TILE_SIZE);
+
+            tile_dst.h = TILE_SIZE;
+            CU_ASSERT(tile_dst.h == TILE_SIZE);
+            
+            if (map_array[i][j] == WALL){   
+                CU_ASSERT(map_array[i][j] == WALL);
+            }
+
+            else if ( map_array[i][j] == BLANK){
+                CU_ASSERT(map_array[i][j] == BLANK);
+            }
+
+            else if ( map_array[i][j] == ALT){   
+                CU_ASSERT(map_array[i][j] == ALT);
+            }
+        }
+    }
+
+    printf("\nIf no FAILS: All components of map successfully changed.\n");
+
+    edit.previous = input.add;
+    assert_test(edit.previous == input.add, "Level editor set to not running and successfully exited.");
+
+}
