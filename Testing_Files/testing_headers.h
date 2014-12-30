@@ -313,3 +313,13 @@ void test_problem_generator(void);
 void test_free_room_array(void);
 
 void test_input_screen(void);
+
+void test_create_answer_for_checking(void);
+
+void test_initialise_input_string(void);
+
+void test_initialise_drcrect(void);
+
+void test_check_user_variable_input(void);
+
+void user_check_variable_input_case(roomGrid *room_grid, char c, int event);

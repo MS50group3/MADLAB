@@ -2148,7 +2148,7 @@ void test_input_screen(void)
     roomGrid roomStuff, *room_grid;
     room_grid = &roomStuff;
 
-    int input_index = 0, finish_checker = unfinished, chars_in_ans = 10;
+    int input_index = 0, finish_checker = unfinished, chars_in_ans = 9;
     bool current_puzzle_solved = false;
 
     char *correct_answer = "arbitrary";
@@ -2181,4 +2181,161 @@ void test_input_screen(void)
 
     printf("\n");
 
+}
+
+void test_create_answer_for_checking(void)
+{
+    int i, chars_in_ans = 9;
+
+    char possible_answer[MAX_INPUT_CHARS];
+    char *input_string = "arbitrary";
+
+    printf("\n");
+
+    for(i = 0; i < chars_in_ans; ++i){
+        possible_answer[i] = input_string[i];
+        CU_ASSERT(possible_answer[i] == input_string[i]);
+    }
+
+    possible_answer[chars_in_ans] = '\0';
+    CU_ASSERT_STRING_EQUAL("arbitrary", possible_answer);
+    printf("\nThe answer string has been set to the input string.\n");
+
+    printf("\n");
+}
+
+void test_initialise_input_string(void)
+{
+    int i;
+    char input_string[MAX_INPUT_CHARS];
+
+    printf("\n");
+
+    for(i = 0; i < MAX_INPUT_CHARS; ++i){
+        input_string[i] = ' ';
+        CU_ASSERT(input_string[i] == ' ');
+    }
+
+    printf("\nThe input string has been successfully initialised.\n");
+
+    printf("\n");
+}
+
+void test_initialise_drcrect(void)
+{
+    SDL_Rect drcrect_obj, *drcrect;
+    drcrect = &drcrect_obj;
+
+    int input_index = 10;
+
+    printf("\n");
+
+    drcrect->x = RECT_X;
+    assert_test(drcrect->x == RECT_X, "The drcrect x coordinate has been successfully set.");
+
+    drcrect->y = RECT_Y;
+    assert_test(drcrect->y == RECT_Y, "The drcrect y coordinate has been successfully set.");
+
+    drcrect->w = RECT_W * (input_index + 1);
+    assert_test(drcrect->w == RECT_W * (input_index + 1), "The drcrect width has been successfully set.");
+
+    drcrect->h = RECT_H;
+    assert_test(drcrect->h == RECT_H, "The drcrect height has been successfully set.");
+
+    printf("\n");
+}
+
+void test_check_user_variable_input(void)
+{
+    int i;
+
+    roomGrid roomStuff, *room_grid;
+    room_grid = &roomStuff;
+
+    printf("\n");
+
+    for(i = 'a'; i <= 'z'; ++i){
+        printf("\nCharacter set to %c.\n", i);
+        user_check_variable_input_case(room_grid, 'c', 1);
+    }
+
+    user_check_variable_input_case(room_grid, '=', 1);
+
+    user_check_variable_input_case(room_grid, ',', 1);
+
+    user_check_variable_input_case(room_grid, '.', 1);
+
+    user_check_variable_input_case(room_grid, escape, 1);
+
+    user_check_variable_input_case(room_grid, enter, 1);
+
+    user_check_variable_input_case(room_grid, backspace, 1);
+
+    printf("\n");
+}
+
+void user_check_variable_input_case(roomGrid *room_grid, char c, int event)
+{
+    int gameover = 0, finish_checker = unfinished, input_index = 1, temp = input_index;
+
+    char input_string[MAX_INPUT_CHARS];
+
+    while (gameover != INPUT_FINISHED){                                                                                                                                                                    //checks for events.
+        if(event == 1){                                                                                                                                                                     //if the key is pressed assigns character
+            if( (c >= 'a' && c <= 'z') || (c == ' ' || c == '=' || c == ',' || c == '.' ) || (c >= '0' && c <= '9') ){
+                assert_test((c >= 'a' && c <= 'z') || (c == ' ' || c == '=' || c == ',' || c == '.' ) || (c >= '0' && c <= '9'), "Valid regular character registered.");
+                if(c == ','){
+                    assert_test(c == ',', "Character to be translated to < registered.");
+
+                    input_string[input_index] = '<';
+                    assert_test(input_string[input_index] == '<', "< symbol assigned to string.");
+                }
+                else if(c == '.'){
+                    assert_test(c == '.', "Character to be translated to > registered.");
+
+                    input_string[input_index] = '>';
+                    assert_test(input_string[input_index] == '>', "> symbol assigned to string.");
+                }
+                else{
+                    input_string[input_index] = c;
+                    assert_test(input_string[input_index] == c, "Regular character assigned to string.");
+                }                                                                                                         
+                ++(input_index);
+                assert_test(temp + 1 == input_index, "Input index successfully incremented.");
+
+                gameover = INPUT_FINISHED;
+                assert_test(gameover == INPUT_FINISHED, "Input registered as finished.");
+                }
+                else if( c == backspace){
+                    assert_test(c == backspace, "Backspace registered.");
+
+                    input_string[--(input_index)] = ' ';
+                    assert_test(input_string[input_index] == ' ', "Character index stepped back by one and previous entry erased.");
+
+                    gameover = INPUT_FINISHED;
+                    assert_test(gameover == INPUT_FINISHED, "Input registered as finished."); 
+                }
+                else if(c == enter){
+                    assert_test(c == enter, "Enter symbol registered.");
+
+                    finish_checker = finished;
+                    assert_test(finish_checker == finished, "Input string registered as completed.");
+
+                    gameover = INPUT_FINISHED;
+                    assert_test(gameover == INPUT_FINISHED, "Input registered as finished."); 
+                }
+                else if(c == escape){
+                    assert_test(c == escape, "Escape symbol registered.");
+
+                    room_grid -> problem_quitter = on;
+                    assert_test(room_grid -> problem_quitter == on, "Problem quitter registered to be on.");
+
+                    gameover = INPUT_FINISHED;
+                    assert_test(gameover == INPUT_FINISHED, "Input registered as finished.");
+                }
+            }
+        }              
+
+    input_string[MAX_INPUT_CHARS] = '\0';
+ 
 }

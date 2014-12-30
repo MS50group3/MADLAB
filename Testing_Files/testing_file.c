@@ -78,5 +78,11 @@ int main(int aroom_gridc, char *argv[])
 
     set_up_test("Creat Answer for Checking Suite", "Test of create_answer_for_checking()", test_create_answer_for_checking);
 
+    set_up_test("Initialise Input String Suite", "Test of initialise_input_string()", test_initialise_input_string);
+
+    set_up_test("Initialise drcrect Suite", "Test of initialise_drcrect()", test_initialise_drcrect);
+
+    set_up_test("Check User Variable Input Suite", "Test of check_user_variable_input()", test_check_user_variable_input);
+
     return(0);
 }
