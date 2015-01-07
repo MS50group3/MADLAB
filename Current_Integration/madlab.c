@@ -32,10 +32,11 @@
 #define MUSIC_CONST_TWO        4096
 #define MOVEMENT_INCREMENT 		  8
 #define WALL                      1
-#define ALT                       2
+#define RED                       2
+#define BLUE                      3
 #define BLANK                     0
 #define NUM_DIRECTIONS            4
-#define NUM_TILE_TYPES			  3
+#define NUM_TILE_TYPES			  4
 
 
 // TYPEDEFS AND ENUMERATION
@@ -237,7 +238,8 @@ void load_image(roomGrid *room_grid, SDL_Surface **surf, SDL_Texture **tex, char
 void editor_interactions(int map_array[ROOM_Y][ROOM_X], bool *running, editor_input *editor_input);
 void configure_mouse(int excess, int *tile_x, int *tile_y, editor_input editor_input, cursor cursor, SDL_Rect *cursor_src, SDL_Rect *cursor_dst, SDL_Rect *tile_src);
 Edit draw_edited_map(int map_array[ROOM_Y][ROOM_X], editor_input editor_input, int tile_x, int tile_y, SDL_Texture *tile_tex, SDL_Rect tile_src, SDL_Rect tile_dst, 
-                     roomGrid *room_grid, SDL_Texture *cursor_tex, SDL_Rect cursor_src, SDL_Rect cursor_dst, SDL_Texture *back_tex, SDL_Texture *red_tex, Edit edit);
+                     roomGrid *room_grid, SDL_Texture *cursor_tex, SDL_Rect cursor_src, SDL_Rect cursor_dst, SDL_Texture *back_tex, SDL_Texture *red_tex, 
+                     SDL_Texture *blue_tex, Edit edit);
 
 //MAIN
 
@@ -1504,8 +1506,8 @@ void level_editor(roomGrid *room_grid)
     initialise_level_editor_map(map_array);
     
     // Background, tile, cursor and menu stuff
-    SDL_Surface *back_surf, *tile_surf, *red_surf, *cursor_surf, *menu_surf, *options_surf;
-    SDL_Texture *back_tex, *tile_tex, *red_tex, *cursor_tex, *menu_tex, *options_tex;
+    SDL_Surface *back_surf, *tile_surf, *red_surf, *blue_surf, *cursor_surf, *menu_surf, *options_surf;
+    SDL_Texture *back_tex, *tile_tex, *red_tex, *blue_tex, *cursor_tex, *menu_tex, *options_tex;
     SDL_Rect tile_src, tile_dst, cursor_src, cursor_dst;
     
     // Make the tile
@@ -1514,6 +1516,10 @@ void level_editor(roomGrid *room_grid)
     red_surf = IMG_Load("block_red.png");
     red_tex = SDL_CreateTextureFromSurface(room_grid -> renderer, red_surf);
     SDL_FreeSurface(red_surf);
+
+    blue_surf = IMG_Load("block_blue.png");
+    blue_tex = SDL_CreateTextureFromSurface(room_grid -> renderer, blue_surf);
+    SDL_FreeSurface(blue_surf);
 
     // Make the cursor
     cursor_surf = IMG_Load("cursor.png");
@@ -1538,7 +1544,7 @@ void level_editor(roomGrid *room_grid)
 
         configure_mouse(excess, &tile_x, &tile_y, editor_input, cursor, &cursor_src, &cursor_dst, &tile_src);
 
-        edit = draw_edited_map(map_array, editor_input, tile_x, tile_y, tile_tex, tile_src, tile_dst, room_grid, cursor_tex, cursor_src, cursor_dst, back_tex, red_tex, edit);
+        edit = draw_edited_map(map_array, editor_input, tile_x, tile_y, tile_tex, tile_src, tile_dst, room_grid, cursor_tex, cursor_src, cursor_dst, back_tex, red_tex, blue_tex, edit);
         
     }
     
@@ -1553,7 +1559,8 @@ void level_editor(roomGrid *room_grid)
 }
 
 Edit draw_edited_map(int map_array[ROOM_Y][ROOM_X], editor_input editor_input, int tile_x, int tile_y, SDL_Texture *tile_tex, SDL_Rect tile_src, SDL_Rect tile_dst, 
-                     roomGrid *room_grid, SDL_Texture *cursor_tex, SDL_Rect cursor_src, SDL_Rect cursor_dst, SDL_Texture *back_tex, SDL_Texture *red_tex, Edit edit)
+                     roomGrid *room_grid, SDL_Texture *cursor_tex, SDL_Rect cursor_src, SDL_Rect cursor_dst, SDL_Texture *back_tex, SDL_Texture *red_tex, 
+                     SDL_Texture *blue_tex, Edit edit)
 {
 
 	// If the mouse has been held down between events:
@@ -1597,10 +1604,16 @@ Edit draw_edited_map(int map_array[ROOM_Y][ROOM_X], editor_input editor_input, i
                 SDL_RenderCopy(room_grid -> renderer, back_tex, &tile_src, &tile_dst);
             }
 
-            else if ( map_array[i][j] == ALT)
+            else if ( map_array[i][j] == RED)
             {   // If the element is a 2, draw a red tile
                 SDL_RenderCopy(room_grid -> renderer, red_tex, &tile_src, &tile_dst);
             }
+
+            else if ( map_array[i][j] == BLUE)
+            {   // If the element is a 2, draw a red tile
+                SDL_RenderCopy(room_grid -> renderer, blue_tex, &tile_src, &tile_dst);
+            }
+
         }
     }
 
