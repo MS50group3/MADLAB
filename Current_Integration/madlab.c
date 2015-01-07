@@ -532,7 +532,7 @@ void James_SDL_Events(roomGrid *room_grid)
        switch (event.type){
 
             case SDL_QUIT:
-                room_grid -> finished = on;
+                room_grid -> finished = finished;
                 break;
             case SDL_MOUSEBUTTONDOWN:
                 room_grid -> skip_checker = on;
@@ -547,6 +547,7 @@ void James_SDL_Events(roomGrid *room_grid)
                         room_grid -> skip_checker = on;
                         break;
                 }
+                break;
         }
     }
 }
@@ -770,18 +771,22 @@ void movement(roomGrid *room_grid, progress *puzzle, char *instructions_list[NUM
                     room_grid -> gamerunning = false;
                     break;
                case SDLK_LEFT:
+               printf("\nRegistered as moving left.\n");
                     room_grid -> direction = left;
                     (!((room_grid -> rc_sprite.x) % TILE_SIZE)) ? possible(room_grid, puzzle): move(room_grid, puzzle);
                     break;
                 case SDLK_RIGHT:
+                printf("\nRegistered as moving right.\n");
                     room_grid -> direction = right;
                     (!((room_grid -> rc_sprite.x) % TILE_SIZE)) ? possible(room_grid, puzzle): move(room_grid, puzzle);
                     break;
                 case SDLK_UP:
+                printf("\nRegistered as moving up.\n");
                     room_grid -> direction = up;
                     (!((room_grid -> rc_sprite.y) % TILE_SIZE)) ? possible(room_grid, puzzle): move(room_grid, puzzle);
                     break;
                 case SDLK_DOWN:
+                printf("\nRegistered as moving down.\n");
                     room_grid -> direction = down;
                     (!((room_grid -> rc_sprite.y) % TILE_SIZE)) ? possible(room_grid, puzzle): move(room_grid, puzzle);
                     break;
