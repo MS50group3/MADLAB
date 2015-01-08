@@ -1840,9 +1840,7 @@ void cycle_options(roomGrid *room_grid){
                 
                 }
             }
-        
         }
-    
     }
 }
 
