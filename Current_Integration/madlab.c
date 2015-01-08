@@ -33,9 +33,11 @@
 #define MUSIC_CONST_TWO        4096
 #define MOVEMENT_INCREMENT 		  8
 #define WALL                      1
-#define ALT                       2
+#define TERMINAL                  2
+#define DESK                      3
 #define BLANK                     0
 #define NUM_DIRECTIONS            4
+#define NUM_TILE_TYPES			  4
 
 #define MAX_NUM_LINES 1000
 #define MAX_SIZE_OF_LINE 1000
@@ -201,19 +203,13 @@ struct cursor{
 }; 
 typedef struct cursor cursor;
 
-struct input{
+struct editor_input{
     int mouse_x; 
     int mouse_y;
     int add; 
     int remove;
 };
-typedef struct input input;
-
-struct map{
-    int width; 
-    int height;
-};
-typedef struct map map;
+typedef struct editor_input editor_input;
 
 struct edit{
     int previous;
@@ -301,14 +297,23 @@ void cycle_options(roomGrid *room_grid, char *argv[]);
 void getloadscreenevent(roomGrid *room_grid);
 void getkeyEvent(roomGrid *room_grid, int x);
 void runloadscreen();
+
 void menu_space_press(roomGrid *room_grid, int *current_selection, SDL_Texture *menu_tex, SDL_Texture *options_tex, bool *menu_running, char *argv[]);
 void level_editor(roomGrid *room_grid);
-void initialise_level_editor_map(int array[ROOM_Y][ROOM_X]);
 void load_image(roomGrid *room_grid, SDL_Surface **surf, SDL_Texture **tex, char *image_name);
-void editor_interactions(int map_array[ROOM_Y][ROOM_X], bool *running, input *input);
-void configure_mouse(int excess, int *tile_x, int *tile_y, input input, cursor cursor, SDL_Rect *cursor_src, SDL_Rect *cursor_dst, SDL_Rect *tile_src);
-Edit draw_edited_map(int map_array[ROOM_Y][ROOM_X], input input, int tile_x, int tile_y, SDL_Texture *tile_tex, SDL_Rect tile_src, SDL_Rect tile_dst, 
-                     roomGrid *room_grid, SDL_Texture *cursor_tex, SDL_Rect cursor_src, SDL_Rect cursor_dst, SDL_Texture *back_tex, SDL_Texture *red_tex, Edit edit);
+
+
+//FUNCTIONS FOR EDITOR
+void save(roomGrid *room_grid);
+void initialise_level_editor_map(int **map_array);
+void level_editor(roomGrid *room_grid);
+void editor_interactions(roomGrid *room_grid, bool *running, editor_input *editor_input);
+
+void configure_mouse(int excess, int *tile_x, int *tile_y, editor_input editor_input, cursor cursor,
+ SDL_Rect *cursor_src, SDL_Rect *cursor_dst);
+
+Edit draw_edited_map(roomGrid *room_grid, editor_input editor_input, int tile_x, int tile_y, 
+    SDL_Texture *cursor_tex, SDL_Rect cursor_src, SDL_Rect cursor_dst, Edit edit, SDL_Texture *grafix_tex);
 
 
 //MAIN
@@ -1457,7 +1462,7 @@ void input_screen(roomGrid *room_grid, char *correct_answer, int chars_in_ans, b
 
 void create_answer_for_checking(char possible_answer[MAX_INPUT_CHARS], char input_string[MAX_INPUT_CHARS], int chars_in_ans)
 {
-  int i, j = 0;
+  int i = 0, j = 0;
 
     while( i < chars_in_ans ){
         if(input_string[i] != ' '){
@@ -1548,7 +1553,7 @@ void run_menu_screen(roomGrid *room_grid, char *argv[])
 
 }
 
-void save(int array[ROOM_Y][ROOM_X]){
+void save(roomGrid *room_grid){
     
     FILE *writing_file;
 
@@ -1561,7 +1566,7 @@ void save(int array[ROOM_Y][ROOM_X]){
     {
         for (int j = 0; j < ROOM_X; ++j)
         {
-            fprintf(writing_file, "%d ", array[i][j]);
+            fprintf(writing_file, "%d ", room_grid->room_array[i][j]);
         }
         
         fprintf(writing_file,"\n");
@@ -1570,60 +1575,58 @@ void save(int array[ROOM_Y][ROOM_X]){
     fclose(writing_file);
 }
 
+
 void level_editor(roomGrid *room_grid)
 {
     Edit edit;
     bool running = true;
-    input input;
+    editor_input editor_input;
     cursor cursor;
     
-    input.add = 0;
-    input.remove = 0;
+    editor_input.add = 0;
+    editor_input.remove = 0;
     
     edit.previous  = 0;
     edit.src_value = 0;
     
-    int map_array[ROOM_Y][ROOM_X];
     int excess = 0, tile_x = 0, tile_y = 0;
     
-    initialise_level_editor_map(map_array);
+    initialise_level_editor_map(room_grid->room_array);
     
     // Background, tile, cursor and menu stuff
-    SDL_Surface *back_surf, *tile_surf, *red_surf, *cursor_surf, *menu_surf, *options_surf;
-    SDL_Texture *back_tex, *tile_tex, *red_tex, *cursor_tex, *menu_tex, *options_tex;
-    SDL_Rect tile_src, tile_dst, cursor_src, cursor_dst;
+    SDL_Surface *grafix_surf, *back_surf, *tile_surf, *red_surf, *blue_surf, *cursor_surf, *menu_surf, *options_surf;
+    SDL_Texture *grafix_tex, *back_tex, *tile_tex, *red_tex, *blue_tex, *cursor_tex, *menu_tex, *options_tex;
+    SDL_Rect cursor_src, cursor_dst;
     
+    // One texture to rule them all? (Attempt)
+    load_image(room_grid, &grafix_surf, &grafix_tex, "tile_array.png");
+
     // Make the tile
     load_image(room_grid, &tile_surf, &tile_tex, "block.png");
+    load_image(room_grid, &red_surf, &red_tex, "block_red.png");
+    load_image(room_grid, &blue_surf, &blue_tex, "block_blue.png");
+    load_image(room_grid, &back_surf, &back_tex, "labtile2.png");    
 
-    red_surf = IMG_Load("block_red.png");
-    red_tex = SDL_CreateTextureFromSurface(room_grid -> renderer, red_surf);
-    SDL_FreeSurface(red_surf);
 
-    // Make the cursor
+    // Make the cursor - more complicated
     cursor_surf = IMG_Load("cursor.png");
     Uint32 colorkey = SDL_MapRGB(cursor_surf->format, 127, 0, 127);
-
     SDL_SetColorKey( cursor_surf, SDL_TRUE, colorkey);
     cursor_tex = SDL_CreateTextureFromSurface(room_grid -> renderer, cursor_surf);
-
     SDL_FreeSurface (cursor_surf);
-    
-    // Make the background
-    load_image(room_grid, &back_surf, &back_tex, "labtile2.png");    
     
     
     // Run the meat of the program.
     while(running){
         
-        editor_interactions(map_array, &running, &input);
+        editor_interactions(room_grid, &running, &editor_input);
         
         // Get the mouse coords
-        SDL_GetMouseState(&input.mouse_x, &input.mouse_y);
+        SDL_GetMouseState(&editor_input.mouse_x, &editor_input.mouse_y);
 
-        configure_mouse(excess, &tile_x, &tile_y, input, cursor, &cursor_src, &cursor_dst, &tile_src);
+        configure_mouse(excess, &tile_x, &tile_y, editor_input, cursor, &cursor_src, &cursor_dst);
 
-        edit = draw_edited_map(map_array, input, tile_x, tile_y, tile_tex, tile_src, tile_dst, room_grid, cursor_tex, cursor_src, cursor_dst, back_tex, red_tex, edit);
+        edit = draw_edited_map(room_grid, editor_input, tile_x, tile_y, cursor_tex, cursor_src, cursor_dst, edit, grafix_tex);
         
     }
     
@@ -1637,52 +1640,68 @@ void level_editor(roomGrid *room_grid)
     
 }
 
-Edit draw_edited_map(int map_array[ROOM_Y][ROOM_X], input input, int tile_x, int tile_y, SDL_Texture *tile_tex, SDL_Rect tile_src, SDL_Rect tile_dst, 
-                     roomGrid *room_grid, SDL_Texture *cursor_tex, SDL_Rect cursor_src, SDL_Rect cursor_dst, SDL_Texture *back_tex, SDL_Texture *red_tex, Edit edit)
+
+Edit draw_edited_map(roomGrid *room_grid, editor_input editor_input, int tile_x, int tile_y,  
+                    SDL_Texture *cursor_tex, SDL_Rect cursor_src, SDL_Rect cursor_dst, 
+                    Edit edit, SDL_Texture *grafix_tex)
 {
 
-    if (input.add == edit.previous && edit.previous == 1) // If the mouse has been held down
-        {
-            map_array[tile_y][tile_x] = edit.src_value;
-        }
-
-        else if(input.add == 1) // If we've got a new add signal, add a tile
-        {   
-            map_array[tile_y][tile_x]++;
-            map_array[tile_y][tile_x] = map_array[tile_y][tile_x] % 3;
-            edit.src_value = map_array[tile_y][tile_x];
-        } 
-    
-    if (input.remove == 1)
+	// If the mouse has been held down between events:
+    if (editor_input.add == edit.previous && edit.previous == 1) 
     {
-        map_array[tile_y][tile_x] = BLANK;
+    	// Continue to use the original tile type:
+        room_grid->room_array[tile_y][tile_x] = edit.src_value; 
+    }
+
+    // If we get a NEW add signal:
+    else if(editor_input.add == 1) 
+    {   
+        room_grid->room_array[tile_y][tile_x]++; // Increment the tile type
+        room_grid->room_array[tile_y][tile_x] = room_grid->room_array[tile_y][tile_x] % NUM_TILE_TYPES; 
+        edit.src_value = room_grid->room_array[tile_y][tile_x];
+    } 
+    
+    if (editor_input.remove == 1)
+    {
+        room_grid->room_array[tile_y][tile_x] = BLANK;
     }
     
+    // Update the room graphics
     for (int i = 0; i < ROOM_Y; ++i)
     {
         for (int j = 0; j < ROOM_X; ++j)
         {   
             // Where to put the tile
-            tile_dst.x = j*TILE_SIZE;
-            tile_dst.y = i*TILE_SIZE;
-            tile_dst.w = TILE_SIZE;
-            tile_dst.h = TILE_SIZE;
+            room_grid -> rc_dest.x = (j * TILE_SIZE);              //the destination rects are set to i and j
+            room_grid -> rc_dest.y = (i * TILE_SIZE);
+            room_grid -> rc_dest.w = TILE_SIZE;
+            room_grid -> rc_dest.h = TILE_SIZE;
             
-            if (map_array[i][j] == WALL)
+            if (room_grid->room_array[i][j] == WALL)
             {   
                 // If the array element is a 1, draw a wall
-                SDL_RenderCopy(room_grid -> renderer, tile_tex, &tile_src, &tile_dst);
+                rcsrc_set(0, 138, 32, 32, grafix_tex, room_grid);
+                SDL_RenderCopy(room_grid -> renderer, grafix_tex, &room_grid -> rc_src, &room_grid -> rc_dest);
             }
 
-            else if ( map_array[i][j] == BLANK)
+            else if ( room_grid->room_array[i][j] == BLANK)
             {   // If the element is a 0, draw a floor tile
-                SDL_RenderCopy(room_grid -> renderer, back_tex, &tile_src, &tile_dst);
+                rcsrc_set(34, 138, 32, 32, grafix_tex, room_grid);
+                SDL_RenderCopy(room_grid -> renderer, grafix_tex, &room_grid -> rc_src, &room_grid -> rc_dest);
             }
 
-            else if ( map_array[i][j] == ALT)
+            else if ( room_grid->room_array[i][j] == TERMINAL)
             {   // If the element is a 2, draw a red tile
-                SDL_RenderCopy(room_grid -> renderer, red_tex, &tile_src, &tile_dst);
+                rcsrc_set(71, 138, 32, 32, grafix_tex, room_grid);
+                SDL_RenderCopy(room_grid -> renderer, grafix_tex, &room_grid -> rc_src, &room_grid -> rc_dest);
             }
+
+            else if ( room_grid->room_array[i][j] == DESK)
+            {   // If the element is a 2, draw a red tile
+                rcsrc_set(140, 137, 32, 32, grafix_tex, room_grid);
+                SDL_RenderCopy(room_grid -> renderer, grafix_tex, &room_grid -> rc_src, &room_grid -> rc_dest);
+            }
+
         }
     }
 
@@ -1690,28 +1709,29 @@ Edit draw_edited_map(int map_array[ROOM_Y][ROOM_X], input input, int tile_x, int
     
     // Update the screen with the latest render 
     SDL_RenderPresent(room_grid -> renderer);
+    SDL_RenderClear(room_grid -> renderer); // Clear the renderer
 
-    edit.previous = input.add;
+    edit.previous = editor_input.add;
 
     return edit;   
 }
 
-void configure_mouse(int excess, int *tile_x, int *tile_y, input input, cursor cursor, SDL_Rect *cursor_src, SDL_Rect *cursor_dst, SDL_Rect *tile_src)
+void configure_mouse(int excess, int *tile_x, int *tile_y, editor_input editor_input, cursor cursor, SDL_Rect *cursor_src, SDL_Rect *cursor_dst)
 {
-    // Round the coords to the nearest multiple of TILE_SIZE
-    excess = input.mouse_x % TILE_SIZE;
-    input.mouse_x = input.mouse_x - excess;
+    // Round the coords to the nearest multiple of TILE_SIZE:
+    excess = editor_input.mouse_x % TILE_SIZE;
+    editor_input.mouse_x = editor_input.mouse_x - excess;
     
-    excess = input.mouse_y % TILE_SIZE;
-    input.mouse_y = input.mouse_y - excess;
+    excess = editor_input.mouse_y % TILE_SIZE;
+    editor_input.mouse_y = editor_input.mouse_y - excess;
     
-    // Which tile 'element' are we in
-    *tile_x = input.mouse_x / TILE_SIZE;
-    *tile_y = input.mouse_y / TILE_SIZE;
+    // Which tile 'element' are we in:
+    *tile_x = editor_input.mouse_x / TILE_SIZE;
+    *tile_y = editor_input.mouse_y / TILE_SIZE;
     
-    // curstor details
-    cursor.x = input.mouse_x;
-    cursor.y = input.mouse_y;
+    // cursor details
+    cursor.x = editor_input.mouse_x;
+    cursor.y = editor_input.mouse_y;
     
     // Where to get the image from (relative)
     cursor_src->y = 0;
@@ -1725,90 +1745,76 @@ void configure_mouse(int excess, int *tile_x, int *tile_y, input input, cursor c
     cursor_dst->w = TILE_SIZE;
     cursor_dst->h = TILE_SIZE;
     
-    tile_src->y=0;
-    tile_src->x=0;
-    tile_src->w=TILE_SIZE;
-    tile_src->h=TILE_SIZE;
 }
 
-void editor_interactions(int map_array[ROOM_Y][ROOM_X], bool *running, input *input)
+void editor_interactions(roomGrid *room_grid, bool *running, editor_input *editor_input)
 {
-    // Event handling time
     SDL_Event event;
     
     if (SDL_PollEvent(&event))  // If there is an event
     {
         switch (event.type)
         {
-                // Quit
-            case SDL_QUIT:
+            case SDL_QUIT:	// General SDL Quit signal
                 exit(0);
-                break;
+            break;
                 
-                // Keydowns
+            // Keydowns: save and quit
             case SDL_KEYDOWN:
                 switch (event.key.keysym.sym)
-            {
-                case SDLK_q:
-                    *running = false;
+            	{
+                	case SDLK_q:
+                    	*running = false; // Quit with 'Q' key
                     break;
                     
-                case SDLK_s:
-                    save(map_array);
-                    break;
+	                case SDLK_s:
+	                    save(room_grid);  // Save with 'S'
+	                break;
                     
-                default:
-                    break;
-            }
-                break;
+               		default:
+                	break;
+            	}
+            break;
                 
-                // Key ups
-            case SDL_KEYUP:
-                switch (event.key.keysym.sym)
-            {
-                default:
-                    break;
-            }
-                break;
-                
-                // Click
+            // Mouse Click: Add or remove a tile
             case SDL_MOUSEBUTTONDOWN:
                 switch(event.button.button)
-            {
-                case SDL_BUTTON_LEFT:
-                    input -> add = 1;
-                    break;
-                    
-                case SDL_BUTTON_RIGHT:
-                    input -> remove = 1;
-                    break;
-                    
-                default:
-                    break;
-            }
-                break;
+            	{
+                	case SDL_BUTTON_LEFT:
+	                    editor_input -> add = 1;
+	                break;
+	                    
+	                case SDL_BUTTON_RIGHT:
+	                    editor_input -> remove = 1;
+	                break;
+	                    
+	                default:
+	                break;
+            	}
+            break;
                 
-                // "Unclick" - reset the values on the key release
+            // "Unclick": Reset the add/remove flags on key release
             case SDL_MOUSEBUTTONUP:
                 switch(event.button.button)
-            {
-                case SDL_BUTTON_LEFT:
-                    input -> add = 0;
-                    break;
-                    
-                case SDL_BUTTON_RIGHT:
-                    input -> remove = 0;
-                    break;
-                    
-                default:
-                    break;
-            }
-                break;
+	            {
+	                case SDL_BUTTON_LEFT:
+	                    editor_input -> add = 0;
+	                break;
+	                    
+	                case SDL_BUTTON_RIGHT:
+	                    editor_input -> remove = 0;
+	                break;
+	                    
+	                default:
+	                    break;
+	            }
+            break;
         }
     }
 }
 
-void initialise_level_editor_map(int map_array[ROOM_Y][ROOM_X])
+
+void initialise_level_editor_map(int **map_array)
 {
     int i, j;
 
@@ -1817,7 +1823,6 @@ void initialise_level_editor_map(int map_array[ROOM_Y][ROOM_X])
             map_array[i][j] = 0;
         }
     }
-
 }
 
 
@@ -1835,12 +1840,12 @@ void load_menu_frame(roomGrid *room_grid)
 
 }
 
-//draw correct part of background image each time (a rectangular box around the written options)
+// draw correct part of background image each time (a rectangular box around the written options)
 void highlight_area(roomGrid *room_grid, int current_selection, SDL_Texture *menu_tex, SDL_Texture *options_tex){
     
    SDL_Rect tile_src, tile_drc;
 
-   //Draw original background.
+   // Draw original background.
    load_menu_frame(room_grid);
 
     if(current_selection == new_game){
@@ -1854,7 +1859,6 @@ void highlight_area(roomGrid *room_grid, int current_selection, SDL_Texture *men
     else if(current_selection == options){
         tile_src = (SDL_Rect) {344,499,119,32};
         tile_drc = (SDL_Rect) {344,532,119,32};
-
     }
     else if(current_selection == editor){
         tile_src = (SDL_Rect) {331,526,140,30};
@@ -1866,12 +1870,10 @@ void highlight_area(roomGrid *room_grid, int current_selection, SDL_Texture *men
         SDL_RenderPresent(room_grid -> renderer);
     }
     else if(current_selection == in_option_screen){ 
-        //Draw controls screen
+        // Draw controls screen
         SDL_RenderCopy(room_grid -> renderer, options_tex, NULL, NULL);
         SDL_RenderPresent(room_grid -> renderer);;
-       
-    }
-   
+    }  
 }
 
 void cycle_options(roomGrid *room_grid, char *argv[])
@@ -1879,12 +1881,12 @@ void cycle_options(roomGrid *room_grid, char *argv[])
     
     SDL_Event event;
     bool menu_running = true;
-    int current_selection = new_game;
+    int current_selection = new_game; // Fie menu defaults to new_game
 
     SDL_Surface *menu_surf = NULL, *options_surf = NULL;
     SDL_Texture *menu_tex = NULL, *options_tex = NULL;
 
-    load_image(room_grid, &menu_surf, &menu_tex, "screen2.png");
+    load_image(room_grid, &menu_surf, &menu_tex, "screen2.png"); // Yellow text
 
     load_image(room_grid, &options_surf, &options_tex, "controls.png");
     
@@ -1927,9 +1929,7 @@ void cycle_options(roomGrid *room_grid, char *argv[])
                 
                 }
             }
-        
         }
-    
     }
 }
 
