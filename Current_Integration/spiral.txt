@@ -1,0 +1,7 @@
+{
+DO A FROM 1 TO 5 {
+SET C := A 10 - ;
+FD A
+LT 90
+}
+}
