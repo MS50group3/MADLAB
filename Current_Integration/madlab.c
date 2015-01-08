@@ -8,6 +8,7 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_mixer.h>
 #include <SDL2/SDL_ttf.h>
+#include <math.h>
 
 #define SCREEN_WIDTH     		800
 #define SCREEN_HEIGHT    		640
@@ -36,6 +37,20 @@
 #define BLANK                     0
 #define NUM_DIRECTIONS            4
 
+#define MAX_NUM_LINES 1000
+#define MAX_SIZE_OF_LINE 1000
+#define CLEAR_SUCCESS 0
+#define NUM_LETTERS_ALPHABET 26
+#define ERROR(PHRASE) {fprintf(stderr, "Fatal Error %sOccured in %s, line %d\n\n", PHRASE, __FILE__, __LINE__); exit(1); }
+#define RADIANS_CONST 0.0174532925
+#define ERROR_VALUE -1000
+#define MAX_STACK_SIZE 1000
+#define START_ITERATION_END 5
+#define MAX_EMBEDDED_LOOPS 1000
+#define MIDDLE_OF_BOARD 320
+#define WWIDTH            800
+#define WHEIGHT           640
+
 
 // TYPEDEFS AND ENUMERATION
 
@@ -54,11 +69,68 @@ typedef enum fin_unfin fin_unfin;
 enum on_off {off, on};
 typedef enum on_off on_off;
 
-enum menu_options{new_game = 1, load_game = 2, options = 3,  editor = 4, in_option_screen = 7};
+enum menu_options{new_game = 1, image_drawing = 2, options = 3,  editor = 4, in_option_screen = 7};
 typedef enum menu_options menu_options;
 
 enum special_buttons{enter = '\r', backspace = '\b', escape = 27};
 typedef enum special_buttons special_buttons;
+
+enum success_unsuccess {unsuccessful, successful};
+typedef enum success_unsuccess success_unsuccess;
+
+enum uncoloured_coloured {uncoloured, coloured};
+typedef enum uncoloured_coloured uncoloured_coloured;
+
+enum grid_location {top_right, bottom_right, bottom_left, top_left};
+typedef enum grid_location grid_location;
+
+enum rt_lt {rt_dir, lt_dir};
+typedef enum rt_lt rt_lt;
+
+enum looping_array {start_word, start_number, end_number, current_iteration, variable};
+typedef enum looping_array looping_array;
+
+typedef uncoloured_coloured board_array[WWIDTH][WHEIGHT];
+
+struct program{
+    char prog_line[MAX_NUM_LINES][MAX_SIZE_OF_LINE];
+    int current_word;
+    int num_lines_in_file;
+};
+typedef struct program program;
+
+struct player{
+
+    board_array player_board;
+
+    int row;
+    int col;
+    int angle;
+
+    float variable_values[NUM_LETTERS_ALPHABET];
+    float current_constant;
+    int current_variable;
+    int current_operator;
+    int current_steps_taken;
+
+    on_off variable_checker;
+    on_off constant_checker;
+    on_off operation_indicator;
+    on_off loop_indicator;
+
+    int set_variable;
+    int looping_index;
+    int looping_array[START_ITERATION_END][MAX_EMBEDDED_LOOPS];
+};
+typedef struct player player;
+
+struct polish_stack{
+
+    float numbers_stack[MAX_STACK_SIZE];
+    int current_index;
+
+};
+typedef struct polish_stack polish_stack;
 
 typedef struct roomGrid
 {
@@ -221,15 +293,15 @@ void hen_sequence(Chicken *hen, roomGrid *room_grid, char *instructions_list[NUM
 
 //FUNCTIONS FOR MENU
 
-void run_menu_screen(roomGrid *room_grid);
+void run_menu_screen(roomGrid *room_grid, char *argv[]);
 void load_menu_frame(roomGrid *room_grid);
 void highlight_area(roomGrid *room_grid, int current_selection, SDL_Texture *menu_tex, SDL_Texture *options_tex);
 bool getEvent(roomGrid *room_grid);
-void cycle_options(roomGrid *room_grid);
+void cycle_options(roomGrid *room_grid, char *argv[]);
 void getloadscreenevent(roomGrid *room_grid);
 void getkeyEvent(roomGrid *room_grid, int x);
 void runloadscreen();
-void menu_space_press(roomGrid *room_grid, int *current_selection, SDL_Texture *menu_tex, SDL_Texture *options_tex, bool *menu_running);
+void menu_space_press(roomGrid *room_grid, int *current_selection, SDL_Texture *menu_tex, SDL_Texture *options_tex, bool *menu_running, char *argv[]);
 void level_editor(roomGrid *room_grid);
 void initialise_level_editor_map(int array[ROOM_Y][ROOM_X]);
 void load_image(roomGrid *room_grid, SDL_Surface **surf, SDL_Texture **tex, char *image_name);
@@ -238,12 +310,12 @@ void configure_mouse(int excess, int *tile_x, int *tile_y, input input, cursor c
 Edit draw_edited_map(int map_array[ROOM_Y][ROOM_X], input input, int tile_x, int tile_y, SDL_Texture *tile_tex, SDL_Rect tile_src, SDL_Rect tile_dst, 
                      roomGrid *room_grid, SDL_Texture *cursor_tex, SDL_Rect cursor_src, SDL_Rect cursor_dst, SDL_Texture *back_tex, SDL_Texture *red_tex, Edit edit);
 
+
 //MAIN
 
 int main(int aroom_gridc, char *argv[])
 {
-    roomGrid roomStuff, *room_grid;
-    room_grid = &roomStuff;
+    roomGrid *room_grid = (roomGrid *)malloc(sizeof(roomGrid));
 
     progress puzzlesolved, *puzzle;
     puzzle = &puzzlesolved;
@@ -255,8 +327,8 @@ int main(int aroom_gridc, char *argv[])
     map_file = fopen(argv[1], "r");
 
     if (map_file == NULL){
-        printf("File could not be opened.\n");
-        exit(1);
+       printf("File could not be opened.\n");
+       exit(1);
     }
 
     printf("File was opened.\n");
@@ -265,7 +337,7 @@ int main(int aroom_gridc, char *argv[])
 
     fclose(map_file);
 
-    run_menu_screen(room_grid);
+    run_menu_screen(room_grid, argv);
 
     run_main_game(room_grid, puzzle, hen);
 
@@ -532,7 +604,7 @@ void James_SDL_Events(roomGrid *room_grid)
        switch (event.type){
 
             case SDL_QUIT:
-                room_grid -> finished = on;
+                room_grid -> finished = finished;
                 break;
             case SDL_MOUSEBUTTONDOWN:
                 room_grid -> skip_checker = on;
@@ -547,6 +619,7 @@ void James_SDL_Events(roomGrid *room_grid)
                         room_grid -> skip_checker = on;
                         break;
                 }
+                break;
         }
     }
 }
@@ -612,7 +685,9 @@ void draw(roomGrid *room_grid, progress *puzzle, char *instructions_list[NUM_INS
 
     SDL_DestroyTexture(grafix_tex);
     SDL_DestroyRenderer(room_grid -> renderer);
-    SDL_DestroyWindow(room_grid -> window);
+
+    //THIS IS CAUSING A SEGFAULT!
+    //SDL_DestroyWindow(room_grid -> window);
 }
 
 
@@ -970,7 +1045,7 @@ int action(roomGrid *room_grid, progress *puzzle, char *instructions_list[NUM_IN
                             }
                             else if( (puzzle -> puzzle_1_solved) == false){     
 
-                                initialise_problem(prob_point, "fan < too hot", 22, 27, 13, 29);
+                                initialise_problem(prob_point, "fan<toohot", 22, 27, 13, 29);
                                 problem_generator(room_grid, instructions_list, prob_point, &puzzle -> puzzle_1_solved, "Instructions/code_entry.bmp");
 
                                 return 0;
@@ -984,7 +1059,7 @@ int action(roomGrid *room_grid, progress *puzzle, char *instructions_list[NUM_IN
 
         case(puz_3):        if ((puzzle -> puzzle_3_solved) == false){
 
-                                initialise_problem(prob_point, "0101", 29, 35, 4, 36);
+                                initialise_problem(prob_point, "101", 29, 35, 3, 36);
                                 problem_generator(room_grid, instructions_list, prob_point, &puzzle -> puzzle_3_solved, "Instructions/code_entry_two.bmp");
 
                                 return 0;
@@ -1349,7 +1424,12 @@ void input_screen(roomGrid *room_grid, char *correct_answer, int chars_in_ans, b
 
     SDL_Color fg = { 0, 0, 0, 0};
 
+    SDL_RenderClear(room_grid->renderer);
+    SDL_RenderCopy(room_grid->renderer, image_one, NULL, NULL);
+    SDL_RenderPresent(room_grid->renderer);
+
     do{
+
         check_user_variable_input(room_grid, input_string, &input_index, &finish_checker);
 
         text = TTF_RenderText_Solid(font, input_string, fg) ;
@@ -1377,13 +1457,19 @@ void input_screen(roomGrid *room_grid, char *correct_answer, int chars_in_ans, b
 
 void create_answer_for_checking(char possible_answer[MAX_INPUT_CHARS], char input_string[MAX_INPUT_CHARS], int chars_in_ans)
 {
-  int i;
+  int i, j = 0;
 
-  for(i = 0; i < chars_in_ans; ++i){
-        possible_answer[i] = input_string[i];
+    while( i < chars_in_ans ){
+        if(input_string[i] != ' '){
+            possible_answer[j] = input_string[i];
+            ++j;
+        }
+        ++i;
     }
 
-  possible_answer[chars_in_ans] = '\0';
+  possible_answer[j] = '\0';
+
+  printf("\n%s\n", possible_answer);
 }
 
 void initialise_input_string(char input_string[MAX_INPUT_CHARS])
@@ -1447,7 +1533,7 @@ void check_user_variable_input(roomGrid *room_grid, char *input_string, int *inp
 
 }
 
-void run_menu_screen(roomGrid *room_grid)
+void run_menu_screen(roomGrid *room_grid, char *argv[])
 {
     static int first_pass = 0;
 
@@ -1458,7 +1544,7 @@ void run_menu_screen(roomGrid *room_grid)
 
     load_menu_frame(room_grid);
     
-    cycle_options(room_grid);
+    cycle_options(room_grid, argv);
 
 }
 
@@ -1761,7 +1847,7 @@ void highlight_area(roomGrid *room_grid, int current_selection, SDL_Texture *men
         tile_src = (SDL_Rect) {333,442,143,31};
         tile_drc = (SDL_Rect) {333,472,143,31};
     }
-    else if(current_selection == load_game){
+    else if(current_selection == image_drawing){
         tile_src = (SDL_Rect) {336,473,143,31};
         tile_drc = (SDL_Rect) {336,504,143,31};
     }
@@ -1775,7 +1861,7 @@ void highlight_area(roomGrid *room_grid, int current_selection, SDL_Texture *men
         tile_drc = (SDL_Rect) {331,560,140,30};
     }
 
-    if(current_selection == new_game || current_selection == load_game || current_selection == options || current_selection == editor){
+    if(current_selection == new_game || current_selection == image_drawing || current_selection == options || current_selection == editor){
         SDL_RenderCopy(room_grid -> renderer, menu_tex, &tile_src, &tile_drc);
         SDL_RenderPresent(room_grid -> renderer);
     }
@@ -1788,7 +1874,8 @@ void highlight_area(roomGrid *room_grid, int current_selection, SDL_Texture *men
    
 }
 
-void cycle_options(roomGrid *room_grid){
+void cycle_options(roomGrid *room_grid, char *argv[])
+{
     
     SDL_Event event;
     bool menu_running = true;
@@ -1819,7 +1906,7 @@ void cycle_options(roomGrid *room_grid){
                 {
                     case SDLK_UP:
                     {
-                        if( current_selection == load_game || current_selection == options || current_selection == editor ){
+                        if( current_selection == image_drawing || current_selection == options || current_selection == editor ){
                             current_selection--;
                         }
                         highlight_area(room_grid, current_selection, menu_tex, options_tex);
@@ -1827,7 +1914,7 @@ void cycle_options(roomGrid *room_grid){
                     }
                     case SDLK_DOWN:
                     {
-                        if( current_selection == new_game || current_selection == load_game || current_selection == options ){
+                        if( current_selection == new_game || current_selection == image_drawing || current_selection == options ){
                             current_selection++;
                         }
                         highlight_area(room_grid, current_selection, menu_tex, options_tex);
@@ -1836,7 +1923,7 @@ void cycle_options(roomGrid *room_grid){
                         
                     case SDLK_SPACE:
 
-                        menu_space_press(room_grid, &current_selection, menu_tex, options_tex, &menu_running);
+                        menu_space_press(room_grid, &current_selection, menu_tex, options_tex, &menu_running, argv);
                 
                 }
             }
@@ -1853,7 +1940,7 @@ void load_image(roomGrid *room_grid, SDL_Surface **surf, SDL_Texture **tex, char
     SDL_FreeSurface(*surf);
 }
 
-void menu_space_press(roomGrid *room_grid, int *current_selection, SDL_Texture *menu_tex, SDL_Texture *options_tex, bool *menu_running)
+void menu_space_press(roomGrid *room_grid, int *current_selection, SDL_Texture *menu_tex, SDL_Texture *options_tex, bool *menu_running, char *argv[])
 {
     SDL_Event event;
 
@@ -1892,4 +1979,8 @@ void menu_space_press(roomGrid *room_grid, int *current_selection, SDL_Texture *
         level_editor(room_grid);
 
     }
+
+    if( *current_selection == image_drawing ){
+
+    } 
 }
