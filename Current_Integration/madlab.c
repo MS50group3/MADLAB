@@ -1333,8 +1333,8 @@ void eggfault(Chicken *hen, roomGrid *room_grid, char *instructions_list[NUM_INS
     room_grid -> x_sprite_centre = (room_grid -> rc_sprite.x + (TILE_SIZE / 2)) / TILE_SIZE;
     room_grid -> y_sprite_centre = (room_grid -> rc_sprite.y + (TILE_SIZE / 2)) / TILE_SIZE;
 
-    if (((room_grid -> room_array[hen -> x_chick_centre]) == (room_grid -> room_array[room_grid -> x_sprite_centre]))
-        && (room_grid -> room_array[hen -> y_chick_centre] == room_grid -> room_array[room_grid -> y_sprite_centre])){
+    if (  hen -> x_chick_centre == room_grid -> x_sprite_centre 
+        && hen -> y_chick_centre == room_grid -> y_sprite_centre ) {
 
         print_instruction(room_grid, instructions_list, 41, 42);
         room_grid -> gamerunning = false;
