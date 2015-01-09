@@ -995,11 +995,11 @@ void possible(roomGrid *room_grid, progress *puzzle)
         case(up):       if (room_grid -> rc_sprite.y != 0)
                         {
                             if ((room_grid -> room_array[room_grid -> bottom_y_coord-1][room_grid -> left_x_coord]) == (room_grid -> room_array[room_grid -> bottom_y_coord-1][room_grid -> right_x_coord])){
-                            if (room_grid -> room_array[room_grid -> bottom_y_coord - 1][room_grid -> left_x_coord] == 0){
+                              if (room_grid -> room_array[room_grid -> bottom_y_coord - 1][room_grid -> left_x_coord] == 0){
 
                                 move(room_grid, puzzle);
-                        }      
-                        }
+                              }      
+                            }
                         }
                         break;
 
