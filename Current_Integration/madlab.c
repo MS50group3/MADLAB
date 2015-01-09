@@ -9,6 +9,7 @@
 #include <SDL2/SDL_mixer.h>
 #include <SDL2/SDL_ttf.h>
 #include <math.h>
+#include <assert.h>
 
 #define SCREEN_WIDTH     		800
 #define SCREEN_HEIGHT    		640
@@ -18,7 +19,7 @@
 #define SPRITE_VEL         		  5
 #define SDL_8BITCOLOUR   		256
 #define SLEEP_TIME       		100
-#define NUM_INSTRUCTIONS  		 62
+#define NUM_INSTRUCTIONS  		 68
 #define LENGTH_EXTENSION   		  5
 #define LENGTH_PREFIX     		 14
 #define NUM_REFRESHES     		 50
@@ -39,20 +40,20 @@
 #define NUM_DIRECTIONS            4
 #define NUM_TILE_TYPES			  4
 
-#define MAX_NUM_LINES 1000
-#define MAX_SIZE_OF_LINE 1000
-#define CLEAR_SUCCESS 0
-#define NUM_LETTERS_ALPHABET 26
-#define ERROR(PHRASE) {fprintf(stderr, "Fatal Error %sOccured in %s, line %d\n\n", PHRASE, __FILE__, __LINE__); exit(1); }
-#define RADIANS_CONST 0.0174532925
-#define ERROR_VALUE -1000
-#define MAX_STACK_SIZE 1000
-#define START_ITERATION_END 5
-#define MAX_EMBEDDED_LOOPS 1000
-#define MIDDLE_OF_BOARD 320
-#define WWIDTH            800
-#define WHEIGHT           640
+#define MAXNUMTOKENS 			  50 // Maximum number of lines
+#define MAXTOKENSIZE 			  7 // maximum instruction length
+#define CURRENT 				  p->wds[p->counter]
+#define NEXT 					  p->wds[p->counter+1]
+#define STACKSIZE 				  50
+#define PI 						  3.142
+#define ANSI_A 					  65
+#define NUM_VARS 				  26
+#define CENTRE_X				  400
+#define CENTRE_Y				  300
 
+#define ERROR(PHRASE) {fprintf(stderr, "\n\nERROR: %s. \
+%s, line %d\n\n\n", PHRASE, \
+__FILE__, __LINE__); exit(2); }
 
 // TYPEDEFS AND ENUMERATION
 
@@ -80,59 +81,14 @@ typedef enum special_buttons special_buttons;
 enum success_unsuccess {unsuccessful, successful};
 typedef enum success_unsuccess success_unsuccess;
 
-enum uncoloured_coloured {uncoloured, coloured};
-typedef enum uncoloured_coloured uncoloured_coloured;
-
-enum grid_location {top_right, bottom_right, bottom_left, top_left};
-typedef enum grid_location grid_location;
-
-enum rt_lt {rt_dir, lt_dir};
-typedef enum rt_lt rt_lt;
-
 enum looping_array {start_word, start_number, end_number, current_iteration, variable};
 typedef enum looping_array looping_array;
 
-typedef uncoloured_coloured board_array[WWIDTH][WHEIGHT];
+enum inst{ FD, LT, RT, FROM, TO };
+typedef enum inst Inst;
 
-struct program{
-    char prog_line[MAX_NUM_LINES][MAX_SIZE_OF_LINE];
-    int current_word;
-    int num_lines_in_file;
-};
-typedef struct program program;
-
-struct player{
-
-    board_array player_board;
-
-    int row;
-    int col;
-    int angle;
-
-    float variable_values[NUM_LETTERS_ALPHABET];
-    float current_constant;
-    int current_variable;
-    int current_operator;
-    int current_steps_taken;
-
-    on_off variable_checker;
-    on_off constant_checker;
-    on_off operation_indicator;
-    on_off loop_indicator;
-
-    int set_variable;
-    int looping_index;
-    int looping_array[START_ITERATION_END][MAX_EMBEDDED_LOOPS];
-};
-typedef struct player player;
-
-struct polish_stack{
-
-    float numbers_stack[MAX_STACK_SIZE];
-    int current_index;
-
-};
-typedef struct polish_stack polish_stack;
+enum op{ ADD, SUB, MULT, DIV, NONE };
+typedef enum op Op;
 
 typedef struct roomGrid
 {
@@ -226,6 +182,30 @@ struct problem{
 };
 typedef struct problem problem;
 
+struct program{
+   char wds[MAXNUMTOKENS][MAXTOKENSIZE];     
+   int counter, do_start, do_store;                  
+   double var[NUM_VARS];                     
+   int index, index_store, set_target;       
+   int from, to, from_store, to_store, temp, do_var, do_var_store;
+   on_off error_detected;
+};
+typedef struct program Program;
+
+struct turtle{
+    double bearing;
+    int distance;
+    int x;
+    int y;
+};
+typedef struct turtle Turtle;
+
+struct stack{
+    double array[STACKSIZE]; // array of doubles, sizing must be fixed
+    int top;                 
+};
+typedef struct stack Stack;
+
 //FUNCTIONS FOR PROBLEMS
 
 void print_instruction(roomGrid *room_grid, char *instructions_list[NUM_INSTRUCTIONS], int start, int end);
@@ -251,6 +231,26 @@ void door_hinge_problem(roomGrid *room_grid, progress *puzzle, char *instruction
 void find_weight_a(roomGrid *room_grid, progress *puzzle, char *instructions_list[NUM_INSTRUCTIONS]);
 void find_weight_b(roomGrid *room_grid, progress *puzzle, char *instructions_list[NUM_INSTRUCTIONS]);
 
+//FUNCTIONS FOR PARSER
+
+void image_drawing_tool(roomGrid *room_grid, char *argv[], int argc, char *instructions_list[NUM_INSTRUCTIONS]);
+void Initialise_Program(Program *p);
+void Prog(Program *p, Turtle *t, roomGrid *room_grid, char *instructions_list[NUM_INSTRUCTIONS]);
+void InstructionList(Program *p, Turtle *t, roomGrid *room_grid, char *instructions_list[NUM_INSTRUCTIONS]);
+void Instruction(Program *p, Turtle *t, roomGrid *room_grid, char *instructions_list[NUM_INSTRUCTIONS]);
+void Varnum(Program *p, Turtle *t, Inst instruct, roomGrid *room_grid, char *instructions_list[NUM_INSTRUCTIONS]);
+void Var(Program *p, Turtle *t, roomGrid *room_grid, char *instructions_list[NUM_INSTRUCTIONS]);
+void Do(Program *p, Turtle *t, roomGrid *room_grid, char *instructions_list[NUM_INSTRUCTIONS]);
+void Set(Program *p, Turtle *t, roomGrid *room_grid, char *instructions_list[NUM_INSTRUCTIONS]);
+void Polish(Program *p, Turtle *t, roomGrid *room_grid, char *instructions_list[NUM_INSTRUCTIONS]);
+void Operator(Program *p, char *instructions_list[NUM_INSTRUCTIONS], roomGrid *room_grid);
+void DrawLine(Turtle *t, roomGrid *room_grid);
+void PrintValues(Turtle *t);
+void InitialiseStack(Stack *s);
+void Push(Stack *s, double *num);
+int  Pop(Stack *s);
+int  StringMatch(char string1[], char string2[]);
+void Scan_Program(Program *p, char *argv[], char *instructions_list[NUM_INSTRUCTIONS], roomGrid *room_grid);
 
 
 //FUNCTIONS FOR MOVEMENT
@@ -258,7 +258,7 @@ void find_weight_b(roomGrid *room_grid, progress *puzzle, char *instructions_lis
 void makeRoom(roomGrid *room_grid, FILE *map_file);
 void print_room_array(roomGrid *room_grid, progress *puzzle);
 void draw(roomGrid *room_grid, progress *puzzle, char *instructions_list[NUM_INSTRUCTIONS], Chicken *hen);
-void run_main_game(roomGrid *room_grid, progress *puzzle, Chicken *hen);
+void run_main_game(roomGrid *room_grid, progress *puzzle, Chicken *hen, char *instructions_list[NUM_INSTRUCTIONS]);
 void free_room_array(roomGrid *room_grid);
 void sound_on_off(roomGrid *room_grid);
 void possible(roomGrid *room_grid, progress *puzzle);
@@ -289,16 +289,16 @@ void hen_sequence(Chicken *hen, roomGrid *room_grid, char *instructions_list[NUM
 
 //FUNCTIONS FOR MENU
 
-void run_menu_screen(roomGrid *room_grid, char *argv[]);
+void run_menu_screen(roomGrid *room_grid, char *argv[], int argc, char *instructions_list[NUM_INSTRUCTIONS]);
 void load_menu_frame(roomGrid *room_grid);
 void highlight_area(roomGrid *room_grid, int current_selection, SDL_Texture *menu_tex, SDL_Texture *options_tex);
 bool getEvent(roomGrid *room_grid);
-void cycle_options(roomGrid *room_grid, char *argv[]);
+void cycle_options(roomGrid *room_grid, char *argv[], int argc, char *instructions_list[NUM_INSTRUCTIONS]);
 void getloadscreenevent(roomGrid *room_grid);
 void getkeyEvent(roomGrid *room_grid, int x);
 void runloadscreen();
+void menu_space_press(roomGrid *room_grid, int *current_selection, SDL_Texture *menu_tex, SDL_Texture *options_tex, bool *menu_running, char *argv[], int argc, char *instructions_list[NUM_INSTRUCTIONS]);
 
-void menu_space_press(roomGrid *room_grid, int *current_selection, SDL_Texture *menu_tex, SDL_Texture *options_tex, bool *menu_running, char *argv[]);
 void level_editor(roomGrid *room_grid);
 void load_image(roomGrid *room_grid, SDL_Surface **surf, SDL_Texture **tex, char *image_name);
 
@@ -318,7 +318,7 @@ Edit draw_edited_map(roomGrid *room_grid, editor_input editor_input, int tile_x,
 
 //MAIN
 
-int main(int aroom_gridc, char *argv[])
+int main(int argc, char *argv[])
 {
     roomGrid *room_grid = (roomGrid *)malloc(sizeof(roomGrid));
 
@@ -327,6 +327,8 @@ int main(int aroom_gridc, char *argv[])
 
     Chicken Fowl, *hen;
     hen = &Fowl;
+
+    char *instructions_list[NUM_INSTRUCTIONS];
 
     FILE *map_file = NULL;
     map_file = fopen(argv[1], "r");
@@ -342,9 +344,11 @@ int main(int aroom_gridc, char *argv[])
 
     fclose(map_file);
 
-    run_menu_screen(room_grid, argv);
+    get_instructions(instructions_list);
 
-    run_main_game(room_grid, puzzle, hen);
+    run_menu_screen(room_grid, argv, argc, instructions_list);
+
+    run_main_game(room_grid, puzzle, hen, instructions_list);
 
     print_room_array(room_grid, puzzle);
 
@@ -389,12 +393,8 @@ void makeRoom(roomGrid *room_grid, FILE *map_file)
 }
 
 //The main part of the game running problems and movement etc.
-void run_main_game(roomGrid *room_grid, progress *puzzle, Chicken *hen)
+void run_main_game(roomGrid *room_grid, progress *puzzle, Chicken *hen, char *instructions_list[NUM_INSTRUCTIONS])
 {
-    char *instructions_list[NUM_INSTRUCTIONS];
-
-    get_instructions(instructions_list);
-
     Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, AUDIO_S16SYS, MUSIC_CONST_ONE, MUSIC_CONST_TWO);
     room_grid -> mus = Mix_LoadWAV("sfx/20141124b.wav");
 
@@ -479,51 +479,51 @@ void get_instructions(char *instructions_list[NUM_INSTRUCTIONS])
 {
     //Opening scenes instructions
     instructions_list[0] = "MadLab";
-    instructions_list[1] = "Where_am_I";
-    instructions_list[2] = "looks_like";
-    instructions_list[3] = "door_locked";
-    instructions_list[4] = "shenanigans";
-    instructions_list[5] = "neill_shenanigans";
-    instructions_list[6] = "maybe_if_I";
-    instructions_list[7] = "press_spacebar";
-    instructions_list[8] = "find_neill";
-    instructions_list[9] = "lets_go";
+    instructions_list[1] = "my_lab";
+    instructions_list[2] = "my_assistant";
+    instructions_list[3] = "shenanigans";
+    instructions_list[4] = "loves_shenanigans";
+    instructions_list[5] = "he_pressed";
+    instructions_list[6] = "the_secret_button";
+    instructions_list[7] = "bad_things_happen";
+    instructions_list[8] = "the_secret_button";
+    instructions_list[9] = "fix_my_lab";
 
     //Neill's notes instructions
-    instructions_list[10] = "neill_note";
+    instructions_list[10] = "neill_left_notes";
 	instructions_list[11] = "coding_stuff";
-	instructions_list[12] = "door_jammed";
-	instructions_list[13] = "room_too_hot";
-	instructions_list[14] = "using_some_code";
-	instructions_list[15] = "number";
-	instructions_list[16] = "less_than_ten";
-	instructions_list[17] = "but_if_we_have";
-	instructions_list[18] = "greater_ten";
-	instructions_list[19] = "number_eq_eq_ten";
-  	instructions_list[20] = "number_is_ten";
-  	instructions_list[21] = "useful_later";
+	instructions_list[12] = "stuff_in_here";
+	instructions_list[13] = "down_temperature";
+	instructions_list[14] = "fan_lt_too_cold";
+	instructions_list[15] = "less_than_too_cold";
+	instructions_list[16] = "fan_gt_too_cold";
+	instructions_list[17] = "greater_than_too_cold";
+	instructions_list[18] = "fan_eq_too_cold";
+	instructions_list[19] = "at_too_cold";
+  	instructions_list[20] = "take_notes";
+  	instructions_list[21] = "go_check_out";
 
     //First part of first problem instructions
-	instructions_list[22] = "fan_on_wall";
+	instructions_list[22] = "heres_fan";
 	instructions_list[23] = "cool_down_room";
 	instructions_list[24] = "control_panel";
-	instructions_list[25] = "neill_notes";
-	instructions_list[26] = "change_temp";
+	instructions_list[25] = "like_neills_notes";
+	instructions_list[26] = "change_temperature";
 
     //Second part of first problem instrucions.
-	instructions_list[27] = "that_worked";
-	instructions_list[28] = "room_cooling";
+	instructions_list[27] = "it_worked";
+	instructions_list[28] = "cooling_down";
 
     //First block of instructions
-    instructions_list[29] = "door_still_locked";
-    instructions_list[30] = "work_out";
+    instructions_list[29] = "computer_fritz";
+    instructions_list[30] = "enter_a_code";
     instructions_list[31] = "code_is_five";
     instructions_list[32] = "binary";
     instructions_list[33] = "info_here";
-    instructions_list[34] = "bin_notes";
+    instructions_list[34] = "binary_notes";
 
     //Second block of instructions
-    instructions_list[35] = "door_open";
+    instructions_list[35] = "mended_it";
 
     //Hen related .bmp images
     instructions_list[36] = "chicken_in_here";
@@ -534,32 +534,44 @@ void get_instructions(char *instructions_list[NUM_INSTRUCTIONS])
     instructions_list[41] = "eggfault";
 
     //Discovering the x problem.
-    instructions_list[42] = "door_still_locked";
-    instructions_list[43] = "oh_my_word";
-    instructions_list[44] = "hinge_sticks";
-    instructions_list[45] = "x_part_hinge";
-    instructions_list[46] = "swing_open";
-    instructions_list[47] = "x_eq_five";
-    instructions_list[48] = "two_weights";
-    instructions_list[49] = "a_weight_b_weight";
-    instructions_list[50] = "a_eq_b_eq";
-    instructions_list[51] = "go_find";
-    instructions_list[52] = "finally_get_out";
+    instructions_list[42] = "problem_with_door";
+    instructions_list[43] = "hinge_sticks";
+    instructions_list[44] = "pressure_on_hinge";
+    instructions_list[45] = "weight_on_hinge_five";
+    instructions_list[46] = "x_eq_five";
+    instructions_list[47] = "weights_in_lab";
+    instructions_list[48] = "a_weight_b_weight";
+    instructions_list[49] = "a_eq_b_eq";
+    instructions_list[50] = "use_these_weights";
+    instructions_list[51] = "right_pressure";
+    instructions_list[52] = "sort_out_this_door";
 
     //Picking up the a weight.
-    instructions_list[53] = "a_weight";
-    instructions_list[54] = "put_by_door";
+    instructions_list[53] = "found_a_weight";
+    instructions_list[54] = "will_be_useful";
 
     //Picking up the b weight.
-    instructions_list[55] = "found_b";
-    instructions_list[56] = "put_on_door_hinge";
+    instructions_list[55] = "b_weight";
+    instructions_list[56] = "to_door_hinge";
 
     //Combining the weights.
     instructions_list[57] = "a_weight_on_hinge";
     instructions_list[58] = "b_weight_on_hinge";
-    instructions_list[59] = "both_weights";
-    instructions_list[60] = "x_is_eq";
-    instructions_list[61] = "door_finally_open";
+    instructions_list[59] = "both_weights_on_hinge";
+    instructions_list[60] = "so_x_eq_a_eq_b_eq";
+    instructions_list[61] = "the_right_weight";
+
+    //No file for parsing specified.
+    instructions_list[62] = "works_yet";
+    instructions_list[63] = "play_game";
+
+    //File for parser specified.
+    instructions_list[64] = "computer_to_draw";
+    instructions_list[65] = "see_if_it_works";
+
+    //Error with parser.
+    instructions_list[66] = "something_wrong";
+    instructions_list[67] = "check_answer";
 
 }
 
@@ -1058,11 +1070,13 @@ int action(roomGrid *room_grid, progress *puzzle, char *instructions_list[NUM_IN
                             return 1;
                             break;
 
-        case(puz_2):        door_hinge_problem(room_grid, puzzle, instructions_list);
+        case(puz_2):        if((puzzle -> puzzle_1_seen == true)){
+                                door_hinge_problem(room_grid, puzzle, instructions_list);
+                            }
                             return 0;
                             break; 
 
-        case(puz_3):        if ((puzzle -> puzzle_3_solved) == false){
+        case(puz_3):        if ((puzzle -> puzzle_1_seen == true) && (puzzle -> puzzle_3_solved) == false){
 
                                 initialise_problem(prob_point, "101", 29, 35, 3, 36);
                                 problem_generator(room_grid, instructions_list, prob_point, &puzzle -> puzzle_3_solved, "Instructions/code_entry_two.bmp");
@@ -1072,7 +1086,9 @@ int action(roomGrid *room_grid, progress *puzzle, char *instructions_list[NUM_IN
                             return 1;
                             break;
 
-        case(puz_4):        find_weight_a(room_grid, puzzle, instructions_list);
+        case(puz_4):        if((puzzle -> puzzle_1_seen == true) && (puzzle -> puzzle_2_seen == true)){
+                                find_weight_a(room_grid, puzzle, instructions_list);
+                            }
                             return 0;
                             break; 
 
@@ -1080,7 +1096,9 @@ int action(roomGrid *room_grid, progress *puzzle, char *instructions_list[NUM_IN
                             return 0;
                             break;
 
-        case(puz_6):        find_weight_b(room_grid, puzzle, instructions_list);
+        case(puz_6):        if((puzzle -> puzzle_1_seen == true) && (puzzle -> puzzle_2_seen == true)){
+                                find_weight_b(room_grid, puzzle, instructions_list);
+                            }
                             return 0;
                             break; 
 
@@ -1333,8 +1351,8 @@ void eggfault(Chicken *hen, roomGrid *room_grid, char *instructions_list[NUM_INS
     room_grid -> x_sprite_centre = (room_grid -> rc_sprite.x + (TILE_SIZE / 2)) / TILE_SIZE;
     room_grid -> y_sprite_centre = (room_grid -> rc_sprite.y + (TILE_SIZE / 2)) / TILE_SIZE;
 
-    if (  hen -> x_chick_centre == room_grid -> x_sprite_centre 
-        && hen -> y_chick_centre == room_grid -> y_sprite_centre ) {
+    if (((room_grid -> room_array[hen -> x_chick_centre]) == (room_grid -> room_array[room_grid -> x_sprite_centre]))
+        && (room_grid -> room_array[hen -> y_chick_centre] == room_grid -> room_array[room_grid -> y_sprite_centre])){
 
         print_instruction(room_grid, instructions_list, 41, 42);
         room_grid -> gamerunning = false;
@@ -1462,7 +1480,9 @@ void input_screen(roomGrid *room_grid, char *correct_answer, int chars_in_ans, b
 
 void create_answer_for_checking(char possible_answer[MAX_INPUT_CHARS], char input_string[MAX_INPUT_CHARS], int chars_in_ans)
 {
+
   int i = 0, j = 0;
+
 
     while( i < chars_in_ans ){
         if(input_string[i] != ' '){
@@ -1538,7 +1558,7 @@ void check_user_variable_input(roomGrid *room_grid, char *input_string, int *inp
 
 }
 
-void run_menu_screen(roomGrid *room_grid, char *argv[])
+void run_menu_screen(roomGrid *room_grid, char *argv[], int argc, char *instructions_list[NUM_INSTRUCTIONS])
 {
     static int first_pass = 0;
 
@@ -1549,7 +1569,7 @@ void run_menu_screen(roomGrid *room_grid, char *argv[])
 
     load_menu_frame(room_grid);
     
-    cycle_options(room_grid, argv);
+    cycle_options(room_grid, argv, argc, instructions_list);
 
 }
 
@@ -1594,19 +1614,12 @@ void level_editor(roomGrid *room_grid)
     initialise_level_editor_map(room_grid->room_array);
     
     // Background, tile, cursor and menu stuff
-    SDL_Surface *grafix_surf, *back_surf, *tile_surf, *red_surf, *blue_surf, *cursor_surf, *menu_surf, *options_surf;
-    SDL_Texture *grafix_tex, *back_tex, *tile_tex, *red_tex, *blue_tex, *cursor_tex, *menu_tex, *options_tex;
+    SDL_Surface *grafix_surf, *cursor_surf, *menu_surf, *options_surf;
+    SDL_Texture *grafix_tex, *cursor_tex, *menu_tex, *options_tex;
     SDL_Rect cursor_src, cursor_dst;
     
     // One texture to rule them all? (Attempt)
     load_image(room_grid, &grafix_surf, &grafix_tex, "tile_array.png");
-
-    // Make the tile
-    load_image(room_grid, &tile_surf, &tile_tex, "block.png");
-    load_image(room_grid, &red_surf, &red_tex, "block_red.png");
-    load_image(room_grid, &blue_surf, &blue_tex, "block_blue.png");
-    load_image(room_grid, &back_surf, &back_tex, "labtile2.png");    
-
 
     // Make the cursor - more complicated
     cursor_surf = IMG_Load("cursor.png");
@@ -1876,7 +1889,7 @@ void highlight_area(roomGrid *room_grid, int current_selection, SDL_Texture *men
     }  
 }
 
-void cycle_options(roomGrid *room_grid, char *argv[])
+void cycle_options(roomGrid *room_grid, char *argv[], int argc, char *instructions_list[NUM_INSTRUCTIONS])
 {
     
     SDL_Event event;
@@ -1925,7 +1938,7 @@ void cycle_options(roomGrid *room_grid, char *argv[])
                         
                     case SDLK_SPACE:
 
-                        menu_space_press(room_grid, &current_selection, menu_tex, options_tex, &menu_running, argv);
+                        menu_space_press(room_grid, &current_selection, menu_tex, options_tex, &menu_running, argv, argc, instructions_list);
                 
                 }
             }
@@ -1940,7 +1953,7 @@ void load_image(roomGrid *room_grid, SDL_Surface **surf, SDL_Texture **tex, char
     SDL_FreeSurface(*surf);
 }
 
-void menu_space_press(roomGrid *room_grid, int *current_selection, SDL_Texture *menu_tex, SDL_Texture *options_tex, bool *menu_running, char *argv[])
+void menu_space_press(roomGrid *room_grid, int *current_selection, SDL_Texture *menu_tex, SDL_Texture *options_tex, bool *menu_running, char *argv[], int argc, char *instructions_list[NUM_INSTRUCTIONS])
 {
     SDL_Event event;
 
@@ -1981,6 +1994,10 @@ void menu_space_press(roomGrid *room_grid, int *current_selection, SDL_Texture *
     }
 
     if( *current_selection == image_drawing ){
+
+        // image_drawing_tool(room_grid, argv, argc, instructions_list);
+        // load_menu_frame(room_grid);
+        // highlight_area(room_grid, *current_selection, menu_tex, options_tex);
 
     } 
 }
