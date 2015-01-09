@@ -1866,7 +1866,7 @@ void test_chicken_help(void)
     printf("\n");
 
     hen -> chick_facing = rand() % 4;
-    assert_test(hen -> chick_facing >= 0 && hen -> chick_facing <=3  , "The chicken has been successfully orientated.");
+    assert_test(hen -> chick_facing >= 1 && hen -> chick_facing <=3  , "The chicken has been successfully orientated.");
 
     printf("\n");
 }
@@ -2022,7 +2022,7 @@ void eggfault_case(Chicken *hen, roomGrid *room_grid, int sprite_x, int sprite_y
     room_grid -> rc_sprite.y = sprite_y;
     room_grid -> gamerunning = true;
 
-    hen -> x_chick_centre = (hen -> dstChicken.x + (TILE_SIZE / 2)) / TILE_SIZE;
+    hen -> x_chick_centre = (hen -> dstChicken.x + (TILE_SIZE / 2)) / TILE_SIZE; // (0 + 16) / 32 = 0.5 = 0
     assert_test(hen -> x_chick_centre == (hen -> dstChicken.x + (TILE_SIZE / 2)) / TILE_SIZE, "The chicken centre x coordinate has been successfully set.");
 
     hen -> y_chick_centre = (hen -> dstChicken.y + (TILE_SIZE / 2)) / TILE_SIZE;
@@ -2031,18 +2031,24 @@ void eggfault_case(Chicken *hen, roomGrid *room_grid, int sprite_x, int sprite_y
     room_grid -> x_sprite_centre = (room_grid -> rc_sprite.x + (TILE_SIZE / 2)) / TILE_SIZE;
     assert_test(room_grid -> x_sprite_centre == (room_grid -> rc_sprite.x + (TILE_SIZE / 2)) / TILE_SIZE, "The sprite centre x coordinate has been successfully set.");
 
+
     room_grid -> y_sprite_centre = (room_grid -> rc_sprite.y + (TILE_SIZE / 2)) / TILE_SIZE;
     assert_test(room_grid -> y_sprite_centre == (room_grid -> rc_sprite.y + (TILE_SIZE / 2)) / TILE_SIZE, "The sprite centre y coordinate has been successfully set.");
 
+    printf("%d %d\n", hen-> x_chick_centre, room_grid -> x_sprite_centre);
+    printf("%d %d\n", hen -> y_chick_centre, room_grid -> y_sprite_centre);
 
-    if (((room_grid -> room_array[hen -> x_chick_centre]) == (room_grid -> room_array[room_grid -> x_sprite_centre]))
-        && (room_grid -> room_array[hen -> y_chick_centre] == room_grid -> room_array[room_grid -> y_sprite_centre])){
-        assert_test(((room_grid -> room_array[hen -> x_chick_centre]) == (room_grid -> room_array[room_grid -> x_sprite_centre]))
-                    && (room_grid -> room_array[hen -> y_chick_centre] == room_grid -> room_array[room_grid -> y_sprite_centre]), "The chicken and sprite have been detected to be at the same place.");
+
+    if (  (hen -> x_chick_centre) == (room_grid -> x_sprite_centre) 
+        && (hen -> y_chick_centre) == (room_grid -> y_sprite_centre) ){
+       
+        assert_test( (hen -> x_chick_centre) == (room_grid -> x_sprite_centre) 
+          && (hen -> y_chick_centre) == (room_grid -> y_sprite_centre), "The chicken and sprite have been detected to be at the same place.");
 
         room_grid -> gamerunning = false;
         assert_test(room_grid -> gamerunning == false, "The game has been successfully closed.");
     }
+
 }
 
 void test_changeChickenDirection(void)
@@ -2326,7 +2332,7 @@ void user_check_variable_input_case(roomGrid *room_grid, char c, int event)
             }
         }              
 
-    input_string[MAX_INPUT_CHARS] = '\0';
+    input_string[MAX_INPUT_CHARS - 1] = '\0'; // LOOK HERE 
  
 }
 
@@ -2357,6 +2363,53 @@ void run_menu_screen_case(void)
 
     assert_test(first_pass != 0, "Loading menu having been seen registered.");
 }
+
+void test_save(void){
+
+    printf("\n");
+
+    roomGrid *room_grid = (roomGrid *)malloc(sizeof(roomGrid));
+
+    room_grid -> room_array = (int **)calloc((ROOM_Y) + 1, sizeof(int *));
+
+    for (int i = 0; i <= ROOM_Y; i++){
+        room_grid -> room_array[i] = (int *)calloc((ROOM_X) + 1, sizeof(int));
+        if (room_grid -> room_array[i] ==  NULL){
+            fprintf(stderr, "No memory available.\n");
+            exit(4);
+        }
+    }
+
+    save_case(room_grid);
+    
+    printf("\n");
+}
+
+void save_case(roomGrid *room_grid){
+    
+    FILE *writing_file;
+   
+    writing_file = fopen("Your_level.txt","w");
+    assert_test( writing_file != NULL, "Editor output file opened");
+
+    if(writing_file == NULL) {
+        printf("ERROR opening file...exiting\n");
+    }
+
+    for (int i = 0; i < ROOM_Y; ++i)
+    {   
+        for (int j = 0; j < ROOM_X; ++j)
+        {   
+            printf("%d %d\n", i, j);
+            fprintf(writing_file, "%d ", room_grid->room_array[i][j]);
+        }
+        
+        fprintf(writing_file,"\n");
+    }
+
+    fclose(writing_file);
+}
+
 
 void test_level_editor(void)
 {

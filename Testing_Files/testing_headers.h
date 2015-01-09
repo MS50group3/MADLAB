@@ -342,6 +342,10 @@ void test_run_menu_screen(void);
 
 void run_menu_screen_case(void);
 
+void test_save(void);
+
+void save_case(roomGrid *room_grid);
+
 void test_level_editor(void);
 
 void test_draw_edited_map(void);
