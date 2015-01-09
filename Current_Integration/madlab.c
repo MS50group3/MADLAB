@@ -664,6 +664,8 @@ void SDL_QuitChecker(roomGrid *room_grid)
 
 void draw(roomGrid *room_grid, progress *puzzle, char *instructions_list[NUM_INSTRUCTIONS], Chicken *hen)
 {
+    static int first_pass = 0;
+
     SDL_Surface *grafix;
     SDL_Texture *grafix_tex;
 
@@ -698,6 +700,11 @@ void draw(roomGrid *room_grid, progress *puzzle, char *instructions_list[NUM_INS
        // SDL_RenderCopy(room_grid -> renderer, chickentex, &hen -> srcChicken, &hen -> dstChicken);
         SDL_RenderCopy(room_grid -> renderer, grafix_tex, &room_grid -> rc_sprite_pos, &room_grid -> rc_sprite);  //draws 
         SDL_RenderPresent(room_grid -> renderer);
+
+        if(puzzle -> puzzle_1_solved && puzzle -> puzzle_2_solved && puzzle -> puzzle_3_solved && first_pass == 0){
+            printf("\n\n\n\nTop fucking work!\n\n\n\n\n");
+            ++first_pass;
+        }
     }
 
     SDL_DestroyTexture(grafix_tex);
@@ -1129,6 +1136,7 @@ void door_hinge_problem(roomGrid *room_grid, progress *puzzle, char *instruction
     
     if(puzzle -> a_weight_on_hinge == true && puzzle -> b_weight_on_hinge == true){
         print_instruction(room_grid, instructions_list, 59, 62);
+        puzzle -> puzzle_2_solved = true;
     }
 }
 
