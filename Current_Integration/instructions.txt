@@ -1,0 +1,95 @@
+//Opening scenes instructions
+instructions_list[0] = "MadLab";
+instructions_list[1] = "Where_am_I";
+instructions_list[2] = "looks_like";
+instructions_list[3] = "door_locked";
+instructions_list[4] = "shenanigans";
+instructions_list[5] = "neill_shenanigans";
+instructions_list[6] = "maybe_if_I";
+instructions_list[7] = "press_spacebar";
+instructions_list[8] = "find_neill";
+instructions_list[9] = "lets_go";
+
+//Neill's notes instructions
+instructions_list[10] = "neill_note";
+instructions_list[11] = "coding_stuff";
+instructions_list[12] = "door_jammed";
+instructions_list[13] = "room_too_hot";
+instructions_list[14] = "using_some_code";
+instructions_list[15] = "number";
+instructions_list[16] = "less_than_ten";
+instructions_list[17] = "but_if_we_have";
+instructions_list[18] = "greater_ten";
+instructions_list[19] = "number_eq_eq_ten";
+	instructions_list[20] = "number_is_ten";
+	instructions_list[21] = "useful_later";
+
+//First part of first problem instructions
+instructions_list[22] = "fan_on_wall";
+instructions_list[23] = "cool_down_room";
+instructions_list[24] = "control_panel";
+instructions_list[25] = "neill_notes";
+instructions_list[26] = "change_temp";
+
+//Second part of first problem instrucions.
+instructions_list[27] = "that_worked";
+instructions_list[28] = "room_cooling";
+
+//First block of instructions
+instructions_list[29] = "door_still_locked";
+instructions_list[30] = "work_out";
+instructions_list[31] = "code_is_five";
+instructions_list[32] = "binary";
+instructions_list[33] = "info_here";
+instructions_list[34] = "bin_notes";
+
+//Second block of instructions
+instructions_list[35] = "door_open";
+
+//Hen related .bmp images
+instructions_list[36] = "chicken_in_here";
+instructions_list[37] = "leave_it_alone";
+instructions_list[38] = "come_back_let_it_out";
+instructions_list[39] = "latch_loose";
+instructions_list[40] = "got_out";
+instructions_list[41] = "eggfault";
+
+//Discovering the x problem.
+instructions_list[42] = "door_still_locked";
+instructions_list[43] = "oh_my_word";
+instructions_list[44] = "hinge_sticks";
+instructions_list[45] = "x_part_hinge";
+instructions_list[46] = "swing_open";
+instructions_list[47] = "x_eq_five";
+instructions_list[48] = "two_weights";
+instructions_list[49] = "a_weight_b_weight";
+instructions_list[50] = "a_eq_b_eq";
+instructions_list[51] = "go_find";
+instructions_list[52] = "finally_get_out";
+
+//Picking up the a weight.
+instructions_list[53] = "a_weight";
+instructions_list[54] = "put_by_door";
+
+//Picking up the b weight.
+instructions_list[55] = "found_b";
+instructions_list[56] = "put_on_door_hinge";
+
+//Combining the weights.
+instructions_list[57] = "a_weight_on_hinge";
+instructions_list[58] = "b_weight_on_hinge";
+instructions_list[59] = "both_weights";
+instructions_list[60] = "x_is_eq";
+instructions_list[61] = "door_finally_open";
+
+//No file for parsing specified.
+instructions_list[62] = "works_yet";
+instructions_list[63] = "find_out";
+
+//File for parser specified.
+instructions_list[64] = "something_draw";
+instructions_list[65] = "let_me_have_a_go";
+
+//Error with parser.
+instructions_list[66] = "something_wrong";
+instructions_list[67] = "error_terminal";
