@@ -60,7 +60,7 @@ typedef enum fin_unfin fin_unfin;
 enum on_off {off, on};
 typedef enum on_off on_off;
 
-enum menu_options{new_game = 1, load_game = 2, options = 3,  editor = 4, in_option_screen = 7};
+enum menu_options{new_game = 1, image_drawing = 2, options = 3,  editor = 4, in_option_screen = 7};
 typedef enum menu_options menu_options;
 
 enum special_buttons{enter = '\r', backspace = '\b', escape = 27};
@@ -361,3 +361,8 @@ void test_initialise_level_editor_map(void);
 void test_highlight_area(void);
 
 void highlight_area_case(menu_options option);
+
+void test_cycle_options(void);
+
+void cycle_options_case(int current_selection);
+

@@ -2647,7 +2647,7 @@ void test_highlight_area(void)
 
     highlight_area_case(new_game);
 
-    highlight_area_case(load_game);
+    highlight_area_case(image_drawing);
 
     highlight_area_case(options);
 
@@ -2672,8 +2672,8 @@ void highlight_area_case(menu_options option)
         tile_drc = (SDL_Rect) {333,472,143,31};
         assert_test(sizeof(tile_drc) == sizeof((SDL_Rect) {333,472,143,31}), "Destination rectangle for new game successfully set.");
     }
-    else if(current_selection == load_game){
-        assert_test(current_selection == load_game, "Load game successfully registered.");
+    else if(current_selection == image_drawing){
+        assert_test(current_selection == image_drawing, "Load game successfully registered.");
 
         tile_src = (SDL_Rect) {336,473,143,31};
         assert_test(sizeof(tile_src) == sizeof((SDL_Rect) {336,473,143,31}), "Source rectangle for load game successfully set.");
@@ -2701,11 +2701,52 @@ void highlight_area_case(menu_options option)
         assert_test(sizeof(tile_src) == sizeof((SDL_Rect) {331,560,140,30}), "Destination rectangle for editor successfully set.");
     }
 
-    if(current_selection == new_game || current_selection == load_game || current_selection == options || current_selection == editor){
-        assert_test(current_selection == new_game || current_selection == load_game || current_selection == options || current_selection == editor, "Registered to be at some point on the main menu.");
+    if(current_selection == new_game || current_selection == image_drawing || current_selection == options || current_selection == editor){
+        assert_test(current_selection == new_game || current_selection == image_drawing || current_selection == options || current_selection == editor, "Registered to be at some point on the main menu.");
     }
     else if(current_selection == in_option_screen){ 
         assert_test(current_selection == in_option_screen, "In option screen registered.");       
     }
 }
+
+void test_cycle_options(void){
+
+    printf("\n");
+
+    cycle_options_case(image_drawing);
+    cycle_options_case(editor);
+
+    printf("\n");
+    
+}
+
+void cycle_options_case(int current_selection){
+    
+    bool menu_running = true;
+    int temp;
+
+    while(menu_running){
+
+        assert_test( menu_running == true, "Menu successfully recognised as running");
+
+        temp = current_selection;
+
+        if (current_selection == image_drawing || current_selection == options || 
+            current_selection == editor ){
+            
+            current_selection--;
+            assert_test( current_selection = temp - 1 ,"Below option selected.");
+        }
+        else
+        {
+            assert_test( current_selection == temp, "Bottom option reselected.");
+        }
+        
+        menu_running = false;
+    }
+}
+
+
+
+
 

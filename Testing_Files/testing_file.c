@@ -98,5 +98,7 @@ int main(int aroom_gridc, char *argv[])
 
     set_up_test("Highlight Area Suite", "Test of highlight_area()", test_highlight_area);
 
+    set_up_test("Cycle Options Suite", "Test of cycle_options()", test_cycle_options);
+
     return(0);
 }
