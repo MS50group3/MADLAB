@@ -353,7 +353,6 @@ void test_get_instructions(void)
     instructions_list[52] = "finally_get_out";
     get_instructions_case(instructions_list[52], "finally_get_out");
 
-
     //Picking up the a weight.
     instructions_list[53] = "a_weight";
     get_instructions_case(instructions_list[53], "a_weight");
@@ -2415,7 +2414,7 @@ void test_level_editor(void)
 {
     Edit edit;
     bool running = true;
-    input input;
+    editor_input input;
 
     printf("\n");
     
@@ -2453,32 +2452,33 @@ void test_level_editor(void)
 
 void test_draw_edited_map(void)
 {
-    int map_array[ROOM_Y][ROOM_X], i, j;
+    int room_array[ROOM_Y][ROOM_X], i, j; // To save creating the whole roomGrid struct
     Edit edit;
-    input input;
+    editor_input input;
 
     edit.src_value = 1;
 
     for(i = 0; i < ROOM_Y; ++i){
         for(j = 0; j < ROOM_X; ++j){
-            map_array[i][j] = rand() % 3;
+            room_array[i][j] = rand() % 3;
         }
     }
 
     printf("\n");
 
-    draw_edited_map_case(1, 1, 1, map_array, edit, input);
+    draw_edited_map_case(1, 1, 1, room_array, edit, input);
 
     printf("\n");
 }
 
-void draw_edited_map_case(int input_add, int edit_previous, int input_remove, int map_array[ROOM_Y][ROOM_X], Edit edit, input input)
+void draw_edited_map_case(int input_add, int edit_previous, int input_remove, int map_array[ROOM_Y][ROOM_X], Edit edit, editor_input input)
 {
-    int tile_y = 0, tile_x = 0, temp;
+    int tile_y = 0, tile_x = 0, temp; 
     SDL_Rect tile_dst;
 
     if (input.add == edit.previous && edit.previous == 1){
-        assert_test(input.add == edit.previous && edit.previous == 1, "Selected square registered as previously edited.");
+        
+            assert_test(input.add == edit.previous && edit.previous == 1, "Selected square registered as previously edited.");
 
             map_array[tile_y][tile_x] = edit.src_value;
             assert_test(map_array[tile_y][tile_x] == edit.src_value, "Square set as the edit source value.");
@@ -2492,8 +2492,8 @@ void draw_edited_map_case(int input_add, int edit_previous, int input_remove, in
             map_array[tile_y][tile_x]++;
             assert_test(map_array[tile_y][tile_x] = temp + 1, "Number on tile successfully incremented by one.");
 
-            map_array[tile_y][tile_x] = map_array[tile_y][tile_x] % 3;
-            assert_test(map_array[tile_y][tile_x] < 3, "Number on tile successfully modulesed to usable number.");
+            map_array[tile_y][tile_x] = map_array[tile_y][tile_x] % NUM_TILE_TYPES;
+            assert_test(map_array[tile_y][tile_x] < NUM_TILE_TYPES, "Number on tile successfully modulesed to usable number.");
 
             edit.src_value = map_array[tile_y][tile_x];
             assert_test(edit.src_value == map_array[tile_y][tile_x], "The edit source value has been successfully set.");
@@ -2530,6 +2530,10 @@ void draw_edited_map_case(int input_add, int edit_previous, int input_remove, in
                 CU_ASSERT(map_array[i][j] == BLANK);
             }
 
+            else if ( map_array[i][j] == TERMINAL){   
+                CU_ASSERT(map_array[i][j] == TERMINAL);
+            }
+
             else if ( map_array[i][j] == ALT){   
                 CU_ASSERT(map_array[i][j] == ALT);
             }
@@ -2546,7 +2550,7 @@ void draw_edited_map_case(int input_add, int edit_previous, int input_remove, in
 void test_configure_mouse(void)
 {
     int excess, tx, *tile_x, ty, *tile_y, temp; 
-    input input;
+    editor_input input;
     cursor cursor; 
     SDL_Rect cs, cd, ts, *cursor_src, *cursor_dst, *tile_src;
 
@@ -2704,3 +2708,4 @@ void highlight_area_case(menu_options option)
         assert_test(current_selection == in_option_screen, "In option screen registered.");       
     }
 }
+

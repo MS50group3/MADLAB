@@ -38,7 +38,9 @@
 #define WALL                      1
 #define ALT                       2
 #define BLANK                     0
+#define NUM_TILE_TYPES            4
 #define NUM_DIRECTIONS            4
+#define TERMINAL                  3
 
 
 // TYPEDEFS AND ENUMERATION
@@ -132,13 +134,13 @@ struct cursor{
 }; 
 typedef struct cursor cursor;
 
-struct input{
+struct editor_input{
     int mouse_x; 
     int mouse_y;
     int add; 
     int remove;
 };
-typedef struct input input;
+typedef struct editor_input editor_input;
 
 struct map{
     int width; 
@@ -350,7 +352,7 @@ void test_level_editor(void);
 
 void test_draw_edited_map(void);
 
-void draw_edited_map_case(int input_add, int edit_previous, int input_remove, int map_array[ROOM_Y][ROOM_X], Edit edit, input input);
+void draw_edited_map_case(int input_add, int edit_previous, int input_remove, int map_array[ROOM_Y][ROOM_X], Edit edit, editor_input input);
 
 void test_configure_mouse(void);
 
