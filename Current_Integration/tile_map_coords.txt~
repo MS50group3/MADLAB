@@ -117,12 +117,7 @@ STEEL_DOOR - TILESIZE*2
 x: 332
 y: 66
 
-CAGE_CLOSED- TILESIZE*3
-=======================
+CAGE - TILESIZE*3
+=================
 x: 433
-y: 0
-
-CAGE_OPEN - TILESIZE*3
-======================
-x: 529
 y: 0

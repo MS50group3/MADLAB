@@ -275,7 +275,7 @@ void rcsrc_set(int x_coord, int y_coord, int width, int height, SDL_Texture *bac
 void initialise_chicken(Chicken *hen, roomGrid *room_grid);
 void changeChickenDirection(Chicken *hen);
 void draw_room(SDL_Texture *grafix_tex, roomGrid *room_grid);
-void draw_obj(SDL_Texture *grafix_tex, roomGrid *room_grid);
+void draw_obj(SDL_Texture *grafix_tex, roomGrid *room_grid, progress *puzzle, Chicken *hen);
 void rcsrc_set(int x_coord, int y_coord, int width, int height, SDL_Texture *grafix_tex, roomGrid *room_grid);
 void rcobj_set(int x_coord, int y_coord, int width, int height, int dest_x, int dest_y, SDL_Texture *grafix_tex, roomGrid *room_grid);
 void position_chicken(Chicken *hen, roomGrid *room_grid);
@@ -670,7 +670,7 @@ void draw(roomGrid *room_grid, progress *puzzle, char *instructions_list[NUM_INS
     SDL_Texture *grafix_tex;
 
     /*One texture to rule them all*/
-    grafix = IMG_Load("gfx/tile_array.png");  //if you want to add new items, to code, ensure to check the txt file with the coordinates
+    grafix = IMG_Load("gfx/tile_array.png");  //if you want to add new items to the code check the txt file for the coordinates
     grafix_tex = SDL_CreateTextureFromSurface(room_grid -> renderer, grafix);
     SDL_FreeSurface (grafix);
 
@@ -694,10 +694,10 @@ void draw(roomGrid *room_grid, progress *puzzle, char *instructions_list[NUM_INS
         }
 
         draw_room(grafix_tex, room_grid);
-        draw_obj(grafix_tex, room_grid);
+        draw_obj(grafix_tex, room_grid, puzzle, hen);
 
         /*RenderClear to wipe framebuffer, RenderCopy to compose final framebuffer, RenderPresent puts on screen*/
-       // SDL_RenderCopy(room_grid -> renderer, chickentex, &hen -> srcChicken, &hen -> dstChicken);
+        SDL_RenderCopy(room_grid -> renderer, grafix_tex, &hen -> srcChicken, &hen -> dstChicken);
         SDL_RenderCopy(room_grid -> renderer, grafix_tex, &room_grid -> rc_sprite_pos, &room_grid -> rc_sprite);  //draws 
         SDL_RenderPresent(room_grid -> renderer);
 
@@ -749,13 +749,34 @@ void rcsrc_set(int x_coord, int y_coord, int width, int height, SDL_Texture *gra
 }
 
 /*draws an object by selecting values from the tile sheet and drawing them to a destination on the game map*/
-void draw_obj(SDL_Texture *grafix_tex, roomGrid *room_grid)
+void draw_obj(SDL_Texture *grafix_tex, roomGrid *room_grid, progress *puzzle, Chicken *hen)
 {
     /*draw and position extractor*/
     rcobj_set(264, 63, 64, 64, 0, 0, grafix_tex, room_grid);
 
     /*draw and position fan*/
     rcobj_set(0, 62, 64, 64, 737, 318, grafix_tex, room_grid);
+
+    /*draw weight a*/
+    if((puzzle -> player_has_a_weight == false) && (puzzle -> a_weight_on_hinge == false) ){
+        rcobj_set(208, 131, 32, 32, 0, 128, grafix_tex, room_grid);
+    }
+
+    /*draw weight b*/
+    if((puzzle -> player_has_b_weight == false) && (puzzle -> b_weight_on_hinge == false)){
+        rcobj_set(240, 131, 32, 32, 672, 0, grafix_tex, room_grid);
+    }
+    
+    /*draw door*/
+    rcobj_set(332, 66, 96, 96, 416, 0, grafix_tex, room_grid);
+
+    /*draw chicken_cage*/
+    if(hen -> chicken_cross_road == true){
+        rcobj_set(529, 0, 96, 96, 192, 256, grafix_tex, room_grid);
+    }
+    else{
+        rcobj_set(433, 0, 96, 96, 192, 256, grafix_tex, room_grid);
+    }
 
 }
 
