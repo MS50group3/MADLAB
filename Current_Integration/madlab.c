@@ -1,15 +1,6 @@
 // PREPROCESSING
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <SDL2/SDL.h>
-#include <stdbool.h>
-#include <string.h>
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_mixer.h>
-#include <SDL2/SDL_ttf.h>
-#include <math.h>
-#include <assert.h>
+#include "extern.h"
 
 #define SCREEN_WIDTH     		800
 #define SCREEN_HEIGHT    		640
@@ -39,6 +30,7 @@
 #define BLANK                     0
 #define NUM_DIRECTIONS            4
 #define NUM_TILE_TYPES			  4
+#define NUM_ARGS                  3
 
 #define MAXNUMTOKENS 			  50 // Maximum number of lines
 #define MAXTOKENSIZE 			  7 // maximum instruction length
@@ -57,17 +49,11 @@ __FILE__, __LINE__); exit(2); }
 
 // TYPEDEFS AND ENUMERATION
 
-enum compass{up = 0, right = 1, down = 2, left = 3};
-typedef enum compass compass;
-
 enum tileType{path = 0, obstacle = 1, puz_1 = 9, puz_2 = 3, puz_3 = 1, puz_4 = 7, puz_5 = 6, puz_6 = 5};
 typedef enum tileType tileType;
 
 enum wrong_right {correct, incorrect};
 typedef enum wrong_right wrong_right;
-
-enum fin_unfin {unfinished, finished};
-typedef enum fin_unfin fin_unfin;
 
 enum on_off {off, on};
 typedef enum on_off on_off;
@@ -89,31 +75,6 @@ typedef enum inst Inst;
 
 enum op{ ADD, SUB, MULT, DIV, NONE };
 typedef enum op Op;
-
-typedef struct roomGrid
-{
-    int **room_array;
-    compass direction;
-    SDL_Rect rc_sprite, rc_sprite_pos, rc_src, rc_obj, rc_obj_dest, rc_dest;
-    SDL_Window *window;
-    SDL_Renderer *renderer;
-    SDL_Surface *surface;
-    SDL_Texture *texture;
-    fin_unfin finished;
-    bool gamerunning;
-    int left_x_coord;
-    int right_x_coord;
-    int bottom_y_coord;
-    int top_y_coord;
-    int x_sprite_centre;
-    int y_sprite_centre;
-    int probe;
-    int skip_checker;
-    int problem_quitter;
-    int refresh_counter;
-    Mix_Chunk *mus;
-    int paused;
-}roomGrid;
 
 typedef struct Chicken
 {
@@ -1098,7 +1059,7 @@ int action(roomGrid *room_grid, progress *puzzle, char *instructions_list[NUM_IN
                             return 1;
                             break;
 
-        case(puz_2):        if((puzzle -> puzzle_1_seen == true)){
+        case(puz_2):        if(puzzle -> puzzle_1_seen == true){
                                 door_hinge_problem(room_grid, puzzle, instructions_list);
                             }
                             return 0;
@@ -2024,9 +1985,33 @@ void menu_space_press(roomGrid *room_grid, int *current_selection, SDL_Texture *
 
     if( *current_selection == image_drawing ){
 
-        // image_drawing_tool(room_grid, argv, argc, instructions_list);
-        // load_menu_frame(room_grid);
-        // highlight_area(room_grid, *current_selection, menu_tex, options_tex);
+        image_drawing_tool(room_grid, argv, argc, instructions_list);
+        load_menu_frame(room_grid);
+        highlight_area(room_grid, *current_selection, menu_tex, options_tex);
 
     } 
 }
+
+
+void image_drawing_tool(roomGrid *room_grid, char *argv[], int argc, char *instructions_list[NUM_INSTRUCTIONS])
+{
+
+    if(argc == NUM_ARGS) {
+
+        print_instruction(room_grid, instructions_list, 64, 66);
+
+        Run_interpreter(room_grid, argv, instructions_list); 
+        // Run_interpreter is external
+
+        room_grid->refresh_counter = 0;
+        room_grid->skip_checker = off;
+        look_for_action(room_grid);
+    }
+    else {
+
+        print_instruction(room_grid, instructions_list, 62, 64);
+
+    }
+}
+
+
