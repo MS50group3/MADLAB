@@ -75,7 +75,6 @@ typedef struct Chicken
     bool chicken_cross_road;
 }Chicken;
 
-
 struct progress
 {   
     bool puzzle_1_seen;
@@ -211,12 +210,9 @@ void initialise_level_editor_map(int **map_array);
 void level_editor(roomGrid *room_grid);
 void editor_interactions(roomGrid *room_grid, bool *running, editor_input *editor_input);
 
-void configure_mouse(int excess, int *tile_x, int *tile_y, editor_input editor_input, cursor cursor,
- SDL_Rect *cursor_src, SDL_Rect *cursor_dst);
+void configure_mouse(int excess, editor_input *editor_input, cursor cursor, SDL_Rect *cursor_src, SDL_Rect *cursor_dst);
 
-Edit draw_edited_map(roomGrid *room_grid, editor_input editor_input, int tile_x, 
-                        int tile_y, SDL_Texture *cursor_tex, SDL_Rect cursor_src, 
-                        SDL_Rect cursor_dst, Edit edit, SDL_Texture *grafix_tex);
+Edit draw_edited_map(roomGrid *room_grid, editor_input *editor_input, SDL_Texture *cursor_tex, SDL_Rect cursor_src, SDL_Rect cursor_dst, Edit edit, SDL_Texture *grafix_tex);
 
 //FUNCTION FOR INTERPRETER BONUS FEATURE
 void image_drawing_tool(roomGrid *room_grid, char *argv[], int argc, char *instructions_list[NUM_INSTRUCTIONS]);
@@ -1545,7 +1541,7 @@ void level_editor(roomGrid *room_grid)
     edit.previous  = 0;
     edit.src_value = 0;
     
-    int excess = 0, tile_x = 0, tile_y = 0;
+    int excess = 0;
     
     initialise_level_editor_map(room_grid->room_array);
     
@@ -1573,9 +1569,9 @@ void level_editor(roomGrid *room_grid)
         // Get the exact mouse coords and put them in editor_input
         SDL_GetMouseState(&editor_input.mouse_x, &editor_input.mouse_y);
 
-        configure_mouse(excess, &tile_x, &tile_y, editor_input, cursor, &cursor_src, &cursor_dst);
+        configure_mouse(excess, &editor_input, cursor, &cursor_src, &cursor_dst);
 
-        edit = draw_edited_map(room_grid, editor_input, tile_x, tile_y, cursor_tex, cursor_src, cursor_dst, edit, grafix_tex);
+        edit = draw_edited_map(room_grid, &editor_input, cursor_tex, cursor_src, cursor_dst, edit, grafix_tex);
     }
     
     load_menu_frame(room_grid);
@@ -1589,29 +1585,29 @@ void level_editor(roomGrid *room_grid)
 }
 
 
-Edit draw_edited_map(roomGrid *room_grid, editor_input editor_input, int tile_x, int tile_y,  
+Edit draw_edited_map(roomGrid *room_grid, editor_input *editor_input, 
                     SDL_Texture *cursor_tex, SDL_Rect cursor_src, SDL_Rect cursor_dst, 
                     Edit edit, SDL_Texture *grafix_tex)
 {
 
 	// If the mouse has been held down between events:
-    if (editor_input.add == edit.previous && edit.previous == 1) 
+    if (editor_input->add == edit.previous && edit.previous == 1) 
     {
     	// Continue to use the original tile type:
-        room_grid->room_array[tile_y][tile_x] = edit.src_value; 
+        room_grid->room_array[editor_input->mouse_tile_y][editor_input->mouse_tile_x] = edit.src_value; 
     }
 
     // If we get a NEW add signal:
-    else if(editor_input.add == 1) 
+    else if(editor_input->add == 1) 
     {   
-        room_grid->room_array[tile_y][tile_x]++; // Increment the tile type
-        room_grid->room_array[tile_y][tile_x] = room_grid->room_array[tile_y][tile_x] % NUM_TILE_TYPES; 
-        edit.src_value = room_grid->room_array[tile_y][tile_x];
+        room_grid->room_array[editor_input->mouse_tile_y][editor_input->mouse_tile_x]++; // Increment the tile type
+        room_grid->room_array[editor_input->mouse_tile_y][editor_input->mouse_tile_x] = room_grid->room_array[editor_input->mouse_tile_y][editor_input->mouse_tile_x] % NUM_TILE_TYPES; 
+        edit.src_value = room_grid->room_array[editor_input->mouse_tile_y][editor_input->mouse_tile_x];
     } 
     
-    if (editor_input.remove == 1)
+    if (editor_input->remove == 1)
     {
-        room_grid->room_array[tile_y][tile_x] = BLANK;
+        room_grid->room_array[editor_input->mouse_tile_y][editor_input->mouse_tile_x] = BLANK;
     }
     
     // Update the room graphics
@@ -1659,31 +1655,28 @@ Edit draw_edited_map(roomGrid *room_grid, editor_input editor_input, int tile_x,
     SDL_RenderPresent(room_grid -> renderer);
     SDL_RenderClear(room_grid -> renderer); // Clear the renderer
 
-    edit.previous = editor_input.add;
+    edit.previous = editor_input->add;
 
     return edit;   
 }
 
-void configure_mouse(int excess, int *tile_x, int *tile_y, editor_input editor_input, cursor cursor,
+void configure_mouse(int excess, editor_input *editor_input, cursor cursor,
  SDL_Rect *cursor_src, SDL_Rect *cursor_dst)
 {
     // Round the coords to the nearest multiple of TILE_SIZE:
-    excess = editor_input.mouse_x % TILE_SIZE;
-    editor_input.mouse_x = editor_input.mouse_x - excess;
+    excess = editor_input->mouse_x % TILE_SIZE;
+    editor_input->mouse_x = editor_input->mouse_x - excess;
     
-    excess = editor_input.mouse_y % TILE_SIZE;
-    editor_input.mouse_y = editor_input.mouse_y - excess;
-    
-    
-    *tile_x = editor_input.mouse_x / TILE_SIZE;
-    *tile_y = editor_input.mouse_y / TILE_SIZE;
+    excess = editor_input->mouse_y % TILE_SIZE;
+    editor_input->mouse_y = editor_input->mouse_y - excess;
+
     // Which tile 'element' are we in:
-    //editor_input.mouse_tile_x = editor_input.mouse_x / TILE_SIZE;
-    //editor_input.mouse_tile_y = editor_input.mouse_y / TILE_SIZE;
+    editor_input->mouse_tile_x = editor_input->mouse_x / TILE_SIZE;
+    editor_input->mouse_tile_y = editor_input->mouse_y / TILE_SIZE;
    
     // cursor details
-    cursor.x = editor_input.mouse_x;
-    cursor.y = editor_input.mouse_y;
+    cursor.x = editor_input->mouse_x;
+    cursor.y = editor_input->mouse_y;
     
     // Where to get the image from (relative)
     cursor_src->y = 0;
