@@ -210,8 +210,9 @@ void save(roomGrid *room_grid);
 void initialise_level_editor_map(int **map_array);
 void level_editor(roomGrid *room_grid);
 void editor_interactions(roomGrid *room_grid, bool *running, editor_input *editor_input);
-void configure_mouse(int excess, editor_input editor_input, 
-                        cursor cursor, SDL_Rect *cursor_src, SDL_Rect *cursor_dst);
+
+void configure_mouse(int excess, int *tile_x, int *tile_y, editor_input editor_input, cursor cursor,
+ SDL_Rect *cursor_src, SDL_Rect *cursor_dst);
 
 Edit draw_edited_map(roomGrid *room_grid, editor_input editor_input, int tile_x, 
                         int tile_y, SDL_Texture *cursor_tex, SDL_Rect cursor_src, 
@@ -1572,7 +1573,7 @@ void level_editor(roomGrid *room_grid)
         // Get the exact mouse coords and put them in editor_input
         SDL_GetMouseState(&editor_input.mouse_x, &editor_input.mouse_y);
 
-        configure_mouse(excess, editor_input, cursor, &cursor_src, &cursor_dst);
+        configure_mouse(excess, &tile_x, &tile_y, editor_input, cursor, &cursor_src, &cursor_dst);
 
         edit = draw_edited_map(room_grid, editor_input, tile_x, tile_y, cursor_tex, cursor_src, cursor_dst, edit, grafix_tex);
     }
@@ -1663,7 +1664,8 @@ Edit draw_edited_map(roomGrid *room_grid, editor_input editor_input, int tile_x,
     return edit;   
 }
 
-void configure_mouse(int excess, editor_input editor_input, cursor cursor, SDL_Rect *cursor_src, SDL_Rect *cursor_dst)
+void configure_mouse(int excess, int *tile_x, int *tile_y, editor_input editor_input, cursor cursor,
+ SDL_Rect *cursor_src, SDL_Rect *cursor_dst)
 {
     // Round the coords to the nearest multiple of TILE_SIZE:
     excess = editor_input.mouse_x % TILE_SIZE;
@@ -1673,11 +1675,11 @@ void configure_mouse(int excess, editor_input editor_input, cursor cursor, SDL_R
     editor_input.mouse_y = editor_input.mouse_y - excess;
     
     
-    //*tile_x = editor_input.mouse_x / TILE_SIZE;
-    //*tile_y = editor_input.mouse_y / TILE_SIZE;
+    *tile_x = editor_input.mouse_x / TILE_SIZE;
+    *tile_y = editor_input.mouse_y / TILE_SIZE;
     // Which tile 'element' are we in:
-    editor_input.mouse_tile_x = editor_input.mouse_x / TILE_SIZE;
-    editor_input.mouse_tile_y = editor_input.mouse_y / TILE_SIZE;
+    //editor_input.mouse_tile_x = editor_input.mouse_x / TILE_SIZE;
+    //editor_input.mouse_tile_y = editor_input.mouse_y / TILE_SIZE;
    
     // cursor details
     cursor.x = editor_input.mouse_x;
