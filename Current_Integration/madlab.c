@@ -101,6 +101,9 @@ struct cursor{
     int x; 
     int y; 
     int tileID;
+    SDL_Texture *cursor_tex; 
+    SDL_Rect cursor_src;
+    SDL_Rect cursor_dst;
 }; 
 typedef struct cursor cursor;
 
@@ -210,14 +213,12 @@ void initialise_level_editor_map(int **map_array);
 void level_editor(roomGrid *room_grid);
 void editor_interactions(roomGrid *room_grid, bool *running, editor_input *editor_input);
 
-void configure_mouse(int excess, editor_input *editor_input, cursor cursor, SDL_Rect *cursor_src, SDL_Rect *cursor_dst);
+void configure_mouse(int excess, editor_input *editor_input, cursor *cursor);
 
-Edit draw_edited_map(roomGrid *room_grid, editor_input *editor_input, SDL_Texture *cursor_tex, SDL_Rect cursor_src, SDL_Rect cursor_dst, Edit edit, SDL_Texture *grafix_tex);
+Edit draw_edited_map(roomGrid *room_grid, editor_input *editor_input, Edit edit, SDL_Texture *grafix_tex, cursor *cursor);
 
 //FUNCTION FOR INTERPRETER BONUS FEATURE
 void image_drawing_tool(roomGrid *room_grid, char *argv[], int argc, char *instructions_list[NUM_INSTRUCTIONS]);
-
-
 
 //MAIN
 
@@ -1547,8 +1548,7 @@ void level_editor(roomGrid *room_grid)
     
     // Background, tile, cursor and menu stuff
     SDL_Surface *grafix_surf, *cursor_surf, *menu_surf, *options_surf;
-    SDL_Texture *grafix_tex, *cursor_tex, *menu_tex, *options_tex;
-    SDL_Rect cursor_src, cursor_dst;
+    SDL_Texture *grafix_tex, *menu_tex, *options_tex;
     
     // One texture to rule them all? (Attempt)
     load_image(room_grid, &grafix_surf, &grafix_tex, "tile_array.png");
@@ -1557,7 +1557,7 @@ void level_editor(roomGrid *room_grid)
     cursor_surf = IMG_Load("cursor.png");
     Uint32 colorkey = SDL_MapRGB(cursor_surf->format, 127, 0, 127);
     SDL_SetColorKey( cursor_surf, SDL_TRUE, colorkey);
-    cursor_tex = SDL_CreateTextureFromSurface(room_grid -> renderer, cursor_surf);
+    cursor.cursor_tex = SDL_CreateTextureFromSurface(room_grid -> renderer, cursor_surf);
     SDL_FreeSurface (cursor_surf);
     
     
@@ -1569,9 +1569,9 @@ void level_editor(roomGrid *room_grid)
         // Get the exact mouse coords and put them in editor_input
         SDL_GetMouseState(&editor_input.mouse_x, &editor_input.mouse_y);
 
-        configure_mouse(excess, &editor_input, cursor, &cursor_src, &cursor_dst);
+        configure_mouse(excess, &editor_input, &cursor);
 
-        edit = draw_edited_map(room_grid, &editor_input, cursor_tex, cursor_src, cursor_dst, edit, grafix_tex);
+        edit = draw_edited_map(room_grid, &editor_input, edit, grafix_tex, &cursor);
     }
     
     load_menu_frame(room_grid);
@@ -1585,9 +1585,7 @@ void level_editor(roomGrid *room_grid)
 }
 
 
-Edit draw_edited_map(roomGrid *room_grid, editor_input *editor_input, 
-                    SDL_Texture *cursor_tex, SDL_Rect cursor_src, SDL_Rect cursor_dst, 
-                    Edit edit, SDL_Texture *grafix_tex)
+Edit draw_edited_map(roomGrid *room_grid, editor_input *editor_input, Edit edit, SDL_Texture *grafix_tex, cursor *cursor)
 {
 
 	// If the mouse has been held down between events:
@@ -1649,7 +1647,7 @@ Edit draw_edited_map(roomGrid *room_grid, editor_input *editor_input,
         }
     }
 
-    SDL_RenderCopy(room_grid -> renderer, cursor_tex, &cursor_src, &cursor_dst);
+    SDL_RenderCopy(room_grid -> renderer, cursor->cursor_tex, &cursor->cursor_src, &cursor->cursor_dst);
     
     // Update the screen with the latest render 
     SDL_RenderPresent(room_grid -> renderer);
@@ -1660,8 +1658,7 @@ Edit draw_edited_map(roomGrid *room_grid, editor_input *editor_input,
     return edit;   
 }
 
-void configure_mouse(int excess, editor_input *editor_input, cursor cursor,
- SDL_Rect *cursor_src, SDL_Rect *cursor_dst)
+void configure_mouse(int excess, editor_input *editor_input, cursor *cursor)
 {
     // Round the coords to the nearest multiple of TILE_SIZE:
     excess = editor_input->mouse_x % TILE_SIZE;
@@ -1675,20 +1672,20 @@ void configure_mouse(int excess, editor_input *editor_input, cursor cursor,
     editor_input->mouse_tile_y = editor_input->mouse_y / TILE_SIZE;
    
     // cursor details
-    cursor.x = editor_input->mouse_x;
-    cursor.y = editor_input->mouse_y;
+    cursor->x = editor_input->mouse_x;
+    cursor->y = editor_input->mouse_y;
     
     // Where to get the image from (relative)
-    cursor_src->y = 0;
-    cursor_src->x = 0;
-    cursor_src->w = TILE_SIZE;
-    cursor_src->h = TILE_SIZE;
+    cursor->cursor_src.y = 0;
+    cursor->cursor_src.x = 0;
+    cursor->cursor_src.w = TILE_SIZE;
+    cursor->cursor_src.h = TILE_SIZE;
     
     // Where to put it (relative)
-    cursor_dst->y = cursor.y;
-    cursor_dst->x = cursor.x;
-    cursor_dst->w = TILE_SIZE;
-    cursor_dst->h = TILE_SIZE;
+    cursor->cursor_dst.y = cursor->y;
+    cursor->cursor_dst.x = cursor->x;
+    cursor->cursor_dst.w = TILE_SIZE;
+    cursor->cursor_dst.h = TILE_SIZE;
 }
 
 void editor_interactions(roomGrid *room_grid, bool *running, editor_input *editor_input)
