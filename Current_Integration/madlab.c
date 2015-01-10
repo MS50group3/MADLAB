@@ -32,21 +32,6 @@
 #define NUM_TILE_TYPES			  4
 #define NUM_ARGS                  3
 
-#define MAXNUMTOKENS 			  50 // Maximum number of lines
-#define MAXTOKENSIZE 			  7 // maximum instruction length
-#define CURRENT 				  p->wds[p->counter]
-#define NEXT 					  p->wds[p->counter+1]
-#define STACKSIZE 				  50
-#define PI 						  3.142
-#define ANSI_A 					  65
-#define NUM_VARS 				  26
-#define CENTRE_X				  400
-#define CENTRE_Y				  300
-
-#define ERROR(PHRASE) {fprintf(stderr, "\n\nERROR: %s. \
-%s, line %d\n\n\n", PHRASE, \
-__FILE__, __LINE__); exit(2); }
-
 // TYPEDEFS AND ENUMERATION
 
 enum tileType{path = 0, obstacle = 1, puz_1 = 9, puz_2 = 3, puz_3 = 1, puz_4 = 7, puz_5 = 6, puz_6 = 5};
@@ -123,6 +108,8 @@ typedef struct cursor cursor;
 struct editor_input{
     int mouse_x; 
     int mouse_y;
+    int mouse_tile_x;
+    int mouse_tile_y;
     int add; 
     int remove;
 };
@@ -142,30 +129,6 @@ struct problem{
     int num_chars_in_ans;
 };
 typedef struct problem problem;
-
-struct program{
-   char wds[MAXNUMTOKENS][MAXTOKENSIZE];     
-   int counter, do_start, do_store;                  
-   double var[NUM_VARS];                     
-   int index, index_store, set_target;       
-   int from, to, from_store, to_store, temp, do_var, do_var_store;
-   on_off error_detected;
-};
-typedef struct program Program;
-
-struct turtle{
-    double bearing;
-    int distance;
-    int x;
-    int y;
-};
-typedef struct turtle Turtle;
-
-struct stack{
-    double array[STACKSIZE]; // array of doubles, sizing must be fixed
-    int top;                 
-};
-typedef struct stack Stack;
 
 //FUNCTIONS FOR PROBLEMS
 
@@ -191,28 +154,6 @@ void initialise_problem(problem *prob_point, char *correct_answer, int first_ins
 void door_hinge_problem(roomGrid *room_grid, progress *puzzle, char *instructions_list[NUM_INSTRUCTIONS]);
 void find_weight_a(roomGrid *room_grid, progress *puzzle, char *instructions_list[NUM_INSTRUCTIONS]);
 void find_weight_b(roomGrid *room_grid, progress *puzzle, char *instructions_list[NUM_INSTRUCTIONS]);
-
-//FUNCTIONS FOR PARSER
-
-void image_drawing_tool(roomGrid *room_grid, char *argv[], int argc, char *instructions_list[NUM_INSTRUCTIONS]);
-void Initialise_Program(Program *p);
-void Prog(Program *p, Turtle *t, roomGrid *room_grid, char *instructions_list[NUM_INSTRUCTIONS]);
-void InstructionList(Program *p, Turtle *t, roomGrid *room_grid, char *instructions_list[NUM_INSTRUCTIONS]);
-void Instruction(Program *p, Turtle *t, roomGrid *room_grid, char *instructions_list[NUM_INSTRUCTIONS]);
-void Varnum(Program *p, Turtle *t, Inst instruct, roomGrid *room_grid, char *instructions_list[NUM_INSTRUCTIONS]);
-void Var(Program *p, Turtle *t, roomGrid *room_grid, char *instructions_list[NUM_INSTRUCTIONS]);
-void Do(Program *p, Turtle *t, roomGrid *room_grid, char *instructions_list[NUM_INSTRUCTIONS]);
-void Set(Program *p, Turtle *t, roomGrid *room_grid, char *instructions_list[NUM_INSTRUCTIONS]);
-void Polish(Program *p, Turtle *t, roomGrid *room_grid, char *instructions_list[NUM_INSTRUCTIONS]);
-void Operator(Program *p, char *instructions_list[NUM_INSTRUCTIONS], roomGrid *room_grid);
-void DrawLine(Turtle *t, roomGrid *room_grid);
-void PrintValues(Turtle *t);
-void InitialiseStack(Stack *s);
-void Push(Stack *s, double *num);
-int  Pop(Stack *s);
-int  StringMatch(char string1[], char string2[]);
-void Scan_Program(Program *p, char *argv[], char *instructions_list[NUM_INSTRUCTIONS], roomGrid *room_grid);
-
 
 //FUNCTIONS FOR MOVEMENT
 
@@ -269,12 +210,16 @@ void save(roomGrid *room_grid);
 void initialise_level_editor_map(int **map_array);
 void level_editor(roomGrid *room_grid);
 void editor_interactions(roomGrid *room_grid, bool *running, editor_input *editor_input);
+void configure_mouse(int excess, editor_input editor_input, 
+                        cursor cursor, SDL_Rect *cursor_src, SDL_Rect *cursor_dst);
 
-void configure_mouse(int excess, int *tile_x, int *tile_y, editor_input editor_input, cursor cursor,
- SDL_Rect *cursor_src, SDL_Rect *cursor_dst);
+Edit draw_edited_map(roomGrid *room_grid, editor_input editor_input, int tile_x, 
+                        int tile_y, SDL_Texture *cursor_tex, SDL_Rect cursor_src, 
+                        SDL_Rect cursor_dst, Edit edit, SDL_Texture *grafix_tex);
 
-Edit draw_edited_map(roomGrid *room_grid, editor_input editor_input, int tile_x, int tile_y, 
-    SDL_Texture *cursor_tex, SDL_Rect cursor_src, SDL_Rect cursor_dst, Edit edit, SDL_Texture *grafix_tex);
+//FUNCTION FOR INTERPRETER BONUS FEATURE
+void image_drawing_tool(roomGrid *room_grid, char *argv[], int argc, char *instructions_list[NUM_INSTRUCTIONS]);
+
 
 
 //MAIN
@@ -1624,13 +1569,12 @@ void level_editor(roomGrid *room_grid)
         
         editor_interactions(room_grid, &running, &editor_input);
         
-        // Get the mouse coords
+        // Get the exact mouse coords and put them in editor_input
         SDL_GetMouseState(&editor_input.mouse_x, &editor_input.mouse_y);
 
-        configure_mouse(excess, &tile_x, &tile_y, editor_input, cursor, &cursor_src, &cursor_dst);
+        configure_mouse(excess, editor_input, cursor, &cursor_src, &cursor_dst);
 
         edit = draw_edited_map(room_grid, editor_input, tile_x, tile_y, cursor_tex, cursor_src, cursor_dst, edit, grafix_tex);
-        
     }
     
     load_menu_frame(room_grid);
@@ -1719,7 +1663,7 @@ Edit draw_edited_map(roomGrid *room_grid, editor_input editor_input, int tile_x,
     return edit;   
 }
 
-void configure_mouse(int excess, int *tile_x, int *tile_y, editor_input editor_input, cursor cursor, SDL_Rect *cursor_src, SDL_Rect *cursor_dst)
+void configure_mouse(int excess, editor_input editor_input, cursor cursor, SDL_Rect *cursor_src, SDL_Rect *cursor_dst)
 {
     // Round the coords to the nearest multiple of TILE_SIZE:
     excess = editor_input.mouse_x % TILE_SIZE;
@@ -1728,10 +1672,13 @@ void configure_mouse(int excess, int *tile_x, int *tile_y, editor_input editor_i
     excess = editor_input.mouse_y % TILE_SIZE;
     editor_input.mouse_y = editor_input.mouse_y - excess;
     
-    // Which tile 'element' are we in:
-    *tile_x = editor_input.mouse_x / TILE_SIZE;
-    *tile_y = editor_input.mouse_y / TILE_SIZE;
     
+    //*tile_x = editor_input.mouse_x / TILE_SIZE;
+    //*tile_y = editor_input.mouse_y / TILE_SIZE;
+    // Which tile 'element' are we in:
+    editor_input.mouse_tile_x = editor_input.mouse_x / TILE_SIZE;
+    editor_input.mouse_tile_y = editor_input.mouse_y / TILE_SIZE;
+   
     // cursor details
     cursor.x = editor_input.mouse_x;
     cursor.y = editor_input.mouse_y;
@@ -1747,7 +1694,6 @@ void configure_mouse(int excess, int *tile_x, int *tile_y, editor_input editor_i
     cursor_dst->x = cursor.x;
     cursor_dst->w = TILE_SIZE;
     cursor_dst->h = TILE_SIZE;
-    
 }
 
 void editor_interactions(roomGrid *room_grid, bool *running, editor_input *editor_input)

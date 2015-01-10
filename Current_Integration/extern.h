@@ -4,11 +4,13 @@
 #include <string.h>
 #include <math.h>
 #include <assert.h>
-
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_mixer.h>
 #include <SDL2/SDL_ttf.h>
+
+// Any #defines needed in both interpreter.c and madlab.c:
+#define NUM_INSTRUCTIONS         68
 
 // Typedefs necessary for external declaration of room_grid:
 enum fin_unfin {unfinished, finished};
@@ -41,8 +43,6 @@ typedef struct roomGrid
     Mix_Chunk *mus;
     int paused;
 }roomGrid;
-
-#define NUM_INSTRUCTIONS         68
 
 /* External declaration of room grid */
 extern roomGrid room_grid; 
