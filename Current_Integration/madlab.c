@@ -1649,10 +1649,9 @@ void menu_space_press(roomGrid *room_grid, int *current_selection, SDL_Texture *
                         switch(event.key.keysym.sym){
 
                         case SDLK_SPACE:
-                        
                             *current_selection = new_game;
                             highlight_area(room_grid, *current_selection, menu_tex, options_tex);
-                            break;
+                        break;
                             
                     }
                 }
