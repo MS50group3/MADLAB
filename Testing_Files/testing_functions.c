@@ -2712,16 +2712,24 @@ void highlight_area_case(menu_options option)
 void test_cycle_options(void){
 
     printf("\n");
+    SDL_Event event;
+   
+    event.type = SDL_KEYDOWN;
 
-    cycle_options_case(0, image_drawing);
-    cycle_options_case(1, image_drawing);
-    cycle_options_case(0, editor);
+    event.key.keysym.sym = SDLK_DOWN;
+    cycle_options_case( event, image_drawing);
+
+    event.key.keysym.sym = SDLK_UP;
+    cycle_options_case(event, image_drawing);
+
+    event.key.keysym.sym = SDLK_DOWN;
+    cycle_options_case(event, editor);
 
     printf("\n");
     
 }
 
-void cycle_options_case(int up_down, int current_selection){
+void cycle_options_case(SDL_Event event, int current_selection){
     
     bool menu_running = true;
     int temp;
@@ -2732,9 +2740,9 @@ void cycle_options_case(int up_down, int current_selection){
 
         temp = current_selection;
 
-        switch(up_down)
+        switch(event.key.keysym.sym)
         {
-            case 1: // simulate UP
+            case SDLK_UP: // simulate UP
                 if (current_selection == image_drawing || current_selection == options || current_selection == editor )
                 {    
                     current_selection--;
@@ -2748,7 +2756,7 @@ void cycle_options_case(int up_down, int current_selection){
             break;
 
 
-            case 0: // simulate DOWN
+            case SDLK_DOWN: // simulate DOWN
                 if( current_selection == new_game || current_selection == image_drawing || current_selection == options )
                 {
                     current_selection++;
@@ -2765,11 +2773,49 @@ void cycle_options_case(int up_down, int current_selection){
     }
 }
 
-
+// AFTER a space press
 void test_menu_space_press(void){
 
+    printf("\n");
+    SDL_Event event;
+    event.key.keysym.sym = SDLK_SPACE;
 
+    menu_space_press_case(event, new_game);
+    menu_space_press_case(event, options);
+    menu_space_press_case(event, editor);
+    printf("\n");
 
+}
+
+void menu_space_press_case(SDL_Event event, int current_selection){
+
+    bool menu_running = true;
+    bool select = false;
+
+    if( current_selection == new_game ){
+        menu_running = false;
+        assert_test( menu_running == false, "New game. Menu successfully stopped.");
+    }
+
+    if (current_selection == options)
+    {   
+        assert_test(current_selection == options, "Options opened.");
+       
+        if(event.key.keysym.sym == SDLK_SPACE){
+            select = true;
+            assert_test( select == true, "Re-spaced. Back to menu.");
+        }
+    }
+
+    if (current_selection == editor)
+    {
+        assert_test(current_selection == editor, "Editor opened.");
+    }
+
+    if (current_selection == image_drawing)
+    {
+        assert_test(current_selection == image_drawing, "Drawing tool opened.");
+    }
 
 }
 
