@@ -1,0 +1,22 @@
+Coding notes:
+
+In draw_room: 
+
+Why is it not else if in the loop.
+Why is there no action if the array isn't zero or one.
+
+In movement:
+
+No default for switch.
+
+In initialise_problem:
+
+Could put a clause saying the number of instructions has to make sense.
+
+In chicken walks:
+
+Could this be incorporated into the regular walking function?
+
+In ChickenChangeDirection:
+
+Nothing to catch if the chicken is going in an unspecified direction. 
