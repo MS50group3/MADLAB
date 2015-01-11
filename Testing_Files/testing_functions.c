@@ -2713,33 +2713,52 @@ void test_cycle_options(void){
 
     printf("\n");
 
-    cycle_options_case(image_drawing);
-    cycle_options_case(editor);
+    cycle_options_case(0, image_drawing);
+    cycle_options_case(1, image_drawing);
+    cycle_options_case(0, editor);
 
     printf("\n");
     
 }
 
-void cycle_options_case(int current_selection){
+void cycle_options_case(int up_down, int current_selection){
     
     bool menu_running = true;
     int temp;
 
     while(menu_running){
 
-        assert_test( menu_running == true, "Menu successfully recognised as running");
+        assert_test( menu_running == true, "Menu successfully recognised as running.");
 
         temp = current_selection;
 
-        if (current_selection == image_drawing || current_selection == options || 
-            current_selection == editor ){
-            
-            current_selection--;
-            assert_test( current_selection = temp - 1 ,"Below option selected.");
-        }
-        else
+        switch(up_down)
         {
-            assert_test( current_selection == temp, "Bottom option reselected.");
+            case 1: // simulate UP
+                if (current_selection == image_drawing || current_selection == options || current_selection == editor )
+                {    
+                    current_selection--;
+                    assert_test( current_selection = temp - 1 ,"Lower option selected correctly.");
+                }
+                else
+                {
+                    assert_test( current_selection = temp, "Same option reselected correctly.");
+                }
+
+            break;
+
+
+            case 0: // simulate DOWN
+                if( current_selection == new_game || current_selection == image_drawing || current_selection == options )
+                {
+                    current_selection++;
+                    assert_test( current_selection = temp + 1 ,"Higher option selected correctly.");
+                }      
+                else
+                {
+                    assert_test( current_selection = temp, "Same option reselected correctly.");
+                }      
+            break;
         }
         
         menu_running = false;
@@ -2747,6 +2766,12 @@ void cycle_options_case(int current_selection){
 }
 
 
+void test_menu_space_press(void){
+
+
+
+
+}
 
 
 

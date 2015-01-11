@@ -364,5 +364,5 @@ void highlight_area_case(menu_options option);
 
 void test_cycle_options(void);
 
-void cycle_options_case(int current_selection);
+void cycle_options_case(int up_down, int current_selection);
 
