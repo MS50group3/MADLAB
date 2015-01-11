@@ -2820,4 +2820,34 @@ void menu_space_press_case(SDL_Event event, int current_selection){
 }
 
 
+void test_image_drawing_tool(void){
+    printf("\n");
+    roomGrid room_grid;
+    roomGrid *rg = &room_grid;
+    image_drawing_tool_case( 3, rg);
+    printf("\n");
+}
+
+void image_drawing_tool_case(int argc, roomGrid *rg){
+
+
+    int running_interpreter = 0; 
+   
+    if (argc == 3)
+    {
+        running_interpreter = 1;
+        rg->refresh_counter = 0;
+        rg->skip_checker = off;
+
+        assert_test(running_interpreter == 1, "Three args. Interpreter launched.");
+        assert_test(rg->refresh_counter == 0, "Refresh counter reset.");
+        assert_test(rg->skip_checker == off, "Skip Checker unset.");
+    }
+    else
+    {
+        assert_test(running_interpreter == 0, "Too few args. Interpreter not launched.");
+    }
+
+}
+
 

@@ -102,5 +102,7 @@ int main(int aroom_gridc, char *argv[])
 
     set_up_test("Menu Space Press Suite", "Test of menu_space_press()", test_menu_space_press);
 
+    set_up_test("Image Drawing Tool Suite", "Test of image_drawing_tool()", test_image_drawing_tool);
+
     return(0);
 }

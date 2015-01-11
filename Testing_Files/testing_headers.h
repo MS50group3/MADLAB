@@ -370,3 +370,7 @@ void test_menu_space_press(void);
 
 void menu_space_press_case(SDL_Event event, int current_selection);
 
+void test_image_drawing_tool(void);
+
+void image_drawing_tool_case(int argc, roomGrid *rg);
+
