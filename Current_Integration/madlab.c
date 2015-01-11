@@ -123,6 +123,8 @@ struct edit{
 };
 typedef struct edit Edit;
 
+typedef int map[ROOM_Y][ROOM_X];
+
 struct problem{
     char *correct_answer;
     int first_instructions_start;
@@ -208,14 +210,14 @@ void load_image(roomGrid *room_grid, SDL_Surface **surf, SDL_Texture **tex, char
 
 
 //FUNCTIONS FOR EDITOR
-void save(roomGrid *room_grid);
-void initialise_level_editor_map(int **map_array);
+void save(map edit_map);
+void initialise_level_editor_map(int editor_map[ROOM_Y][ROOM_X]);
 void level_editor(roomGrid *room_grid);
-void editor_interactions(roomGrid *room_grid, bool *running, editor_input *editor_input);
+void editor_interactions(map edit_map, roomGrid *room_grid, bool *running, editor_input *editor_input);
 
 void configure_mouse(int excess, editor_input *editor_input, cursor *cursor);
 
-Edit draw_edited_map(roomGrid *room_grid, editor_input *editor_input, Edit edit, SDL_Texture *grafix_tex, cursor *cursor);
+Edit draw_edited_map(map edit_map, roomGrid *room_grid, editor_input *editor_input, Edit edit, SDL_Texture *grafix_tex, cursor *cursor);
 
 //FUNCTION FOR INTERPRETER BONUS FEATURE
 void image_drawing_tool(roomGrid *room_grid, char *argv[], int argc, char *instructions_list[NUM_INSTRUCTIONS]);
@@ -1506,7 +1508,7 @@ void run_menu_screen(roomGrid *room_grid, char *argv[], int argc, char *instruct
 
 }
 
-void save(roomGrid *room_grid){
+void save(map edit_map){
     
     FILE *writing_file;
 
@@ -1519,7 +1521,7 @@ void save(roomGrid *room_grid){
     {
         for (int j = 0; j < ROOM_X; ++j)
         {
-            fprintf(writing_file, "%d ", room_grid->room_array[i][j]);
+            fprintf(writing_file, "%d ", edit_map[i][j]);
         }
         
         fprintf(writing_file,"\n");
@@ -1535,16 +1537,19 @@ void level_editor(roomGrid *room_grid)
     bool running = true;
     editor_input editor_input;
     cursor cursor;
-    
+    int excess = 0;
+
+    // Temporary map needed to prevent editing the actual game
+	map edit_map;
+
     editor_input.add = 0;
     editor_input.remove = 0;
     
     edit.previous  = 0;
     edit.src_value = 0;
     
-    int excess = 0;
-    
-    initialise_level_editor_map(room_grid->room_array);
+    // Init to blanks:
+    initialise_level_editor_map(edit_map);
     
     // Background, tile, cursor and menu stuff
     SDL_Surface *grafix_surf, *cursor_surf, *menu_surf, *options_surf;
@@ -1560,18 +1565,17 @@ void level_editor(roomGrid *room_grid)
     cursor.cursor_tex = SDL_CreateTextureFromSurface(room_grid -> renderer, cursor_surf);
     SDL_FreeSurface (cursor_surf);
     
-    
     // Run the meat of the program.
     while(running){
         
-        editor_interactions(room_grid, &running, &editor_input);
+        editor_interactions(edit_map, room_grid, &running, &editor_input);
         
         // Get the exact mouse coords and put them in editor_input
         SDL_GetMouseState(&editor_input.mouse_x, &editor_input.mouse_y);
 
         configure_mouse(excess, &editor_input, &cursor);
 
-        edit = draw_edited_map(room_grid, &editor_input, edit, grafix_tex, &cursor);
+        edit = draw_edited_map(edit_map, room_grid, &editor_input, edit, grafix_tex, &cursor);
     }
     
     load_menu_frame(room_grid);
@@ -1585,27 +1589,27 @@ void level_editor(roomGrid *room_grid)
 }
 
 
-Edit draw_edited_map(roomGrid *room_grid, editor_input *editor_input, Edit edit, SDL_Texture *grafix_tex, cursor *cursor)
+Edit draw_edited_map(map edit_map, roomGrid *room_grid, editor_input *editor_input, Edit edit, SDL_Texture *grafix_tex, cursor *cursor)
 {
 
 	// If the mouse has been held down between events:
     if (editor_input->add == edit.previous && edit.previous == 1) 
     {
     	// Continue to use the original tile type:
-        room_grid->room_array[editor_input->mouse_tile_y][editor_input->mouse_tile_x] = edit.src_value; 
+        edit_map[editor_input->mouse_tile_y][editor_input->mouse_tile_x] = edit.src_value; 
     }
 
     // If we get a NEW add signal:
     else if(editor_input->add == 1) 
     {   
-        room_grid->room_array[editor_input->mouse_tile_y][editor_input->mouse_tile_x]++; // Increment the tile type
-        room_grid->room_array[editor_input->mouse_tile_y][editor_input->mouse_tile_x] = room_grid->room_array[editor_input->mouse_tile_y][editor_input->mouse_tile_x] % NUM_TILE_TYPES; 
-        edit.src_value = room_grid->room_array[editor_input->mouse_tile_y][editor_input->mouse_tile_x];
+        edit_map[editor_input->mouse_tile_y][editor_input->mouse_tile_x]++; // Increment the tile type
+        edit_map[editor_input->mouse_tile_y][editor_input->mouse_tile_x] = edit_map[editor_input->mouse_tile_y][editor_input->mouse_tile_x] % NUM_TILE_TYPES; 
+        edit.src_value = edit_map[editor_input->mouse_tile_y][editor_input->mouse_tile_x];
     } 
     
     if (editor_input->remove == 1)
     {
-        room_grid->room_array[editor_input->mouse_tile_y][editor_input->mouse_tile_x] = BLANK;
+        edit_map[editor_input->mouse_tile_y][editor_input->mouse_tile_x] = BLANK;
     }
     
     // Update the room graphics
@@ -1619,26 +1623,26 @@ Edit draw_edited_map(roomGrid *room_grid, editor_input *editor_input, Edit edit,
             room_grid -> rc_dest.w = TILE_SIZE;
             room_grid -> rc_dest.h = TILE_SIZE;
             
-            if (room_grid->room_array[i][j] == WALL)
+            if (edit_map[i][j] == WALL)
             {   
                 // If the array element is a 1, draw a wall
                 rcsrc_set(0, 138, 32, 32, grafix_tex, room_grid);
                 SDL_RenderCopy(room_grid -> renderer, grafix_tex, &room_grid -> rc_src, &room_grid -> rc_dest);
             }
 
-            else if ( room_grid->room_array[i][j] == BLANK)
+            else if ( edit_map[i][j] == BLANK)
             {   // If the element is a 0, draw a floor tile
                 rcsrc_set(34, 138, 32, 32, grafix_tex, room_grid);
                 SDL_RenderCopy(room_grid -> renderer, grafix_tex, &room_grid -> rc_src, &room_grid -> rc_dest);
             }
 
-            else if ( room_grid->room_array[i][j] == TERMINAL)
+            else if ( edit_map[i][j] == TERMINAL)
             {   // If the element is a 2, draw a red tile
                 rcsrc_set(71, 138, 32, 32, grafix_tex, room_grid);
                 SDL_RenderCopy(room_grid -> renderer, grafix_tex, &room_grid -> rc_src, &room_grid -> rc_dest);
             }
 
-            else if ( room_grid->room_array[i][j] == DESK)
+            else if ( edit_map[i][j] == DESK)
             {   // If the element is a 2, draw a red tile
                 rcsrc_set(140, 137, 32, 32, grafix_tex, room_grid);
                 SDL_RenderCopy(room_grid -> renderer, grafix_tex, &room_grid -> rc_src, &room_grid -> rc_dest);
@@ -1688,7 +1692,7 @@ void configure_mouse(int excess, editor_input *editor_input, cursor *cursor)
     cursor->cursor_dst.h = TILE_SIZE;
 }
 
-void editor_interactions(roomGrid *room_grid, bool *running, editor_input *editor_input)
+void editor_interactions(map edit_map, roomGrid *room_grid, bool *running, editor_input *editor_input)
 {
     SDL_Event event;
     
@@ -1709,7 +1713,7 @@ void editor_interactions(roomGrid *room_grid, bool *running, editor_input *edito
                     break;
                     
 	                case SDLK_s:
-	                    save(room_grid);  // Save with 'S'
+	                    save(edit_map);  // Save with 'S'
 	                break;
                     
                		default:
@@ -1755,13 +1759,13 @@ void editor_interactions(roomGrid *room_grid, bool *running, editor_input *edito
 }
 
 
-void initialise_level_editor_map(int **map_array)
+void initialise_level_editor_map(int editor_map[ROOM_Y][ROOM_X])
 {
     int i, j;
 
     for (i = 0; i < ROOM_Y; ++i) {
         for (j = 0; j < ROOM_X; ++j) {
-            map_array[i][j] = 0;
+            editor_map[i][j] = 0;
         }
     }
 }
