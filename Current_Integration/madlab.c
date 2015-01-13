@@ -1942,7 +1942,8 @@ void image_drawing_tool(roomGrid *room_grid, char *argv[], int argc, char *instr
 
         print_instruction(room_grid, instructions_list, 64, 66);
 
-        Run_interpreter(room_grid, argv, instructions_list); 
+        // THIS HAS BEEN COMMENTED SO THAT EVERYONE CAN COMPILE WITH "MAKE BASIC"
+        // Run_interpreter(room_grid, argv, instructions_list); 
         // Run_interpreter is external
 
         room_grid->refresh_counter = 0;
